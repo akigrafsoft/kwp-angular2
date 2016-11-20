@@ -17,4 +17,7 @@ Email: (this IS public) akigrafsoft@gmail.com
 Logged in as akigrafsoft on https://registry.npmjs.org/.
 kmoyse@kmoyse-Precision-T1700:~/akgsworkspace/kwp-angular2$ npm publish
 + kwp-angular2@1.0.0
+
+Consume it !  :
+npm install kwp-angular2
     

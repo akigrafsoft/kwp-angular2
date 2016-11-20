@@ -1,0 +1,8 @@
+e2e
+node_modules
+npm-debug.log
+protractor.conf.js
+Readme.txt
+README.md
+src
+tslint.json
