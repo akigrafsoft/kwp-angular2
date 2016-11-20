@@ -11,7 +11,7 @@ import { User } from '../user';
 
 @Component({
     selector: 'kwp-user-form',
-    templateUrl: 'app/kwp/users/user-form.component.html',
+//    templateUrl: 'app/kwp/users/user-form.component.html',
     template: `
 <form *ngIf="user" name="userForm" class="form-horizontal"
     accept-charset="UTF-8" (ngSubmit)="onSubmit()" #userForm="ngForm">
