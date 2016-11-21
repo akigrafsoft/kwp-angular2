@@ -1,7 +1,7 @@
 exports.AuthService = require('./lib/auth/auth.service').AuthService;
 exports.AuthLoginComponent = require('./lib/auth/login.component').AuthLoginComponent;
 exports.AuthLogoutComponent = require('./lib/auth/logout.component').AuthLogoutComponent;
-exports.AuthLogoutComponent = require('./lib/auth/role').AuthLogoutComponent;
+exports.Role = require('./lib/auth/role').AuthLogoutComponent;
 
 exports.CalendarComponent = require('./lib/calendar/calendar.component').CalendarComponent;
 
@@ -31,4 +31,4 @@ exports.UserFormComponent = require('./lib/users/user-form.component').UserFormC
 exports.UserService = require('./lib/users/user.service').UserService;
 exports.UsersComponent = require('./lib/users/users.component').UsersComponent;
 
-exports.NumberFixedLenPipe = require('./lib/pipes/number-fixed-len.pipe').NumberFixedLenPipe;
+exports.User = require('./lib/user').User;
