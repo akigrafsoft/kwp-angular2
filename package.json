@@ -26,8 +26,26 @@
 	"author": "akigrafsoft@gmail.com",
 	"files": [
 		"lib",
-		"component.js",
-		"component.d.ts"
+		"auth.js",
+		"auth.d.ts",
+		"calendar.js",
+		"calendar.d.ts",
+		"configuration.js",
+		"configuration.d.ts",
+		"files.js",
+		"files.d.ts",
+		"jnlp.js",
+		"jnlp.d.ts",
+		"maps.js",
+		"maps.d.ts",
+		"mongodb.js",
+		"mongodb.d.ts",
+		"pagedlist.js",
+		"pagedlist.d.ts",
+		"pipes.js",
+		"pipes.d.ts",
+		"users.js",
+		"users.d.ts"
 	],
 	"dependencies": {
 		"@angular/common": "~2.2.0",

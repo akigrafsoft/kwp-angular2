@@ -6,7 +6,7 @@ import { Headers, Http, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { User } from '../user';
+import { User } from '../users/user';
 import { Role } from './role';
 
 @Injectable()

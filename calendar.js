@@ -1,0 +1,1 @@
+exports.CalendarComponent = require('./lib/calendar/calendar.component').CalendarComponent;

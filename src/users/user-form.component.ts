@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
-import { User } from '../user';
+import { User } from './user';
 
 @Component({
     selector: 'kwp-user-form',

@@ -10,7 +10,7 @@ import { UserFormComponent } from './user-form.component';
 import { PagedListDirective } from '../pagedlist/pagedlist.directive';
 
 import { UserService } from './user.service';
-import { User } from '../user';
+import { User } from './user';
 
 @Component({
     selector: 'my-users',

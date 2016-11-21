@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { AuthService } from '../auth/auth.service';
-import { User } from '../user';
+import { User } from './user';
 
 import 'rxjs/add/operator/toPromise';
 

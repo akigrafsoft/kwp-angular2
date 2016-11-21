@@ -1,0 +1,2 @@
+exports.ConfigurationResolver = require('./lib/configuration/configuration.resolver').ConfigurationResolver;
+exports.ConfigurationService = require('./lib/configuration/configuration.service').ConfigurationService;

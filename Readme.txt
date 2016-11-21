@@ -20,4 +20,19 @@ kmoyse@kmoyse-Precision-T1700:~/akgsworkspace/kwp-angular2$ npm publish
 
 Consume it !  :
 npm install kwp-angular2
+
+OR to install it loccaly only :
+
+cd ~/akgsworkspace/KWebAngular2/src/main/webapp/node_modules/kwp-angular2
+cp -r ~/akgsworkspace/kwp-angular2/lib .
+cp  ~/akgsworkspace/kwp-angular2/auth.* .
+cp  ~/akgsworkspace/kwp-angular2/calendar.* .
+cp  ~/akgsworkspace/kwp-angular2/configuration.* .
+cp  ~/akgsworkspace/kwp-angular2/files.* .
+cp  ~/akgsworkspace/kwp-angular2/jnlp.* .
+cp  ~/akgsworkspace/kwp-angular2/maps.* .
+cp  ~/akgsworkspace/kwp-angular2/mongodb.* .
+cp  ~/akgsworkspace/kwp-angular2/pagedlist.* .
+cp  ~/akgsworkspace/kwp-angular2/pipes.* .
+cp  ~/akgsworkspace/kwp-angular2/users.* .
     

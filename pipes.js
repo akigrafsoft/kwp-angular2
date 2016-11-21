@@ -1,0 +1,1 @@
+exports.NumberFixedLenPipe = require('./lib/pipes/number-fixed-len.pipe').NumberFixedLenPipe;

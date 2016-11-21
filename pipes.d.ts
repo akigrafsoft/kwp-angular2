@@ -1,0 +1,1 @@
+export { NumberFixedLenPipe } from './lib/pipes/number-fixed-len.pipe';
