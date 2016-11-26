@@ -77,7 +77,8 @@ export class AuthService {
             this.sessionId = null;
             this.authenticatedUser = null;
             location.reload();
-        }
+        } else
+        { console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status); }
     }
 
     private handleError(response: any) {
