@@ -6,12 +6,6 @@ import { Directive, Input, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { PagedListService } from './pagedlist.service';
 
-
-//@Component({
-//    selector: 'kwp-paged-list',
-//    template: '<ng-content></ng-content>'
-//})
-
 @Directive({
     selector: '[kwp-paged-list]'
 })
@@ -29,6 +23,9 @@ export class PagedListDirective implements OnInit {
 
     @Input('searchCriteriasBase')
     searchCriteriasBase: any = null;
+
+    @Input('searchCriterias')
+    searchCriterias: any = null;
 
     items: any[];
 
@@ -53,7 +50,7 @@ export class PagedListDirective implements OnInit {
         //console.debug("PagedListComponent::ngOnInit()");
         let factoryParams = "";
         this.pagedListService.createList(this.factory, factoryParams,
-            this.listId, this.searchCriteriasBase, null,
+            this.listId, this.searchCriteriasBase, this.searchCriterias,
             null, false, this.fromIndex, this.pageSize)
             .then(response => this.handleSuccessResponse(response))
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
@@ -92,20 +89,20 @@ export class PagedListDirective implements OnInit {
     }
 
     public prevPage() {
-        console.debug("PagedListComponent::prevPage:" + (this.currentPage - 1));
+        //console.debug("PagedListComponent::prevPage:" + (this.currentPage - 1));
         if (this.currentPage > 0) {
             this.getItems((this.currentPage - 1) * this.pageSize, this.pageSize);
         }
     };
     public nextPage() {
-        console.debug("PagedListComponent::nextPage:" + (this.currentPage + 1));
+        //console.debug("PagedListComponent::nextPage:" + (this.currentPage + 1));
         if (this.currentPage < (this.nbPages - 1)) {
             this.getItems((this.currentPage + 1) * this.pageSize, this.pageSize);
         }
     };
 
     private handleSuccessResponse(response) {
-        console.debug("PagedListComponent::handleSuccessResponse(" + JSON.stringify(response) + ")");
+        //console.debug("PagedListComponent::handleSuccessResponse(" + JSON.stringify(response) + ")");
         this.items = response.items;
         //if (this.fullSize != response.itemsFullSize) {
         //this.onListModified();
