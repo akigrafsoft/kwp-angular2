@@ -19,47 +19,25 @@ import { AuthService } from './auth.service';
                 <span class="input-group-addon" id="username-addon"><span
                     class="glyphicon glyphicon-user"></span></span> <input ng-if="LANG=='en'"
                     type="text" class="form-control" id="login-username"
-                    name="username" placeholder="username"
-                    [(ngModel)]="credentials.username" value=""
+                    name="username"
+                    placeholder="{{LANG=='fr' ? 'nom utilisateur' : 'username'}}" [(ngModel)]="credentials.username" value=""
                     aria-describedby="username-addon" required>
-                <!--                        kwp-auto-fill -->
-                <!--                         <input -->
-                <!--                        ng-if="LANG=='fr'" type="text" class="form-control" -->
-                <!--                        id="login-username" name="username" -->
-                <!--                        placeholder="nom d'utilisateur/e-mail" -->
-                <!--                        ng-model="credentials.username" value="" kwp-auto-fill> -->
             </div>
         </div>
         <div class="form-group">
-            <!--            <label class="sr-only" for="login-password">Password</label> -->
             <div class="input-group">
                 <span class="input-group-addon" id="password-addon"><span
                     class="glyphicon glyphicon-lock"></span></span> <input type="password"
                     class="form-control" id="login-password" name="password"
-                    placeholder="password" [(ngModel)]="credentials.password"
+                    placeholder="{{LANG=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="credentials.password"
                     aria-describedby="password-addon" required>
             </div>
         </div>
-        <!--            <a id="forgottenPassword" href -->
-        <!--                ng-show="loginForm.error&&loginForm.username.$valid" -->
-        <!--                kwp-confirm-condition="true" -->
-        <!--                kwp-confirm-message="{{ LANG=='en' ? 'A new password will be sent over your e-mail, continue ?' : 'Un mot de passe temporaire va vous etre envoyé sur votre e-mail, êtes vous sûr de vouloir continuer?'}}" -->
-        <!--                kwp-confirm-click="forgottenPassword()"><span ng-if="LANG=='en'">forgotten</span> -->
-        <!--                <span ng-if="LANG=='fr'">oublié</span> ?</a> -->
         <div class="form-group">
-            <!-- Button -->
-            <!--                ng-if="!processing" -->
-            <!--            <a id="btn-login" href="javascript:void(0)" class="btn btn-success" -->
-            <!--                (click)="login(credentials)"> -->
-            <!--                <span>Login</span> -->
-            <!--                    <span ng-if="LANG=='fr'">Se connecter</span> -->
             &nbsp;
-            <!--                     <img ng-show="processing" src="img/processing.gif" />  -->
-            <!--            </a> -->
             <button type="submit" class="btn btn-success"
-                [disabled]="!loginForm.form.valid">Login</button>
-            <!--                     <small class="alert alert-warning" ng-show="loginForm.error.errorReason">{{loginForm.error.errorReason}}</small> -->
-            <!--                <a ng-if="loginForm.error.errorCode==31" href="#/activation">Activation</a> -->
+                [disabled]="!loginForm.form.valid">{{LANG=='fr' ? 'Connexion' : 'Login'}}</button>
+
         </div>
     </form>
     <div *ngIf="error">
@@ -76,6 +54,8 @@ export class AuthLoginComponent {
     credentials = {};
 
     error: any;
+
+    @Input() LANG = 'en';
 
     authenticatedUser: any;
 

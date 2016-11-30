@@ -12,12 +12,14 @@ import { AuthService } from './auth.service';
                     accept-charset="UTF-8" (ngSubmit)="logout()"
                     #logoutForm="ngForm">
                 <button type="submit" class="btn btn-success"
-                    [disabled]="!logoutForm.form.valid">Logout</button>
+                    [disabled]="!logoutForm.form.valid">{{LANG=='fr' ? 'Déconnexion' : 'Logout'}}</button>
                 </form>
                 `
 })
 export class AuthLogoutComponent {
     title = 'Logout';
+
+    @Input() LANG = 'en';
 
     error: any;
 
