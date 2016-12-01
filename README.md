@@ -10,6 +10,8 @@ Run `npm run build` to build the project. The build artifacts will be stored in 
 
 ## Package
 
+Run `find ./lib -type f -name "*.ts" -exec sed -i 's#/// <reference types="core-js" />##g' {} +`
+
 Run `npm pack`
 
 It will create a tgz file like kwp-angular2-1.0.0.tgz
