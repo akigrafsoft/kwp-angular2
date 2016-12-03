@@ -43,7 +43,7 @@ import { AuthService } from './auth.service';
     <div *ngIf="error">
         <span class="alert alert-warning">{{error.errorReason}}</span>
     </div>
-    <div *ngIf="authenticatedUser">{{authenticatedUser.username}}</div>
+    <div *ngIf="auth.getAuthenticatedUser()">{{auth.getAuthenticatedUser().username}}</div>
 </div>`
 
 })
@@ -57,10 +57,10 @@ export class AuthLoginComponent {
 
     @Input() LANG = 'en';
 
-    authenticatedUser: any;
+    //authenticatedUser: any;
 
     constructor(private router: Router, private auth: AuthService) {
-        this.authenticatedUser = this.auth.authenticatedUser;
+        // this.authenticatedUser = this.auth.authenticatedUser;
     }
 
     //    ngOnInit() {
@@ -76,6 +76,7 @@ export class AuthLoginComponent {
             response.sessionId);
 
         this.auth.sessionId = response.sessionId;
+        this.auth.announceUser(response.user);
         this.auth.authenticatedUser = response.user;
         this.auth.authenticatedRoles = response.userRoles;
         this.error = null;

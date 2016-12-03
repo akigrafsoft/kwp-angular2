@@ -6,6 +6,9 @@ import { Headers, Http, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
+import { Observable } from 'rxjs/Observable';
+import { Subject }    from 'rxjs/Subject';
+
 import { User } from '../users/user';
 import { Role } from './role';
 
@@ -13,12 +16,33 @@ import { Role } from './role';
 export class AuthService {
 
     public sessionId: string;
-    public roles: any;
 
-    public authenticatedUser: User;
-    public authenticatedRoles: Array<Role>;
+    // All existing role names...
+    roles: Array<string>;
+
+    public authenticatedUser: User = null;
+    private user = new Subject<User>();
+    authUser$: Observable<User> = this.user.asObservable();
+
+    authenticatedRoles: Array<Role>;
 
     constructor(private http: Http, private baseUrl: string) { }
+
+    public getAuthenticatedUser(): User {
+        return this.authenticatedUser;
+    }
+
+    public getAuthenticatedRoles(): Array<Role> {
+        return this.authenticatedRoles;
+    }
+
+    public getAllRolesNames(): Array<string> {
+        return this.roles;
+    }
+
+    announceUser(user: User) {
+        this.user.next(user);
+    }
 
     login(credentials: any) {
         let headers = new Headers({
@@ -41,7 +65,7 @@ export class AuthService {
             .catch(this.handleError);
     }
 
-    public isAutenthicated(userName: string): boolean {
+    public isAuthenticated(userName: string): boolean {
         return (this.authenticatedUser && this.authenticatedUser.username === userName);
     }
 
@@ -59,6 +83,20 @@ export class AuthService {
                     return true;
             }
         }
+        return false;
+    }
+
+    public hasRole(i_role: string): boolean {
+        if (!this.authenticatedUser)
+            return false;
+        if (!this.authenticatedRoles)
+            return false;
+
+        for (var role of this.authenticatedRoles) {
+            if (i_role === role.name)
+                return true;
+        }
+
         return false;
     }
 
