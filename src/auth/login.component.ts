@@ -43,7 +43,6 @@ import { AuthService } from './auth.service';
     <div *ngIf="error">
         <span class="alert alert-warning">{{error.errorReason}}</span>
     </div>
-    <div *ngIf="auth.getAuthenticatedUser()">{{auth.getAuthenticatedUser().username}}</div>
 </div>`
 
 })
@@ -57,42 +56,33 @@ export class AuthLoginComponent {
 
     @Input() LANG = 'en';
 
-    //authenticatedUser: any;
-
-    constructor(private router: Router, private auth: AuthService) {
-        // this.authenticatedUser = this.auth.authenticatedUser;
+    constructor(private router: Router, private authService: AuthService) {
     }
 
-    //    ngOnInit() {
-    //        console.log("AuthLoginComponent::ngOnInit()");
-    //    }
-
-    private handleLoginResponse(response: any) {
-        console.log("handleLoginResponse:" + JSON.stringify(response));
-
-        window.localStorage
-            .setItem(
-            'sessionId',
-            response.sessionId);
-
-        this.auth.sessionId = response.sessionId;
-        this.auth.announceUser(response.user);
-        this.auth.authenticatedUser = response.user;
-        this.auth.authenticatedRoles = response.userRoles;
-        this.error = null;
-
-        this.router.navigate(['/']);
-    }
-    private handleLoginErrorResponse(error: any) {
-        //console.log("handleLoginErrorResponse:" + JSON.stringify(error));
-        this.error = error.json();
-        console.log("handleLoginErrorResponse:" + JSON.stringify(this.error));
-    }
     login(credentials) {
         console.log("AuthLoginComponent::login(" + JSON.stringify(credentials) + ")");
-        this.auth.login(credentials)
-            .then(response => this.handleLoginResponse(response))
-            .catch(error => this.handleLoginErrorResponse(error));
+        this.authService.login(credentials)
+            .subscribe(
+            json => this.handleLoginResponse(json),
+            error => this.error = error);
+        //            .then(response => this.handleLoginResponse(response))
+        //            .catch(error => this.handleLoginErrorResponse(error));
     }
+
+    private handleLoginResponse(json: any) {
+        console.log("handleLoginResponse:" + JSON.stringify(json));
+        this.authService.successLogin(json);
+        this.error = null;
+
+        // Redirect the user
+        let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/';
+        this.router.navigate([redirect]);
+    }
+
+    //    private handleLoginErrorResponse(error: any) {
+    //        //console.log("handleLoginErrorResponse:" + JSON.stringify(error));
+    //        this.error = error.json();
+    //        console.log("handleLoginErrorResponse:" + JSON.stringify(this.error));
+    //    }
 
 }

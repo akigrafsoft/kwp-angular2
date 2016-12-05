@@ -2,12 +2,15 @@
 // Author: Kevin Moyse
 //
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
+import { Headers, RequestOptions, Http, Response } from '@angular/http';
 
-import 'rxjs/add/operator/toPromise';
+//import 'rxjs/add/operator/toPromise';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 import { Observable } from 'rxjs/Observable';
-import { Subject }    from 'rxjs/Subject';
+//import { Subject }    from 'rxjs/Subject';
 
 import { User } from '../users/user';
 import { Role } from './role';
@@ -20,11 +23,12 @@ export class AuthService {
     // All existing role names...
     roles: Array<string>;
 
+    public isLoggedIn: boolean = false;
     public authenticatedUser: User = null;
-    private user = new Subject<User>();
-    authUser$: Observable<User> = this.user.asObservable();
+    public authenticatedRoles: Array<Role>;
 
-    authenticatedRoles: Array<Role>;
+    // store the URL so we can redirect after logging in
+    redirectUrl: string;
 
     constructor(private http: Http, private baseUrl: string) { }
 
@@ -40,31 +44,67 @@ export class AuthService {
         return this.roles;
     }
 
-    announceUser(user: User) {
-        this.user.next(user);
+    private extractData(res: Response): any {
+        let body = res.json();
+        return body || {};
     }
 
-    login(credentials: any) {
+    public login(credentials: any): Observable<any> {
+
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.sessionId
         });
+        //        return this.http.post(this.baseUrl, JSON.stringify(credentials), { headers: headers })
+        //            .toPromise()
+        //            .then(this.extractData)
+        //            .catch(this.handleError);
         return this.http.post(this.baseUrl, JSON.stringify(credentials), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
+            .map(this.extractData)
             .catch(this.handleError);
+    }
+
+    //    public doLogin(credentials: any) {
+    //        return Observable.from(this.login(credentials)).subscribe();
+    //    }
+
+    public successLogin(data: any): void {
+        window.localStorage
+            .setItem(
+            'sessionId',
+            data.sessionId);
+
+        this.isLoggedIn = true;
+        this.sessionId = data.sessionId;
+        this.authenticatedUser = data.user;
+        this.authenticatedRoles = data.userRoles;
     }
 
     logout(sessionId: string) {
         let headers = new Headers({
             'SessionId': this.sessionId
         });
+        //        return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
+        //            .toPromise()
+        //            .then(res => res.json())
+        //            .catch(this.handleError);
         return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
+            .map(this.extractData)
             .catch(this.handleError);
     }
 
+    public successLogout(): void {
+        window.localStorage
+            .removeItem(
+            'sessionId');
+
+        this.isLoggedIn = false;
+        this.sessionId = null;
+        this.authenticatedUser = null;
+    }
+
+
+    //    .subscribe(data => { this.isLoggedIn = false;    
     public isAuthenticated(userName: string): boolean {
         return (this.authenticatedUser && this.authenticatedUser.username === userName);
     }
@@ -119,9 +159,23 @@ export class AuthService {
         { console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status); }
     }
 
-    private handleError(response: any) {
-        //this.handleStatus(response);
-        console.error('AuthService::handleError|An error occurred', response);
-        return Promise.reject(response.message || response);
+    //    private handleError(response: any) {
+    //        //this.handleStatus(response);
+    //        console.error('AuthService::handleError|An error occurred', response);
+    //        return Promise.reject(response.message || rese);
+    //    }
+
+    private handleError(error: Response | any) {
+        // In a real world app, we might use a remote logging infrastructure
+        let errMsg: string;
+        if (error instanceof Response) {
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+        } else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error("AuthService::handleError|" + errMsg);
+        return Observable.throw(errMsg);
     }
 }

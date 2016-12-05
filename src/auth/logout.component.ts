@@ -28,12 +28,15 @@ export class AuthLogoutComponent {
 
     logout() {
         console.log("AuthLogoutComponent::logout()");
-        this.auth.logout(this.auth.sessionId).then(response => this.handleLogoutResponse(response))
-            .catch(error => this.handleLogoutErrorResponse(error));
+        this.auth.logout(this.auth.sessionId)
+            .subscribe(
+            data => this.handleLogoutResponse(data),
+            error => this.error = error);
+        //            .then(response => this.handleLogoutResponse(response))
+        //            .catch(error => this.handleLogoutErrorResponse(error));
     }
-    private handleLogoutResponse(response: any) {
-        console.log("handleLogoutResponse:" + JSON.stringify(response));
-
+    private handleLogoutResponse(data: any) {
+        console.log("handleLogoutResponse:" + JSON.stringify(data));
         this.doLogout();
     }
     private handleLogoutErrorResponse(error: any) {
@@ -43,8 +46,7 @@ export class AuthLogoutComponent {
     }
 
     private doLogout() {
-        this.auth.sessionId = null;
-        this.auth.authenticatedUser = null;
+        this.auth.successLogout();
         this.router.navigate(['/']);
     }
 
