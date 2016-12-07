@@ -4,13 +4,9 @@
 import { Injectable } from '@angular/core';
 import { Headers, RequestOptions, Http, Response } from '@angular/http';
 
-//import 'rxjs/add/operator/toPromise';
-
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-
-import { Observable } from 'rxjs/Observable';
-//import { Subject }    from 'rxjs/Subject';
 
 import { User } from '../users/user';
 import { Role } from './role';
@@ -45,8 +41,14 @@ export class AuthService {
     }
 
     private extractData(res: Response): any {
-        let body = res.json();
-        return body || {};
+        //console.debug("AuthService::extractData|" + res);
+        try {
+            let body = res.json();
+            return body;
+        } catch (e) {
+            console.error("AuthService::extractData|" + res);
+            return {};
+        }
     }
 
     public login(credentials: any): Observable<any> {
@@ -63,10 +65,6 @@ export class AuthService {
             .map(this.extractData)
             .catch(this.handleError);
     }
-
-    //    public doLogin(credentials: any) {
-    //        return Observable.from(this.login(credentials)).subscribe();
-    //    }
 
     public successLogin(data: any): void {
         window.localStorage
@@ -101,6 +99,45 @@ export class AuthService {
         this.isLoggedIn = false;
         this.sessionId = null;
         this.authenticatedUser = null;
+    }
+
+    check(sessionId: string, url: string): Observable<boolean> {
+        let headers = new Headers({
+            'SessionId': sessionId
+        });
+
+        return this.http.get(encodeURI(this.baseUrl), { headers: headers })
+            .map((data) => { this.doMap(url, data) })
+            .catch(this.handleError);
+    }
+
+
+    private doMap(redirectUrl: string, response: any): boolean {
+
+        let data = this.extractData(response);
+
+        if (data.user) {
+
+            this.isLoggedIn = true;
+            this.authenticatedUser = data.user;
+
+            if (data.userRoles)
+                this.authenticatedRoles = data.userRoles;
+
+            // tick forces refresh of search.address display in input box
+            //this.ref.tick();
+            console.info("AuthService::doMap(" + JSON.stringify(data) + ")|true");
+            return true;
+        }
+
+        // Store the attempted URL for redirecting
+        this.redirectUrl = redirectUrl;
+
+        // Navigate to the login page with extras
+        //this.router.navigate(['/login']);
+
+        console.warn("AuthService::doMap(" + JSON.stringify(data) + ")|false");
+        return false;
     }
 
 
@@ -169,13 +206,20 @@ export class AuthService {
         // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;
         if (error instanceof Response) {
-            const body = error.json() || '';
+            let body;
+            try {
+                body = error.json();
+            }
+            catch (e) {
+                body = '';
+            }
+
             const err = body.error || JSON.stringify(body);
             errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
         } else {
             errMsg = error.message ? error.message : error.toString();
         }
         console.error("AuthService::handleError|" + errMsg);
-        return Observable.throw(errMsg);
+        return Observable.throw(errMsg + "(AuthService)");
     }
 }
