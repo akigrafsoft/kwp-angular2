@@ -7,6 +7,7 @@ import { Headers, RequestOptions, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/of';
 
 import { User } from '../users/user';
 import { Role } from './role';
@@ -101,18 +102,20 @@ export class AuthService {
         this.authenticatedUser = null;
     }
 
-    check(sessionId: string, url: string): Observable<boolean> {
+    check(sessionId: string, redirectUrl: string): Observable<boolean> {
         let headers = new Headers({
             'SessionId': sessionId
         });
 
         return this.http.get(encodeURI(this.baseUrl), { headers: headers })
-            .map((data) => { this.doMap(url, data) })
-            .catch(this.handleError);
+            .map((data) => { return this.doMapCheck(redirectUrl, data) })
+            .catch((res) => {
+                return Observable.of(false);
+            });
     }
 
 
-    private doMap(redirectUrl: string, response: any): boolean {
+    private doMapCheck(redirectUrl: string, response: any): boolean {
 
         let data = this.extractData(response);
 
