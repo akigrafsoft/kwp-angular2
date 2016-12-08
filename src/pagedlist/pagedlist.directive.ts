@@ -57,7 +57,7 @@ export class PagedListDirective implements OnInit {
     }
 
     refreshList() {
-        console.debug("PagedListComponent::refreshList()");
+        //console.debug("PagedListComponent::refreshList()");
         this.pagedListService.refreshList(this.listId)
             .then(response => this.handleSuccessResponse(response))
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
