@@ -6,10 +6,12 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
 declare var google: any;
 
+//style="width:354px;height:200px"
+
 @Component({
     selector: 'kwp-maps-map',
-    template: '<div id="googleMap" style="width:354px;height:200px"></div>'
-    //styleUrls: ['css/app.css']
+    template: '<div id="map"></div>',
+    styles: ['#map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }']
 })
 export class MapComponent implements OnInit {
 
@@ -56,7 +58,14 @@ export class MapComponent implements OnInit {
             zoom: 11,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        this.map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        this.map = new google.maps.Map(document.getElementById("map"), mapProp);
+
+        // In order to re-center map to location when window is resized
+        let _self = this;
+        google.maps.event.addDomListener(window, 'resize', function() {
+            console.log("map:resize");
+            _self.map.setCenter(_self.location);
+        });
     }
 
     //    public addMarker(location: any) {

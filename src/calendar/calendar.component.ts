@@ -8,7 +8,6 @@ import { Component, OnInit, Input, DoCheck } from '@angular/core';
     //    templateUrl: 'app/kwp/calendar/calendar.component.html',
     template: '<ng-content></ng-content>'
 })
-
 export class CalendarComponent implements OnInit, DoCheck {
 
     daysOfAWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
@@ -18,6 +17,8 @@ export class CalendarComponent implements OnInit, DoCheck {
 
     @Input()
     items: Array<any>;
+
+    // used to detect changes
     itemsSize;
 
     @Input()
@@ -82,7 +83,7 @@ export class CalendarComponent implements OnInit, DoCheck {
                 //console.debug("CalendarComponent::buildCalendarArray(), changeMonth at i=" + i);
             }
             // Date.getDate returns day of month
-            else if ((l_itemDate.getDate() > previousDate.getDate()) && (this.getFrenchDayOfWeek(l_itemDate) <= this.getFrenchDayOfWeek(previousDate) || (l_itemDate.getDate() - previousDate.getDate() >= 7))) {
+            else if ((l_itemDate.getDate() > previousDate.getDate()) && (this.toFrenchDayOfWeek(l_itemDate.getDay()) <= this.toFrenchDayOfWeek(previousDate.getDay()) || (l_itemDate.getDate() - previousDate.getDate() >= 7))) {
                 // new week
                 currentWeek.push(currentDay);
                 currentDay = new Array();
@@ -121,26 +122,41 @@ export class CalendarComponent implements OnInit, DoCheck {
 
     // returns day of week in France
     // Monday is 1, and so on. (Sunday is 7)
-    getFrenchDayOfWeek(date: Date): number {
-        // Date.getDay returns day of week, Sunday is 0, Monday is 1, and so on.
-        var dayOfWeek: number = date.getDay();
-        if (dayOfWeek === 0)
-            return 7;
-        return dayOfWeek;
+    //    getFrenchDayOfWeek(date: Date): number {
+    //        // Date.getDay returns day of week, Sunday is 0, Monday is 1, and so on.
+    //        var dayOfWeek: number = date.getDay();
+    //        if (dayOfWeek === 0)
+    //            return 7;
+    //        return dayOfWeek;
+    //    }
+
+    //
+    //Date.getDay returns day of week, Sunday is 0, Monday is 1, and so on.
+    //toFrenchDayOfWeek return Monday 0, ... Sunday 6
+    toFrenchDayOfWeek(dayOfWeek: number): number {
+        return dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     }
 
-    calcFirstIndex(d: number, week: any[], item: any): number {
-        //console.debug("CalendarComponent::calcFirstIndex(), item=" + JSON.stringify(item));
-        if (d == 0)
-            return 0;
-        var l_date = this.getDateTime(week[d - 1][0]);
-        return l_date.getDay();
+    calcOffset(index: number, week: any[]): number {
+        var dayOfWeek = this.getDateTime(week[index][0]).getDay();
+        if (index == 0) {
+            // Date.getDay returns day of week, Sunday is 0, Monday is 1, and so on.
+            return this.toFrenchDayOfWeek(dayOfWeek);
+        }
+        var prevDayOfWeek = this.getDateTime(week[index - 1][0]).getDay();
+        return this.toFrenchDayOfWeek(dayOfWeek) - this.toFrenchDayOfWeek(prevDayOfWeek) - 1;
     }
 
-    calcLastIndex(d: number, week: any[], item: any) {
-        //console.debug("CalendarComponent::calcLastIndex(), item=" + JSON.stringify(item));
-        var l_date = this.getDateTime(item);
-        return l_date.getDay() - 1;
-    }
+    //    calcFirstIndex(d: number, week: any[], item: any): number {
+    //        if (d == 0)
+    //            return 0;
+    //        var l_date = this.getDateTime(week[d - 1][0]);
+    //        return l_date.getDay();
+    //    }
+    //
+    //    calcLastIndex(d: number, week: any[], item: any) {
+    //        var l_date = this.getDateTime(item);
+    //        return l_date.getDay() - 1;
+    //    }
 
 }
