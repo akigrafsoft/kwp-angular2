@@ -6,8 +6,6 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
 declare var google: any;
 
-//style="width:354px;height:200px"
-
 @Component({
     selector: 'kwp-maps-map',
     template: '<div id="map"></div>',
@@ -18,9 +16,6 @@ export class MapComponent implements OnInit {
     @Input() address: string;
 
     @Input() location: any;
-
-    //  @Input() width: number = 354;
-    //  @Input() height: number = 200;
 
     private map: any = null;
     private marker: any = null;
