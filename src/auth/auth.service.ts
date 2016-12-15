@@ -9,6 +9,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
 
+import { Subject }    from 'rxjs/Subject';
+
 import { User } from '../users/user';
 import { Role } from './role';
 
@@ -26,6 +28,9 @@ export class AuthService {
 
     // store the URL so we can redirect after logging in
     redirectUrl: string;
+
+    private userAuthenticationSubject = new Subject<User>();
+    public userAuthentication$ = this.userAuthenticationSubject.asObservable();
 
     constructor(private http: Http, private baseUrl: string) { }
 
@@ -73,10 +78,18 @@ export class AuthService {
             'sessionId',
             data.sessionId);
 
+        this.acceptAuthenticatedUser(data.sessionId, data.user, data.userRoles);
+    }
+
+    //  public acceptAuthenticatedUser(sessionId: string, user: User): void;
+    // public acceptAuthenticatedUser(sessionId: string, user: User, userRoles: Array<Role>): void;
+
+    public acceptAuthenticatedUser(sessionId: string, user: User, userRoles: Array<Role>): void {
         this.isLoggedIn = true;
-        this.sessionId = data.sessionId;
-        this.authenticatedUser = data.user;
-        this.authenticatedRoles = data.userRoles;
+        this.sessionId = sessionId;
+        this.authenticatedUser = user;
+        this.authenticatedRoles = userRoles;
+        this.userAuthenticationSubject.next(this.authenticatedUser);
     }
 
     logout(sessionId: string) {
@@ -100,13 +113,17 @@ export class AuthService {
         this.isLoggedIn = false;
         this.sessionId = null;
         this.authenticatedUser = null;
+
+        this.userAuthenticationSubject.next(this.authenticatedUser);
     }
 
-    check(sessionId: string, redirectUrl: string): Observable<boolean> {
+    /**
+     * 
+     */
+    public check(sessionId: string, redirectUrl: string): Observable<boolean> {
         let headers = new Headers({
             'SessionId': sessionId
         });
-
         return this.http.get(encodeURI(this.baseUrl), { headers: headers })
             .map((data) => { return this.doMapCheck(redirectUrl, data) })
             .catch((res) => {
@@ -118,17 +135,9 @@ export class AuthService {
     private doMapCheck(redirectUrl: string, response: any): boolean {
 
         let data = this.extractData(response);
-
         if (data.user) {
-
-            this.isLoggedIn = true;
-            this.authenticatedUser = data.user;
-
-            if (data.userRoles)
-                this.authenticatedRoles = data.userRoles;
-
-            // tick forces refresh of search.address display in input box
-            //this.ref.tick();
+            if (!this.isLoggedIn)
+                this.acceptAuthenticatedUser(data.sessionId, data.user, data.userRoles);
             console.info("AuthService::doMap(" + JSON.stringify(data) + ")|true");
             return true;
         }
@@ -136,15 +145,10 @@ export class AuthService {
         // Store the attempted URL for redirecting
         this.redirectUrl = redirectUrl;
 
-        // Navigate to the login page with extras
-        //this.router.navigate(['/login']);
-
         console.warn("AuthService::doMap(" + JSON.stringify(data) + ")|false");
         return false;
     }
 
-
-    //    .subscribe(data => { this.isLoggedIn = false;    
     public isAuthenticated(userName: string): boolean {
         return (this.authenticatedUser && this.authenticatedUser.username === userName);
     }
@@ -198,12 +202,6 @@ export class AuthService {
         } else
         { console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status); }
     }
-
-    //    private handleError(response: any) {
-    //        //this.handleStatus(response);
-    //        console.error('AuthService::handleError|An error occurred', response);
-    //        return Promise.reject(response.message || rese);
-    //    }
 
     private handleError(error: Response | any) {
         // In a real world app, we might use a remote logging infrastructure

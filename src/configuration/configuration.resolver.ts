@@ -12,7 +12,10 @@ import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ConfigurationResolver implements Resolve<any> {
-    constructor(private configurationService: ConfigurationService, private auth: AuthService) {
+
+    constructor(
+        private configurationService: ConfigurationService,
+        private authService: AuthService) {
     }
 
     resolve(
@@ -22,8 +25,8 @@ export class ConfigurationResolver implements Resolve<any> {
 
         let sessionId: string = null;
 
-        if (typeof this.auth.sessionId !== 'undefined' && this.auth.sessionId != null) {
-            sessionId = this.auth.sessionId;
+        if (typeof this.authService.sessionId !== 'undefined' && this.authService.sessionId != null) {
+            sessionId = this.authService.sessionId;
             console.log("ConfigurationResolver::resolve, this.auth.sessionId=" + sessionId);
             return null;
         }
@@ -42,7 +45,6 @@ export class ConfigurationResolver implements Resolve<any> {
         console.debug("ConfigurationResolver::handleResponse(" + JSON.stringify(response) + ")");
 
         // sessionId
-        this.auth.sessionId = response.sessionId;
         window.localStorage
             .setItem(
             'sessionId',
@@ -50,12 +52,13 @@ export class ConfigurationResolver implements Resolve<any> {
 
         // authenticatedUser
         if (response.user) {
-            this.auth.authenticatedUser = response.user;
-            this.auth.authenticatedRoles = response.userRoles;
+            if (!this.authService.isLoggedIn) {
+                this.authService.acceptAuthenticatedUser(response.sessionId, response.user, response.userRoles);
+            }
         }
 
         // roles
-        this.auth.roles = response.roles;
+        this.authService.roles = response.roles;
     }
 
 }
