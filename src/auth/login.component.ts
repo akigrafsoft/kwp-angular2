@@ -10,41 +10,22 @@ import { AuthService } from './auth.service';
     selector: 'auth-login',
     //    templateUrl: 'app/kwp/auth/login.component.html'
     template: `
-<div>
-    <form name="loginForm" class="form-inline enabled"
-        accept-charset="UTF-8" (ngSubmit)="login(credentials)"
-        #loginForm="ngForm">
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon" id="username-addon"><span
-                    class="glyphicon glyphicon-user"></span></span> <input ng-if="LANG=='en'"
-                    type="text" class="form-control" id="login-username"
-                    name="username"
-                    placeholder="{{LANG=='fr' ? 'nom utilisateur' : 'username'}}" [(ngModel)]="credentials.username" value=""
-                    aria-describedby="username-addon" required>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon" id="password-addon"><span
-                    class="glyphicon glyphicon-lock"></span></span> <input type="password"
-                    class="form-control" id="login-password" name="password"
-                    placeholder="{{LANG=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="credentials.password"
-                    aria-describedby="password-addon" required>
-            </div>
-        </div>
-        <div class="form-group">
-            &nbsp;
-            <button type="submit" class="btn btn-success"
-                [disabled]="!loginForm.form.valid">{{LANG=='fr' ? 'Connexion' : 'Login'}}</button>
-
-        </div>
-    </form>
-    <div *ngIf="error">
-        <span class="alert alert-warning">{{error.errorReason}}</span>
-    </div>
-</div>`
-
+<div><form name="loginForm" class="form-inline enabled" accept-charset="UTF-8" (ngSubmit)="login(credentials)" #loginForm="ngForm">
+<div class="form-group">
+<div class="input-group">
+<span class="input-group-addon" id="username-addon"><span class="glyphicon glyphicon-user"></span></span>
+<input ng-if="LANG=='en'" type="text" class="form-control" id="login-username" name="username" placeholder="{{LANG=='fr' ? 'nom utilisateur' : 'username'}}" [(ngModel)]="credentials.username" value="" aria-describedby="username-addon" required>
+</div></div>
+<div class="form-group">
+<div class="input-group">
+<span class="input-group-addon" id="password-addon">
+<span class="glyphicon glyphicon-lock"></span></span>
+<input type="password" class="form-control" id="login-password" name="password" placeholder="{{LANG=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="credentials.password" aria-describedby="password-addon" required>
+</div></div>
+<div class="form-group">&nbsp;
+<button type="submit" class="btn btn-success" [disabled]="!loginForm.form.valid">{{LANG=='fr' ? 'Connexion' : 'Login'}}</button>
+</div></form>
+<div *ngIf="error"><span class="alert alert-warning">{{error.errorReason}}</span></div></div>`
 })
 export class AuthLoginComponent {
 
@@ -65,8 +46,6 @@ export class AuthLoginComponent {
             .subscribe(
             json => this.handleLoginResponse(json),
             error => this.error = error);
-        //            .then(response => this.handleLoginResponse(response))
-        //            .catch(error => this.handleLoginErrorResponse(error));
     }
 
     private handleLoginResponse(json: any) {
@@ -78,11 +57,4 @@ export class AuthLoginComponent {
         let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/';
         this.router.navigate([redirect]);
     }
-
-    //    private handleLoginErrorResponse(error: any) {
-    //        //console.log("handleLoginErrorResponse:" + JSON.stringify(error));
-    //        this.error = error.json();
-    //        console.log("handleLoginErrorResponse:" + JSON.stringify(this.error));
-    //    }
-
 }

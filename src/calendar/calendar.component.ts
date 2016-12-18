@@ -120,16 +120,6 @@ export class CalendarComponent implements OnInit, DoCheck {
         }
     }
 
-    // returns day of week in France
-    // Monday is 1, and so on. (Sunday is 7)
-    //    getFrenchDayOfWeek(date: Date): number {
-    //        // Date.getDay returns day of week, Sunday is 0, Monday is 1, and so on.
-    //        var dayOfWeek: number = date.getDay();
-    //        if (dayOfWeek === 0)
-    //            return 7;
-    //        return dayOfWeek;
-    //    }
-
     //
     //Date.getDay returns day of week, Sunday is 0, Monday is 1, and so on.
     //toFrenchDayOfWeek return Monday 0, ... Sunday 6
@@ -146,17 +136,5 @@ export class CalendarComponent implements OnInit, DoCheck {
         var prevDayOfWeek = this.getDateTime(week[index - 1][0]).getDay();
         return this.toFrenchDayOfWeek(dayOfWeek) - this.toFrenchDayOfWeek(prevDayOfWeek) - 1;
     }
-
-    //    calcFirstIndex(d: number, week: any[], item: any): number {
-    //        if (d == 0)
-    //            return 0;
-    //        var l_date = this.getDateTime(week[d - 1][0]);
-    //        return l_date.getDay();
-    //    }
-    //
-    //    calcLastIndex(d: number, week: any[], item: any) {
-    //        var l_date = this.getDateTime(item);
-    //        return l_date.getDay() - 1;
-    //    }
 
 }

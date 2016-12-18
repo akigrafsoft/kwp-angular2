@@ -1,14 +1,12 @@
 //
 // Author: Kevin Moyse
 //
-
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { ConfigurationService } from './configuration.service';
 import { AuthService } from '../auth/auth.service';
-
 
 @Injectable()
 export class ConfigurationResolver implements Resolve<any> {

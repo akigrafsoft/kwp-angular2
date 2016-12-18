@@ -7,11 +7,7 @@ import { AuthService } from '../auth/auth.service';
 
 @Component({
     selector: 'kwp-file-upload',
-    template: `
-<div>
- <input #input type='file' (change)='onChange()' name='{{name}}'/>
-</div>
-`
+    template: `<input #input type='file' (change)='onChange()' name='{{name}}'/>`
 })
 export class UploadComponent {
     @Input() name: string;

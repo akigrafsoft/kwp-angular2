@@ -8,13 +8,8 @@ import { AuthService } from './auth.service';
 
 @Component({
     selector: 'auth-logout',
-    template: `<form name="logoutForm" class="form-inline enabled"
-                    accept-charset="UTF-8" (ngSubmit)="logout()"
-                    #logoutForm="ngForm">
-                <button type="submit" class="btn btn-success"
-                    [disabled]="!logoutForm.form.valid">{{LANG=='fr' ? 'Déconnexion' : 'Logout'}}</button>
-                </form>
-                `
+    template: `<form name="logoutForm" class="form-inline enabled" accept-charset="UTF-8" (ngSubmit)="logout()" #logoutForm="ngForm">
+<button type="submit" class="btn btn-success" [disabled]="!logoutForm.form.valid">{{LANG=='fr' ? 'Déconnexion' : 'Logout'}}</button></form>`
 })
 export class AuthLogoutComponent {
     title = 'Logout';
