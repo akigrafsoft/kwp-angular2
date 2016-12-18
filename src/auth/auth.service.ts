@@ -58,7 +58,6 @@ export class AuthService {
     }
 
     public login(credentials: any): Observable<any> {
-
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.sessionId
@@ -81,9 +80,8 @@ export class AuthService {
         this.acceptAuthenticatedUser(data.sessionId, data.user, data.userRoles);
     }
 
-    //  public acceptAuthenticatedUser(sessionId: string, user: User): void;
+    // public acceptAuthenticatedUser(sessionId: string, user: User): void;
     // public acceptAuthenticatedUser(sessionId: string, user: User, userRoles: Array<Role>): void;
-
     public acceptAuthenticatedUser(sessionId: string, user: User, userRoles: Array<Role>): void {
         this.isLoggedIn = true;
         this.sessionId = sessionId;
@@ -96,24 +94,16 @@ export class AuthService {
         let headers = new Headers({
             'SessionId': this.sessionId
         });
-        //        return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
-        //            .toPromise()
-        //            .then(res => res.json())
-        //            .catch(this.handleError);
         return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
             .map(this.extractData)
             .catch(this.handleError);
     }
 
     public successLogout(): void {
-        window.localStorage
-            .removeItem(
-            'sessionId');
-
+        window.localStorage.removeItem('sessionId');
         this.isLoggedIn = false;
         this.sessionId = null;
         this.authenticatedUser = null;
-
         this.userAuthenticationSubject.next(this.authenticatedUser);
     }
 
@@ -131,21 +121,19 @@ export class AuthService {
             });
     }
 
-
     private doMapCheck(redirectUrl: string, response: any): boolean {
-
         let data = this.extractData(response);
         if (data.user) {
             if (!this.isLoggedIn)
                 this.acceptAuthenticatedUser(data.sessionId, data.user, data.userRoles);
-            console.info("AuthService::doMap(" + JSON.stringify(data) + ")|true");
+            console.info("AuthService::doMapCheck(" + JSON.stringify(data) + ")|true");
             return true;
         }
 
         // Store the attempted URL for redirecting
         this.redirectUrl = redirectUrl;
 
-        console.warn("AuthService::doMap(" + JSON.stringify(data) + ")|false");
+        console.warn("AuthService::doMapCheck(" + JSON.stringify(data) + ")|false");
         return false;
     }
 
@@ -188,14 +176,16 @@ export class AuthService {
      * Takes the promise response Object (do not provide it as json !)
      */
     public handleErrorResponse(response: Response) {
-        console.debug("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")");
+        //console.debug("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")");
         let status = +response.status;
         if (status == 403) {
+            // Forbidden
             // TODO : does not work well when the request was getting a ResponseType blob
             // maybe we should check for the type ? 
             //let error = response.json();
             //console.log("AuthService::handleError(status:" + status + ") error:" + JSON.stringify(error));
         } else if (status == 419) {
+            // Authentication Timeout
             this.sessionId = null;
             this.authenticatedUser = null;
             location.reload();

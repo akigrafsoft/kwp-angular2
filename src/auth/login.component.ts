@@ -41,7 +41,7 @@ export class AuthLoginComponent {
     }
 
     login(credentials) {
-        console.log("AuthLoginComponent::login(" + JSON.stringify(credentials) + ")");
+        //console.log("AuthLoginComponent::login(" + JSON.stringify(credentials) + ")");
         this.authService.login(credentials)
             .subscribe(
             json => this.handleLoginResponse(json),
@@ -49,7 +49,7 @@ export class AuthLoginComponent {
     }
 
     private handleLoginResponse(json: any) {
-        console.log("handleLoginResponse:" + JSON.stringify(json));
+        //console.log("handleLoginResponse:" + JSON.stringify(json));
         this.authService.successLogin(json);
         this.error = null;
 

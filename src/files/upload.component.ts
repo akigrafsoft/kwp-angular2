@@ -19,8 +19,7 @@ export class UploadComponent {
 
     @Output() onUploaded = new EventEmitter<any>();
 
-    constructor(private auth: AuthService) {
-    }
+    constructor(private authService: AuthService) { }
 
     onChange() {
         let files = this.elt_input.nativeElement.files;
@@ -53,22 +52,16 @@ export class UploadComponent {
 
         xhr.open('POST', this.uploadUrl);
         xhr.setRequestHeader('SessionId',
-            this.auth.sessionId);
+            this.authService.sessionId);
 
         xhr.onreadystatechange = () => {
-
-            console.log('kwpUpload::onreadystatechange readyState=' + xhr.readyState);
-
+            //console.debug('kwpUpload::onreadystatechange readyState=' + xhr.readyState);
             if (xhr.readyState === XMLHttpRequest.DONE) {
-
-                console.log('kwpUpload::onreadystatechange status=' + xhr.status);
-
                 if (xhr.status == 200) {
-                    console.log('kwpUpload::onreadystatechange emit:' + JSON.stringify(xhr.responseText));
+                    //console.debug('kwpUpload::onreadystatechange emit:' + JSON.stringify(xhr.responseText));
                     this.onUploaded.emit(JSON.parse(xhr.responseText));
                 } else {
-                    console
-                        .log('kwpUpload::onreadystatechange error');
+                    console.debug('kwpUpload::onreadystatechange error');
                 }
             }
         };

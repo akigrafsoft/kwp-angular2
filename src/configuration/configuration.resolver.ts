@@ -16,6 +16,7 @@ export class ConfigurationResolver implements Resolve<any> {
         private authService: AuthService) {
     }
 
+    // Override
     resolve(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
@@ -25,7 +26,7 @@ export class ConfigurationResolver implements Resolve<any> {
 
         if (typeof this.authService.sessionId !== 'undefined' && this.authService.sessionId != null) {
             sessionId = this.authService.sessionId;
-            console.log("ConfigurationResolver::resolve, this.auth.sessionId=" + sessionId);
+            //console.debug("ConfigurationResolver::resolve, this.auth.sessionId=" + sessionId);
             return null;
         }
 
@@ -33,14 +34,14 @@ export class ConfigurationResolver implements Resolve<any> {
             .getItem('sessionId') != null) {
             sessionId = window.localStorage
                 .getItem('sessionId');
-            console.log("ConfigurationResolver::resolve, localStorage.sessionId=" + sessionId);
+            //console.debug("ConfigurationResolver::resolve, localStorage.sessionId=" + sessionId);
         }
 
         return this.configurationService.getConfiguration(sessionId).then(response => this.handleResponse(response));
     }
 
     handleResponse(response) {
-        console.debug("ConfigurationResolver::handleResponse(" + JSON.stringify(response) + ")");
+        //console.debug("ConfigurationResolver::handleResponse(" + JSON.stringify(response) + ")");
 
         // sessionId
         window.localStorage

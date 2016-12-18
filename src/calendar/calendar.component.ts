@@ -15,28 +15,25 @@ export class CalendarComponent implements OnInit, DoCheck {
     calendarArray = new Array();
     calendarMonthIndex = 0;
 
-    @Input()
-    items: Array<any>;
+    @Input() items: Array<any>;
+    @Input() getDateTime: Function;
 
     // used to detect changes
     itemsSize;
 
-    @Input()
-    getDateTime: Function;
-
     constructor() {
-        console.debug("CalendarComponent::constructor()");
+        //console.debug("CalendarComponent::constructor()");
     }
 
     ngOnInit() {
-        console.debug("CalendarComponent::ngOnInit()");
+         //console.debug("CalendarComponent::ngOnInit()");
         this.itemsSize = this.items.length;
         this.buildCalendarArray(this.items);
     }
 
     buildCalendarArray(items: Array<any>) {
 
-        console.debug("CalendarComponent::buildCalendarArray()");
+         // console.debug("CalendarComponent::buildCalendarArray()");
 
         // First check array is not empty
         var arrayLength = this.items.length;
@@ -108,13 +105,13 @@ export class CalendarComponent implements OnInit, DoCheck {
 
         this.calendarArray = calendarArray;
 
-        console.debug("CalendarComponent::buildCalendarArray(), calendarArray=" + JSON.stringify(this.calendarArray));
+         //console.debug("CalendarComponent::buildCalendarArray(), calendarArray=" + JSON.stringify(this.calendarArray));
     }
 
     ngDoCheck() {
         //console.debug("CalendarComponent::ngDoCheck()");
         if (this.itemsSize !== this.items.length) {
-            console.debug("CalendarComponent::ngDoCheck() detected change on items");
+             //console.debug("CalendarComponent::ngDoCheck() detected change on items");
             this.itemsSize = this.items.length;
             this.buildCalendarArray(this.items);
         }

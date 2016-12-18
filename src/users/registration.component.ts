@@ -37,8 +37,7 @@ import { User } from './user';
 </div></div></div>
 <div class="form-group">
 <div class="col-sm-offset-2 col-lg-4 col-md-6 col-sm-10">
-<button type="submit" class="btn btn-default" [disabled]="!registrationForm.form.valid">Register</button></div></div>
-</form>`
+<button type="submit" class="btn btn-default" [disabled]="!registrationForm.form.valid">Register</button></div></div></form>`
 })
 export class RegistrationComponent {
 

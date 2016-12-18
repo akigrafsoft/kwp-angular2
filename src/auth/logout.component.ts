@@ -22,7 +22,7 @@ export class AuthLogoutComponent {
     }
 
     logout() {
-        console.log("AuthLogoutComponent::logout()");
+        //console.log("AuthLogoutComponent::logout()");
         this.auth.logout(this.auth.sessionId)
             .subscribe(
             data => this.handleLogoutResponse(data),
@@ -31,12 +31,12 @@ export class AuthLogoutComponent {
         //            .catch(error => this.handleLogoutErrorResponse(error));
     }
     private handleLogoutResponse(data: any) {
-        console.log("handleLogoutResponse:" + JSON.stringify(data));
+        //console.log("handleLogoutResponse:" + JSON.stringify(data));
         this.doLogout();
     }
     private handleLogoutErrorResponse(error: any) {
         this.error = error.json();
-        console.log("handleLogoutErrorResponse:" + JSON.stringify(this.error));
+        //console.log("handleLogoutErrorResponse:" + JSON.stringify(this.error));
         this.doLogout();
     }
 

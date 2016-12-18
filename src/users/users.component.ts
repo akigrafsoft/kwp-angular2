@@ -18,10 +18,9 @@ import { User } from './user';
     //    styleUrls: ['app/kwp/users/users.componens']
 
     styles: [`
-    .panel-title {
-        margin-right: 10px;
-    }
-    `],
+.panel-title {
+margin-right: 10px;
+}`],
     template: `<div>
 <div class="panel panel-default">
 <div class="panel-heading">
