@@ -57,9 +57,9 @@ margin-right: 10px;
 </tr>
 </table>
 <ul class="pagination">
-<li [class.disabled]="pagedList.currentPage == 0"><a aria-label="Previous" (click)="pagedList.prevPage()"> <span aria-hidden="true">&laquo;</span>
+<li [class.disabled]="pagedList.currentPage==0"><a aria-label="Previous" (click)="pagedList.prevPage()"> <span aria-hidden="true">&laquo;</span>
 </a></li>
-<li [class.disabled]="pagedList.currentPage >= (pagedList.nbPages-1)">
+<li [class.disabled]="pagedList.currentPage>=(pagedList.nbPages-1)">
 <a aria-label="Next" (click)="pagedList.nextPage()"> <span aria-hidden="true">&raquo;</span></a></li>
 </ul>
 </div></div><div class="error" *ngIf="error">{{error}}</div></div>`

@@ -48,6 +48,8 @@ export class ConfigurationResolver implements Resolve<any> {
             .setItem(
             'sessionId',
             response.sessionId);
+        // even if not logged in a GUEST session is given by getConfiguration
+        this.authService.sessionId = response.sessionId;
 
         // authenticatedUser
         if (response.user) {
