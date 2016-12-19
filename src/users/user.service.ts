@@ -19,7 +19,7 @@ export class UserService {
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
-        return this.http.post(encodeURI(this.baseUrl + '/' + user.username), JSON.stringify(user), { headers: headers })
+        return this.http.post(encodeURI(this.baseUrl + '/' + user.id), JSON.stringify(user), { headers: headers })
             .toPromise()
             .then(res => res.json())
             .catch(this.handleError);
@@ -40,17 +40,17 @@ export class UserService {
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
-        return this.http.put(encodeURI(this.baseUrl + '/' + user.username), JSON.stringify(user), { headers: headers })
+        return this.http.put(encodeURI(this.baseUrl + '/' + user.id), JSON.stringify(user), { headers: headers })
             .toPromise()
             .then(res => res.json())
             .catch(this.handleError);
     }
 
-    del(username: string) {
+    del(id: string) {
         let headers = new Headers({
             'SessionId': this.auth.sessionId
         });
-        return this.http.delete(encodeURI(this.baseUrl + '/' + username), { headers: headers })
+        return this.http.delete(encodeURI(this.baseUrl + '/' + id), { headers: headers })
             .toPromise()
             .then()
             .catch(this.handleError);

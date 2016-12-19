@@ -152,10 +152,10 @@ export class UserFormComponent implements OnInit {
                 console.debug("UserFormComponent::update() ok");
             }).catch(error => this.auth.handleErrorResponse(error));
         }
-
     }
 
     create(user: User) {
+        user.id = user.username;
         this.userService.create(user)
             .then(() => {
                 let link = ['activation'];
