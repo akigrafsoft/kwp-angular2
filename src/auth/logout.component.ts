@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 @Component({
     selector: 'auth-logout',
     template: `<form name="logoutForm" class="form-inline enabled" accept-charset="UTF-8" (ngSubmit)="logout()" #logoutForm="ngForm">
-<button type="submit" class="btn btn-success" [disabled]="!logoutForm.form.valid">{{LANG=='fr' ? 'Déconnexion' : 'Logout'}}</button></form>`
+<button id='logout-btn' type="submit" class="btn btn-success" [disabled]="!logoutForm.form.valid">{{LANG=='fr' ? 'Déconnexion' : 'Logout'}}</button></form>`
 })
 export class AuthLogoutComponent {
     title = 'Logout';
@@ -27,8 +27,6 @@ export class AuthLogoutComponent {
             .subscribe(
             data => this.handleLogoutResponse(data),
             error => this.error = error);
-        //            .then(response => this.handleLogoutResponse(response))
-        //            .catch(error => this.handleLogoutErrorResponse(error));
     }
     private handleLogoutResponse(data: any) {
         //console.log("handleLogoutResponse:" + JSON.stringify(data));

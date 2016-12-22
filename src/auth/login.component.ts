@@ -23,7 +23,7 @@ import { AuthService } from './auth.service';
 <input type="password" class="form-control" id="login-password" name="password" placeholder="{{LANG=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="credentials.password" aria-describedby="password-addon" required>
 </div></div>
 <div class="form-group">&nbsp;
-<button type="submit" class="btn btn-success" [disabled]="!loginForm.form.valid">{{LANG=='fr' ? 'Connexion' : 'Login'}}</button>
+<button id='login-btn' type="submit" class="btn btn-success" [disabled]="!loginForm.form.valid">{{LANG=='fr' ? 'Connexion' : 'Login'}}</button>
 </div></form>
 <div *ngIf="error"><span class="alert alert-warning">{{error.errorReason}}</span></div></div>`
 })
