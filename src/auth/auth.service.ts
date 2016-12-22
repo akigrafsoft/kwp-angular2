@@ -16,16 +16,14 @@ import { Role } from './role';
 @Injectable()
 export class AuthService {
 
-    public sessionId: string;
-
-    // All existing role names...
-    roles: Array<string>;
-
     public isLoggedIn: boolean = false;
+    public sessionId: string;
     public authenticatedUser: User = null;
     public authenticatedRoles: Array<Role>;
 
-    // store the URL so we can redirect after logging in
+    // All existing role names...
+    roles: Array<string>;
+    // Store the URL so we can redirect after logging in
     redirectUrl: string;
 
     private userAuthenticationSubject = new Subject<User>();
@@ -98,12 +96,16 @@ export class AuthService {
             .catch(this.handleError);
     }
 
-    public successLogout(): void {
+    private cleanUp() {
         window.localStorage.removeItem('sessionId');
         this.isLoggedIn = false;
         this.sessionId = null;
         this.authenticatedUser = null;
         this.userAuthenticationSubject.next(this.authenticatedUser);
+    }
+
+    public successLogout(): void {
+        this.cleanUp();
     }
 
     /**
@@ -185,14 +187,13 @@ export class AuthService {
             //console.log("AuthService::handleError(status:" + status + ") error:" + JSON.stringify(error));
         } else if (status == 419) {
             // Authentication Timeout
-            this.sessionId = null;
-            this.authenticatedUser = null;
+            this.cleanUp();
             location.reload();
         } else
         { console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status); }
     }
 
-    private handleError(error: Response | any) {
+    private handleError(error: Response | any): Observable<string> {
         // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;
         if (error instanceof Response) {

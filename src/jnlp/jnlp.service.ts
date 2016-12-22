@@ -13,7 +13,7 @@ export class JnlpService {
 
     constructor(private http: Http, private authService: AuthService, private baseUrl: string) {
         if (typeof this.baseUrl === 'undefined') {
-            console.debug('JnlpService.baseUrl using default');
+            console.warn('JnlpService.baseUrl using default');
             this.baseUrl = 'jnlp';
         }
     }
