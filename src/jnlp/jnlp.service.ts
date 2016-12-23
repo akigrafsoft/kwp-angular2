@@ -11,7 +11,10 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class JnlpService {
 
-    constructor(private http: Http, private authService: AuthService, private baseUrl: string) {
+    constructor(
+        private http: Http,
+        private authService: AuthService,
+        private baseUrl: string) {
         if (typeof this.baseUrl === 'undefined') {
             console.warn('JnlpService.baseUrl using default');
             this.baseUrl = 'jnlp';

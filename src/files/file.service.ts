@@ -11,14 +11,22 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class FileService {
 
-    private baseUrl = 'updwnld';  // URL to web api
+    private default_baseUrl = 'updwnld';  // URL to web api
 
-    constructor(private http: Http, private auth: AuthService) { }
+    constructor(
+        private http: Http,
+        private authService: AuthService,
+        private baseUrl: string) {
+        if (typeof this.baseUrl === 'undefined') {
+            console.warn('FileService.baseUrl using default<' + this.default_baseUrl + '>');
+            this.baseUrl = this.default_baseUrl;
+        }
+    }
 
     getFile(filename: string) {
 
         let headers = new Headers({
-            'SessionId': this.auth.sessionId
+            'SessionId': this.authService.sessionId
         });
 
         return this.http.get(encodeURI(this.baseUrl + '/' + filename), { headers: headers })
