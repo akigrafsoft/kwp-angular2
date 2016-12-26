@@ -17,8 +17,6 @@ export class PagedListService {
         listId, searchCriteriasBase, searchCriterias,
         sortCriteria, reverse, fromIndex, pageSize) {
 
-        console.log("PagedListService::createList()");
-
         let request = {
             "listFactory": listFactory,
             "listFactoryParams": listFactoryParams,
@@ -40,7 +38,7 @@ export class PagedListService {
     }
 
     refreshList(listId) {
-        console.log("PagedListService::refreshList()");
+        //console.log("PagedListService::refreshList()");
         let request = {};
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',

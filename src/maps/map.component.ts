@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Component, OnInit, Input } from '@angular/core';
-import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 declare var google: any;
 
@@ -30,7 +30,6 @@ export class MapComponent implements OnInit {
     //'7+rue+condorcet+75009+paris'
 
     public refreshLocation(location: any) {
-
         if (this.marker !== null)
             this.marker.setMap(null);
 
@@ -72,23 +71,27 @@ export class MapComponent implements OnInit {
 
     ngOnInit() {
 
+        if (typeof google === 'undefined') {
+            console.error("MapComponent|Google API not loaded");
+            return;
+        }
+
         var l_location: any;
 
         if (typeof this.location !== 'undefined' && this.location !== null) {
-            console.debug("MapComponent::ngOnInit() by location");
+            //console.debug("MapComponent::ngOnInit() by location");
             this.createMap(this.location);
             this.refreshLocation(this.location);
         }
         // otherwise to by address
         else if (typeof this.address !== 'undefined' && this.address !== null) {
-            console.debug("MapComponent::ngOnInit() by address");
+            //console.debug("MapComponent::ngOnInit() by address");
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode(
                 {
                     address: this.address.replace(' ', '+'),
                     region: 'no'
                 }, function(results, status) {
-
                     if (status !== "OK") {
                         console.error("Map::geocode() returned status=" + status);
                         return;

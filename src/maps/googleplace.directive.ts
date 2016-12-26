@@ -1,5 +1,5 @@
-import {Directive, ElementRef, EventEmitter, Output} from '@angular/core';
-import {NgModel} from '@angular/forms';
+import { Directive, ElementRef, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { NgModel } from '@angular/forms';
 
 declare var google: any;
 
@@ -10,18 +10,26 @@ declare var google: any;
         '(input)': 'onInputChange()'
     }
 })
-export class GoogleplaceDirective {
+export class GoogleplaceDirective implements OnInit {
+
+    @Input('googleplace') options: any;
     @Output() setAddress: EventEmitter<any> = new EventEmitter();
-    modelValue: any;
+
     autocomplete: any;
     private _el: HTMLElement;
 
-
-    constructor(el: ElementRef, private model: NgModel) {
+    constructor(el: ElementRef) {
         this._el = el.nativeElement;
-        this.modelValue = this.model;
-        var input = this._el;
-        this.autocomplete = new google.maps.places.Autocomplete(input, {});
+    }
+
+    ngOnInit() {
+        if (typeof google === 'undefined') {
+            console.error("GoogleplaceDirective|Google API not loaded");
+            return;
+        }
+
+        console.log("GoogleplaceDirective|" + JSON.stringify(this.options));
+        this.autocomplete = new google.maps.places.Autocomplete(this._el, this.options);
         google.maps.event.addListener(this.autocomplete, 'place_changed', () => {
             var place = this.autocomplete.getPlace();
             this.invokeEvent(place);
@@ -31,7 +39,6 @@ export class GoogleplaceDirective {
     invokeEvent(place: Object) {
         this.setAddress.emit(place);
     }
-
 
     onInputChange() {
     }
