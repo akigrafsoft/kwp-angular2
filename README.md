@@ -14,6 +14,8 @@ Run `find ./lib -type f -name "*.ts" -exec sed -i 's#/// <reference types="core-
 
 Run `npm pack`
 
+npm run build;find ./lib -type f -name "*.ts" -exec sed -i 's#/// <reference types="core-js" />##g' {} +;npm pack
+
 It will create a tgz file like kwp-angular2-1.0.0.tgz
 
 ## Install it locally
