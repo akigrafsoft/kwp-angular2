@@ -24,7 +24,7 @@ export class AuthService {
     // All existing role names...
     roles: Array<string>;
     // Store the URL so we can redirect after logging in
-    redirectUrl: string;
+    redirectUrl: string = null;
 
     private userAuthenticationSubject = new Subject<User>();
     public userAuthentication$ = this.userAuthenticationSubject.asObservable();
@@ -41,6 +41,14 @@ export class AuthService {
 
     public getAllRolesNames(): Array<string> {
         return this.roles;
+    }
+
+    public setRedirectUrl(redirectUrl: string) {
+        this.redirectUrl = redirectUrl;
+    }
+
+    public getRedirectUrl(): string {
+        return this.redirectUrl;
     }
 
     private extractData(res: Response): any {

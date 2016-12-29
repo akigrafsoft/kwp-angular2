@@ -1,8 +1,8 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
+//import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 
@@ -15,32 +15,29 @@ export class AuthLogoutComponent {
     title = 'Logout';
 
     @Input() LANG = 'en';
+    @Output() onLogout = new EventEmitter<boolean>();
 
     error: any;
 
-    constructor(private router: Router, private auth: AuthService) {
+    constructor(
+        //private router: Router,
+        private authService: AuthService) {
     }
 
     logout() {
         //console.log("AuthLogoutComponent::logout()");
-        this.auth.logout(this.auth.sessionId)
+        this.authService.logout(this.authService.sessionId)
             .subscribe(
-            data => this.handleLogoutResponse(data),
-            error => this.error = error);
-    }
-    private handleLogoutResponse(data: any) {
-        //console.log("handleLogoutResponse:" + JSON.stringify(data));
-        this.doLogout();
-    }
-    private handleLogoutErrorResponse(error: any) {
-        this.error = error.json();
-        //console.log("handleLogoutErrorResponse:" + JSON.stringify(this.error));
-        this.doLogout();
-    }
-
-    private doLogout() {
-        this.auth.successLogout();
-        this.router.navigate(['/']);
+            data => {
+                this.authService.successLogout();
+                this.onLogout.emit(true);
+                // DO THIS in onLogout implementation
+                //this.router.navigate(['/']);
+            },
+            error => {
+                this.authService.successLogout();
+                this.error = error;
+            });
     }
 
 }

@@ -1,8 +1,8 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
+//import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 
@@ -37,7 +37,11 @@ export class AuthLoginComponent {
 
     @Input() LANG = 'en';
 
-    constructor(private router: Router, private authService: AuthService) {
+    @Output() onLogin = new EventEmitter<boolean>();
+
+    constructor(
+        //private router: Router,
+        private authService: AuthService) {
     }
 
     login(credentials) {
@@ -45,7 +49,10 @@ export class AuthLoginComponent {
         this.authService.login(credentials)
             .subscribe(
             json => this.handleLoginResponse(json),
-            error => this.error = error);
+            error => {
+                this.error = error;
+                this.onLogin.emit(false);
+            });
     }
 
     private handleLoginResponse(json: any) {
@@ -53,8 +60,11 @@ export class AuthLoginComponent {
         this.authService.successLogin(json);
         this.error = null;
 
+        this.onLogin.emit(true);
+
         // Redirect the user
-        let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/';
-        this.router.navigate([redirect]);
+        // DO THIS IN onLogin implementation
+        //let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/';
+        //this.router.navigate([redirect]);
     }
 }
