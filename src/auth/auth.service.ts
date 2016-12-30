@@ -27,7 +27,7 @@ export class AuthService {
     redirectUrl: string = null;
 
     private userAuthenticationSubject = new Subject<User>();
-    public userAuthentication$ = this.userAuthenticationSubject.asObservable();
+    private userAuthentication$ = this.userAuthenticationSubject.asObservable();
 
     constructor(private http: Http, private baseUrl: string) { }
 
@@ -49,6 +49,10 @@ export class AuthService {
 
     public getRedirectUrl(): string {
         return this.redirectUrl;
+    }
+
+    public observeUserAuthentication(): Observable<User> {
+        return this.userAuthentication$;
     }
 
     private extractData(res: Response): any {
