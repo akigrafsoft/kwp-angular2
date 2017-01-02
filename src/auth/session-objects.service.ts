@@ -26,6 +26,23 @@ export class SessionObjectsService {
         }
     }
 
+    public setSessionObject(key: string, object: any): Observable<any> {
+        let headers = new Headers({
+            'Content-Type': 'application/json;charset=UTF-8',
+            'SessionId': this.authService.sessionId
+        });
+
+        return this.http.post(encodeURI(this.baseUrl),
+            JSON.stringify({
+                keyvalues: [
+                    { 'key': key, value: object }
+                ]
+            }),
+            { headers: headers })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
     public getSessionObject(key: string): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',

@@ -18,6 +18,8 @@ export class CalendarComponent implements OnInit, DoCheck {
     @Input() items: Array<any>;
     @Input() getDateTime: Function;
 
+    @Input() showDate: Date = null;
+
     // used to detect changes
     itemsSize;
 
@@ -26,16 +28,16 @@ export class CalendarComponent implements OnInit, DoCheck {
     }
 
     ngOnInit() {
-         //console.debug("CalendarComponent::ngOnInit()");
+        //console.debug("CalendarComponent::ngOnInit()");
         this.itemsSize = this.items.length;
         this.buildCalendarArray(this.items);
     }
 
     buildCalendarArray(items: Array<any>) {
 
-         // console.debug("CalendarComponent::buildCalendarArray()");
+        // console.debug("CalendarComponent::buildCalendarArray()");
 
-        // First check array is not empty
+        // First check array emptyness
         var arrayLength = this.items.length;
         if (arrayLength === 0) {
             this.calendarArray = new Array();
@@ -78,6 +80,14 @@ export class CalendarComponent implements OnInit, DoCheck {
                 calendarArray.push(currentMonth);
                 currentMonth = new Array();
                 //console.debug("CalendarComponent::buildCalendarArray(), changeMonth at i=" + i);
+                if (this.showDate != null) {
+                    var firstDayOfMonth: Date = new Date(l_itemDate.getFullYear(), l_itemDate.getMonth(), 1);
+                    //console.debug("CalendarComponent::buildCalendarArray(), showDate=" + this.showDate + ", firstDayOfMonth=" + firstDayOfMonth);
+                    if (this.showDate >= firstDayOfMonth) {
+                        //console.debug("CalendarComponent::buildCalendarArray(), showDate=" + this.showDate + " >= firstDayOfMonth=" + firstDayOfMonth);
+                        this.calendarMonthIndex = calendarArray.length;
+                    }
+                }
             }
             // Date.getDate returns day of month
             else if ((l_itemDate.getDate() > previousDate.getDate()) && (this.toFrenchDayOfWeek(l_itemDate.getDay()) <= this.toFrenchDayOfWeek(previousDate.getDay()) || (l_itemDate.getDate() - previousDate.getDate() >= 7))) {
@@ -105,13 +115,13 @@ export class CalendarComponent implements OnInit, DoCheck {
 
         this.calendarArray = calendarArray;
 
-         //console.debug("CalendarComponent::buildCalendarArray(), calendarArray=" + JSON.stringify(this.calendarArray));
+        //console.debug("CalendarComponent::buildCalendarArray(), calendarArray=" + JSON.stringify(this.calendarArray));
     }
 
     ngDoCheck() {
         //console.debug("CalendarComponent::ngDoCheck()");
         if (this.itemsSize !== this.items.length) {
-             //console.debug("CalendarComponent::ngDoCheck() detected change on items");
+            //console.debug("CalendarComponent::ngDoCheck() detected change on items");
             this.itemsSize = this.items.length;
             this.buildCalendarArray(this.items);
         }

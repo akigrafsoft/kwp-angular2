@@ -150,8 +150,8 @@ export class AuthService {
         return false;
     }
 
-    public isAuthenticated(userName: string): boolean {
-        return (this.authenticatedUser && this.authenticatedUser.username === userName);
+    public isAuthenticated(userId: string): boolean {
+        return (this.authenticatedUser && this.authenticatedUser.id === userId);
     }
 
     public isAllowed(i_right: string): boolean {

@@ -11,45 +11,19 @@ import { User } from './user';
 @Component({
     selector: 'kwp-registration',
     //    templateUrl: 'app/kwp/users/registration.component.html',
-    //    template: `<form name="userRegistrationForm" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()" #registrationForm="ngForm">
-    //<div class="form-group">
-    //<label for="username" class="col-sm-2 control-label">Username</label>
-    //<div class="col-lg-4 col-md-6 col-sm-10">
-    //<input name="username" [(ngModel)]="user.username" type="text" class="form-control" placeholder="username" id="username" required></div></div>
-    //<div class="form-group">
-    //<label for="email" class="col-sm-2 control-label">Email</label>
-    //<div class="col-lg-4 col-md-6 col-sm-10">
-    //<input name="email" [(ngModel)]="user.email" type="email" class="form-control" placeholder="email" id="email" required></div></div>
-    //<div class="form-group">
-    //<label for="firstName" class="col-sm-2 control-label">FirstName</label>
-    //<div class="col-lg-4 col-md-6 col-sm-10">
-    //<input name="firstName" [(ngModel)]="user.firstName" type="text" class="form-control" placeholder="FirstName" id="firstName" required></div></div>
-    //<div class="form-group">
-    //<label for="lastName" class="col-sm-2 control-label">LastName</label>
-    //<div class="col-lg-4 col-md-6 col-sm-10">
-    //<input name="lastName" [(ngModel)]="user.lastName" type="text" class="form-control" placeholder="LastName" id="lastName" required></div></div>
-    //<div class="form-group">
-    //<label for="password" class="col-sm-2 control-label">Password</label>
-    //<div class="col-lg-4 col-md-6 col-sm-10">
-    //<div id="password">
-    //<input name="pw1" [(ngModel)]="user.password" type="password" class="form-control" placeholder="password" required>
-    //<input name="pw2" [(ngModel)]="password2" type="password" class="form-control" placeholder="password" required>
-    //</div></div></div>
-    //<div class="form-group">
-    //<div class="col-sm-offset-2 col-lg-4 col-md-6 col-sm-10">
-    //<button type="submilass="btn btn-default" [disabled]="!registrationForm.form.valid">Register</button></div></div></form>`
-
     template: `<form name="userRegistrationForm" class="form-horizontal"
-    accept-charset="UTF-8" (ngSubmit)="onSubmit()"
-    #registrationForm="ngForm">
+    accept-charset="UTF-8" (ngSubmit)="onSubmit()" #f="ngForm">
     <div class="form-group">
         <label for="username">{{LANG=='fr' ? 'Nom utilisateur' : 'username'}}</label> <input name="username"
-            [(ngModel)]="user.username" type="text" class="form-control"
-            placeholder="{{LANG=='fr' ? 'nom utilisateur' : 'username'}}" id="username" required>
+            [(ngModel)]="user.username" type="text" pattern="[a-zA-Z0-9.-_]+" class="form-control"
+            placeholder="{{LANG=='fr' ? 'nomUtilisateur (sans espaces)' : 'username'}}" id="username" required #username="ngModel">
+        <div class="alert alert-danger" [hidden]="username.valid || (username.pristine && !f.submitted)">
+            {{LANG=='fr' ? "Le nom utilisateur est requis, il ne doit pas contenir d'espaces" : 'Username is required (no spaces)'}}
+        </div>
     </div>
     <div class="form-group">
         <label for="email">Email</label> <input name="email"
-            [(ngModel)]="user.email" type="email" class="form-control"
+            [(ngModel)]="user.email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" class="form-control"
             placeholder="email" id="email" required>
     </div>
     <div class="form-group">
@@ -64,18 +38,24 @@ import { User } from './user';
     </div>
     <div class="form-group">
         <label for="password">{{LANG=='fr' ? 'Mot de passe' : 'Password'}}</label> <input name="pw1"
-            [(ngModel)]="user.password" type="password" class="form-control"
-            placeholder="{{LANG=='fr' ? 'mot de passe' : 'password'}}" id="pw1" required>
+            [(ngModel)]="user.password" type="password" pattern=".{6,}" class="form-control"
+            placeholder="{{LANG=='fr' ? 'mot de passe (6 caractères min)' : 'password (6 characters min)'}}" id="pw1" required>
     </div>
     <div class="form-group">
         <label for="pw2">{{LANG=='fr' ? 'Confirmation mot de passe' : 'Retype password'}}</label><input name="pw2"
-            [(ngModel)]="password2" type="password" class="form-control"
-            placeholder="{{LANG=='fr' ? 'vérifier mot de passe' : 'verify password'}}" id="pw2" required>
+            [(ngModel)]="password2" type="password" pattern="{{user.password}}" class="form-control"
+            placeholder="{{LANG=='fr' ? 'vérifier mot de passe' : 'verify password'}}" id="pw2" required #pw2="ngModel">
+        <div class="alert alert-danger" [hidden]="pw2.valid || (pw2.pristine && !f.submitted)">
+            {{LANG=='fr' ? 'Les mots de passe doivent être les mêmes' : 'Passwords should match'}}
+        </div>
     </div>
     <button type="submit" class="btn btn-default"
-        [disabled]="!registrationForm.form.valid">{{LANG=='fr' ? 'Valider' : 'Register'}}</button>
-</form>`
-
+        [disabled]="!f.form.valid">{{LANG=='fr' ? 'Valider' : 'Register'}}</button>
+</form>`,
+    styles: [
+        `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
+        `.ng-invalid:not(form)  {border-left: 5px solid #a94442;`
+    ]
 })
 export class RegistrationComponent {
 
