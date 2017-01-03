@@ -9,22 +9,23 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { AuthService } from './auth.service';
+import { ServiceUtils } from '../services/service-utils';
 
 @Injectable()
 export class SessionObjectsService {
 
     constructor(private http: Http, private authService: AuthService, private baseUrl: string) { }
 
-    private extractData(res: Response): any {
-        //console.debug("SessionObjectsService::extractData|" + res);
-        try {
-            let body = res.json();
-            return body;
-        } catch (e) {
-            console.error("SessionObjectsService::extractData|" + res);
-            return {};
-        }
-    }
+    //    private extractData(res: Response): any {
+    //        //console.debug("SessionObjectsService::extractData|" + res);
+    //        try {
+    //            let body = res.json();
+    //            return body;
+    //        } catch (e) {
+    //            console.error("SessionObjectsService::extractData|" + res);
+    //            return {};
+    //        }
+    //    }
 
     public setSessionObject(key: string, object: any): Observable<any> {
         let headers = new Headers({
@@ -39,8 +40,11 @@ export class SessionObjectsService {
                 ]
             }),
             { headers: headers })
-            .map(this.extractData)
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
     public getSessionObject(key: string): Observable<any> {
@@ -54,8 +58,11 @@ export class SessionObjectsService {
                 'keys': [key]
             }),
             { headers: headers })
-            .map(this.extractData)
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
     public getSessionObjects(keys: Array<string>): Observable<any> {
@@ -68,28 +75,31 @@ export class SessionObjectsService {
                 'keys': keys
             }),
             { headers: headers })
-            .map(this.extractData)
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
-    private handleError(error: Response | any) {
-        // In a real world app, we might use a remote logging infrastructure
-        let errMsg: string;
-        if (error instanceof Response) {
-            let body;
-            try {
-                body = error.json();
-            }
-            catch (e) {
-                body = '';
-            }
-
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.error("SessionObjectsService::handleError|" + errMsg);
-        return Observable.throw(errMsg + "(SessionObjectsService)");
-    }
+    //    private handleError(error: Response | any): Observable<Response> | Observable<any> {
+    //        // In a real world app, we might use a remote logging infrastructure
+    //        let errMsg: string;
+    //        if (error instanceof Response) {
+    //            let body:any;
+    //            try {
+    //                body = error.json();
+    //            }
+    //            catch (e) {
+    //                body = '';
+    //            }
+    //
+    //            const err = body.error || JSON.stringify(body);
+    //            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    //        } else {
+    //            errMsg = error.message ? error.message : error.toString();
+    //        }
+    //        console.error("SessionObjectsService::handleError|" + errMsg);
+    //        return Observable.throw(errMsg + "(SessionObjectsService)");
+    //    }
 }

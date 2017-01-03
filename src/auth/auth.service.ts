@@ -10,6 +10,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
 import { Subject }    from 'rxjs/Subject';
 
+import { ServiceUtils } from '../services/service-utils';
 import { User } from '../users/user';
 import { Role } from './role';
 
@@ -55,17 +56,6 @@ export class AuthService {
         return this.userAuthentication$;
     }
 
-    private extractData(res: Response): any {
-        //console.debug("AuthService::extractData|" + res);
-        try {
-            let body = res.json();
-            return body;
-        } catch (e) {
-            console.error("AuthService::extractData|" + res);
-            return {};
-        }
-    }
-
     public login(credentials: any): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
@@ -76,8 +66,12 @@ export class AuthService {
         //            .then(this.extractData)
         //            .catch(this.handleError);
         return this.http.post(this.baseUrl, JSON.stringify(credentials), { headers: headers })
-            .map(this.extractData)
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            //.catch(this.handleError);
+            .catch(response => {
+                this.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
     public successLogin(data: any): void {
@@ -99,13 +93,17 @@ export class AuthService {
         this.userAuthenticationSubject.next(this.authenticatedUser);
     }
 
-    logout(sessionId: string) {
+    logout(sessionId: string): Observable<any> {
         let headers = new Headers({
             'SessionId': this.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
-            .map(this.extractData)
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            //.catch(this.handleError);
+            .catch(response => {
+                this.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
     private cleanUp() {
@@ -135,7 +133,7 @@ export class AuthService {
     }
 
     private doMapCheck(redirectUrl: string, response: any): boolean {
-        let data = this.extractData(response);
+        let data = ServiceUtils.extractData(response);
         if (data.user) {
             if (!this.isLoggedIn)
                 this.acceptAuthenticatedUser(data.sessionId, data.user, data.userRoles);
@@ -205,24 +203,24 @@ export class AuthService {
         { console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status); }
     }
 
-    private handleError(error: Response | any): Observable<string> {
-        // In a real world app, we might use a remote logging infrastructure
-        let errMsg: string;
-        if (error instanceof Response) {
-            let body;
-            try {
-                body = error.json();
-            }
-            catch (e) {
-                body = '';
-            }
-
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.error("AuthService::handleError|" + errMsg);
-        return Observable.throw(errMsg + "(AuthService)");
-    }
+    //    private handleError(error: Response | any): Observable<string> {
+    //        // In a real world app, we might use a remote logging infrastructure
+    //        let errMsg: string;
+    //        if (error instanceof Response) {
+    //            let body;
+    //            try {
+    //                body = error.json();
+    //            }
+    //            catch (e) {
+    //                body = '';
+    //            }
+    //
+    //            const err = body.error || JSON.stringify(body);
+    //            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    //        } else {
+    //            errMsg = error.message ? error.message : error.toString();
+    //        }
+    //        console.error("AuthService::handleError|" + errMsg);
+    //        return Observable.throw(errMsg + "(AuthService)");
+    //    }
 }

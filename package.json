@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"angular-cli": {
+		
 	},
 	"scripts": {
 		"start": "ng serve",
@@ -43,6 +44,8 @@
 		"pagedlist.d.ts",
 		"pipes.js",
 		"pipes.d.ts",
+		"services.js",
+		"services.d.ts",
 		"users.js",
 		"users.d.ts"
 	],

@@ -5,6 +5,7 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 //import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
+import { Error } from '../services/error';
 
 @Component({
     selector: 'auth-login',
@@ -25,19 +26,15 @@ import { AuthService } from './auth.service';
 <div class="form-group">&nbsp;
 <button id='login-btn' type="submit" class="btn btn-success" [disabled]="!loginForm.form.valid">{{LANG=='fr' ? 'Connexion' : 'Login'}}</button>
 </div></form>
-<div *ngIf="error"><span class="alert alert-warning">{{error.errorReason}}</span></div></div>`
+<div *ngIf="error"><span class="alert alert-warning" title="{{error.code}}">{{error.reason}}</span></div></div>`
 })
 export class AuthLoginComponent {
 
-    title = 'Login';
+    @Input() LANG = 'en';
+    @Output() onLogin = new EventEmitter<boolean>();
 
     credentials = {};
-
-    error: any;
-
-    @Input() LANG = 'en';
-
-    @Output() onLogin = new EventEmitter<boolean>();
+    private error: Error = null;
 
     constructor(
         //private router: Router,
@@ -50,9 +47,19 @@ export class AuthLoginComponent {
             .subscribe(
             json => this.handleLoginResponse(json),
             error => {
-                this.error = error;
+                if (error instanceof Error) {
+                    this.error = error;
+                    setTimeout(() => {
+                        this.error = null;
+                    }, 3000);
+                }
+                else {
+                    console.error("AuthLoginComponent::login|" + error);
+                    this.error = Error.build(-1, error);
+                }
                 this.onLogin.emit(false);
-            });
+            }
+            );
     }
 
     private handleLoginResponse(json: any) {
