@@ -22,19 +22,20 @@ export class ConfigurationResolver implements Resolve<any> {
         state: RouterStateSnapshot
     ): Observable<any> | Promise<any> | any {
 
-        let sessionId: string = null;
-
         if (typeof this.authService.sessionId !== 'undefined' && this.authService.sessionId != null) {
-            sessionId = this.authService.sessionId;
+            //sessionId = this.authService.sessionId;
             //console.debug("ConfigurationResolver::resolve, this.auth.sessionId=" + sessionId);
             return null;
         }
 
-        if (window.localStorage
-            .getItem('sessionId') != null) {
-            sessionId = window.localStorage
-                .getItem('sessionId');
-            //console.debug("ConfigurationResolver::resolve, localStorage.sessionId=" + sessionId);
+        let sessionId: string = null;
+
+        if (window.localStorage.getItem('sessionId') != null) {
+            sessionId = window.localStorage.getItem('sessionId');
+            console.debug("ConfigurationResolver::resolve, localStorage.sessionId=" + sessionId);
+        }
+        else {
+            console.warn("ConfigurationResolver::resolve|no localStorage sessionId found");
         }
 
         return this.configurationService.getConfiguration(sessionId).then(response => this.handleResponse(response));
@@ -44,10 +45,7 @@ export class ConfigurationResolver implements Resolve<any> {
         //console.debug("ConfigurationResolver::handleResponse(" + JSON.stringify(response) + ")");
 
         // sessionId
-        window.localStorage
-            .setItem(
-            'sessionId',
-            response.sessionId);
+        window.localStorage.setItem('sessionId', response.sessionId);
         // even if not logged in a GUEST session is given by getConfiguration
         this.authService.sessionId = response.sessionId;
 
