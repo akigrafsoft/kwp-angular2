@@ -15,7 +15,8 @@ export class GoogleplaceDirective implements OnInit {
     @Input('googleplace') options: any;
     @Output() setAddress: EventEmitter<any> = new EventEmitter();
 
-    autocomplete: any;
+    //autocomplete: any;
+    //searchBox: any;
     private _el: HTMLElement;
 
     constructor(el: ElementRef) {
@@ -29,11 +30,26 @@ export class GoogleplaceDirective implements OnInit {
         }
 
         console.log("GoogleplaceDirective|" + JSON.stringify(this.options));
-        this.autocomplete = new google.maps.places.Autocomplete(this._el, this.options);
-        google.maps.event.addListener(this.autocomplete, 'place_changed', () => {
-            var place = this.autocomplete.getPlace();
+        var autocomplete = new google.maps.places.Autocomplete(this._el, this.options);
+        google.maps.event.addListener(autocomplete, 'place_changed', () => {
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                console.warn("Autocomplete's returned place contains no geometry");
+                this.invokeEvent(null);
+                return;
+            }
             this.invokeEvent(place);
         });
+
+        // search box actually does not take same option and does not allow to restrict...
+        //        var searchBox = new google.maps.places.SearchBox(this._el, this.options);
+        //        google.maps.event.addListener(searchBox, 'place_changed', () => {
+        //            var place = searchBox.getPlaces()[0];
+        //            console.info("GoogleplaceDirective|place="+JSON.stringify(place));
+        //            if (!place.geometry) return;
+        //            this.invokeEvent(place);
+        //        });
+
     }
 
     invokeEvent(place: Object) {
