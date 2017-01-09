@@ -20,7 +20,7 @@ import { User } from './user';
 </div></div>
 <div class="form-group" *ngIf="!newUser">
 <label for="activationTime" class="col-sm-2 control-label">ActivationTime</label>
-<div class="col-lg-4 col-md-6 col-sm-10"><span id="activationTime">{{user.activationTime}}</span></div>
+<div class="col-lg-4 col-md-6 col-sm-10"><span id="activationTime">{{user.activationTimeMillis}}</span></div>
 </div>
 <div class="form-group">
 <label for="email" class="col-sm-2 control-label">Email</label>

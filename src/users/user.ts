@@ -9,7 +9,7 @@ export class User {
     public lastName: string;
     public address: any;
     public roles: string[];
-    public activationTime: string;
+    public activationTimeMillis: string;
     public email: string;
 
     //lastSuccessfulLoginTime
