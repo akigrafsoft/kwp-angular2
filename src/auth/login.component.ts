@@ -64,7 +64,9 @@ export class AuthLoginComponent {
 
     private handleLoginResponse(json: any) {
         //console.log("handleLoginResponse:" + JSON.stringify(json));
-        this.authService.successLogin(json);
+        this.authService.setSessionId(json.sessionId);
+        this.authService.setAuthenticatedUser(json.user, json.userRoles);
+
         this.error = null;
 
         this.onLogin.emit(true);

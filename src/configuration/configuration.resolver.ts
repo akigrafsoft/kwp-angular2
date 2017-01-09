@@ -22,7 +22,7 @@ export class ConfigurationResolver implements Resolve<any> {
         state: RouterStateSnapshot
     ): Observable<any> | Promise<any> | any {
 
-        if (typeof this.authService.sessionId !== 'undefined' && this.authService.sessionId != null) {
+        if (typeof this.authService.sessionId !== 'undefined' && this.authService.sessionId !== null) {
             //sessionId = this.authService.sessionId;
             //console.debug("ConfigurationResolver::resolve, this.auth.sessionId=" + sessionId);
             return null;
@@ -30,34 +30,33 @@ export class ConfigurationResolver implements Resolve<any> {
 
         let sessionId: string = null;
 
-        if (window.localStorage.getItem('sessionId') != null) {
-            sessionId = window.localStorage.getItem('sessionId');
-            console.debug("ConfigurationResolver::resolve, localStorage.sessionId=" + sessionId);
+        if (window.localStorage.getItem(AuthService.KEY_SESSION_ID) !== null) {
+            sessionId = window.localStorage.getItem(AuthService.KEY_SESSION_ID);
+            console.debug("ConfigurationResolver::resolve|localStorage sessionId=" + sessionId);
         }
         else {
-            console.warn("ConfigurationResolver::resolve|no localStorage sessionId found");
+            console.warn("ConfigurationResolver::resolve|localStorage sessionId not found");
         }
 
-        return this.configurationService.getConfiguration(sessionId).then(response => this.handleResponse(response));
+        return this.configurationService.getConfiguration(sessionId).then(data => this.handleResponse(data));
     }
 
-    handleResponse(response) {
+    handleResponse(data) {
         //console.debug("ConfigurationResolver::handleResponse(" + JSON.stringify(response) + ")");
 
         // sessionId
-        window.localStorage.setItem('sessionId', response.sessionId);
-        // even if not logged in a GUEST session is given by getConfiguration
-        this.authService.sessionId = response.sessionId;
+        //even if not logged in, a GUEST session is given by getConfiguration
+        this.authService.setSessionId(data.sessionId);
 
         // authenticatedUser
-        if (response.user) {
-            if (!this.authService.isLoggedIn) {
-                this.authService.acceptAuthenticatedUser(response.sessionId, response.user, response.userRoles);
-            }
+        if (data.user) {
+            //if (!this.authService.isLoggedIn) {
+            this.authService.setAuthenticatedUser(data.user, data.userRoles);
+            // }
         }
 
         // roles
-        this.authService.roles = response.roles;
+        this.authService.roles = data.roles;
     }
 
 }

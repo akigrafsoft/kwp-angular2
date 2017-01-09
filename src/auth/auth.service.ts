@@ -17,6 +17,8 @@ import { Role } from './role';
 @Injectable()
 export class AuthService {
 
+    public static KEY_SESSION_ID: string = 'kwp-sessionId';
+
     public isLoggedIn: boolean = false;
     public sessionId: string;
     public authenticatedUser: User = null;
@@ -74,26 +76,32 @@ export class AuthService {
             });
     }
 
-    public successLogin(data: any): void {
+
+    public setSessionId(sessionId: string) {
+        //if (sessionId === null)
+        //    alert("AuthService::setSessionId(null)!");
+        this.sessionId = sessionId;
         window.localStorage
             .setItem(
-            'sessionId',
-            data.sessionId);
-
-        this.acceptAuthenticatedUser(data.sessionId, data.user, data.userRoles);
+            AuthService.KEY_SESSION_ID,
+            sessionId);
+        console.debug("AuthService::setSessionId(" + sessionId + ")");
     }
+
+    //    public successLogin(data: any): void {
+    //        this.setAuthenticatedUser(data.user, data.userRoles);
+    //    }
 
     // public acceptAuthenticatedUser(sessionId: string, user: User): void;
     // public acceptAuthenticatedUser(sessionId: string, user: User, userRoles: Array<Role>): void;
-    public acceptAuthenticatedUser(sessionId: string, user: User, userRoles: Array<Role>): void {
+    public setAuthenticatedUser(user: User, userRoles: Array<Role>): void {
         this.isLoggedIn = true;
-        this.sessionId = sessionId;
         this.authenticatedUser = user;
         this.authenticatedRoles = userRoles;
         this.userAuthenticationSubject.next(this.authenticatedUser);
     }
 
-    logout(sessionId: string): Observable<any> {
+    public logout(sessionId: string): Observable<any> {
         let headers = new Headers({
             'SessionId': this.sessionId
         });
@@ -107,7 +115,8 @@ export class AuthService {
     }
 
     private cleanUp() {
-        window.localStorage.removeItem('sessionId');
+        //alert("AuthService::cleanUp()!");
+        window.localStorage.removeItem(AuthService.KEY_SESSION_ID);
         this.isLoggedIn = false;
         this.sessionId = null;
         this.authenticatedUser = null;
@@ -135,8 +144,9 @@ export class AuthService {
     private doMapCheck(redirectUrl: string, response: any): boolean {
         let data = ServiceUtils.extractData(response);
         if (data.user) {
-            if (!this.isLoggedIn)
-                this.acceptAuthenticatedUser(data.sessionId, data.user, data.userRoles);
+            if (!this.isLoggedIn) {
+                this.setAuthenticatedUser(data.user, data.userRoles);
+            }
             console.info("AuthService::doMapCheck(" + JSON.stringify(data) + ")|true");
             return true;
         }
