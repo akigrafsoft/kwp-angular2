@@ -150,4 +150,17 @@ export class CalendarComponent implements OnInit, DoCheck {
         return this.toFrenchDayOfWeek(dayOfWeek) - this.toFrenchDayOfWeek(prevDayOfWeek) - 1;
     }
 
+    public prevPage() {
+        //console.debug("PagedListComponent::prevPage:" + (this.currentPage - 1));
+        if (this.calendarMonthIndex > 0) {
+            this.calendarMonthIndex = this.calendarMonthIndex - 1;
+        }
+    };
+    public nextPage() {
+        //console.debug("PagedListComponent::nextPage:" + (this.currentPage + 1));
+        if (this.calendarMonthIndex < this.calendarArray.length - 1) {
+            this.calendarMonthIndex = this.calendarMonthIndex + 1;
+        }
+    };
+
 }

@@ -24,8 +24,8 @@ export class PagedListDirective implements OnInit {
     @Input('searchCriteriasBase')
     searchCriteriasBase: any = null;
 
-    @Input('searchCriterias')
-    searchCriterias: any = null;
+    //@Input('searchCriterias')
+    private _searchCriterias: any = null;
 
     items: any[];
 
@@ -40,6 +40,8 @@ export class PagedListDirective implements OnInit {
     currentPage: number = 0;
     nbPages: number;
 
+    private created: boolean = false;
+
     public error: any = null;
 
     constructor(private auth: AuthService, private pagedListService: PagedListService) {
@@ -50,9 +52,9 @@ export class PagedListDirective implements OnInit {
         //console.debug("PagedListComponent::ngOnInit()");
         let factoryParams = "";
         this.pagedListService.createList(this.factory, factoryParams,
-            this.listId, this.searchCriteriasBase, this.searchCriterias,
+            this.listId, this.searchCriteriasBase, this._searchCriterias,
             null, false, this.fromIndex, this.pageSize)
-            .then(response => this.handleSuccessResponse(response))
+            .then(response => { this.created = true; this.handleSuccessResponse(response); })
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
@@ -71,6 +73,14 @@ export class PagedListDirective implements OnInit {
 
     public getPagedItems(): any[] {
         return this.items;
+    }
+
+    @Input('searchCriterias')
+    set searchCriterias(searchCriterias: any) {
+        if (this.created)
+            this.search(searchCriterias);
+        else
+            this._searchCriterias = searchCriterias;
     }
 
     public search(searchCriterias: any): void;
