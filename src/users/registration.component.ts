@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
@@ -57,17 +57,24 @@ import { User } from './user';
         `.ng-invalid:not(form)  {border-left: 5px solid #a94442;`
     ]
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
 
-    @Input() LANG = 'en';
+    @Input() LANG: string = 'en';
 
-    user: User;
+    @Input() roles: string[] = null;
+
+    private user: User = new User();
 
     constructor(private router: Router,
         private userService: UserService,
         private auth: AuthService) {
-        //this.user = { address: {}, roles: [] };
-        this.user = new User();
+    }
+
+    ngOnInit() {
+        if (this.roles !== null) {
+            console.debug("RegistrationComponent::constructor|User with roles" + JSON.stringify(this.roles));
+            this.user.roles = this.roles;
+        }
     }
 
     onSubmit() {
@@ -75,7 +82,7 @@ export class RegistrationComponent {
         this.userService.create(this.user)
             .then(() => {
                 let link = ['activation'];
-                console.debug("RegistrationComponent::navigate(" + JSON.stringify(link) + ")");
+                //console.debug("RegistrationComponent::navigate(" + JSON.stringify(link) + ")");
                 this.router.navigate(link);
             }).catch(error => this.auth.handleErrorResponse(error));
     }
