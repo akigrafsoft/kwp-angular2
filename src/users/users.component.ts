@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
@@ -11,18 +11,15 @@ import { PagedListDirective } from '../pagedlist/pagedlist.directive';
 
 import { UserService } from './user.service';
 import { User } from './user';
+import { Error } from '../services/error';
 
 @Component({
-    selector: 'my-users',
-    //    templateUrl: 'app/kwp/users/users.component.html',
-    //    styleUrls: ['app/kwp/users/users.componens']
-
+    selector: 'kwp-users',
     styles: [`
 .panel-title {
 margin-right: 10px;
 }`],
-    template: `<div>
-<div class="panel panel-default">
+    template: `<div class="panel panel-default">
 <div class="panel-heading">
 <span class="panel-title">{{title}}&nbsp;<span class="badge" title="{{pagedList.fullSize ? pagedList.fullSize : 0}} {{LANG=='fr' ? 'items au total' : 'items'}}">{{pagedList.fullSize ? pagedList.fullSize : 0}}</span>
 </span>
@@ -48,28 +45,31 @@ margin-right: 10px;
 </div></div>
 <table class="table table-striped" [kwp-paged-list]="'Users'" [listId]="'users'" [pageSize]="5">
 <tr>
+<th>Id</th>
 <th (click)="pagedList.sort('username',usernameReverse);usernameReverse=!usernameReverse">Nom<span [ngSwitch]="usernameReverse"> <span *ngSwitchCase="true" class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> <span *ngSwitchCase="false" class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> <span *ngSwitchDefault> </span></span></th>
-<th></th>
+<th>Actions</th>
 </tr>
 <tr *ngFor="let user of pagedList.getPagedItems()">
+<td (click)="onSelect(user)">{{user.id}}</td>
 <td (click)="onSelect(user)">{{user.username}}</td>
 <td><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true" (click)="onDelete(user)"></span></td>
 </tr>
 </table>
+<div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
 <ul class="pagination">
 <li [class.disabled]="pagedList.currentPage==0"><a aria-label="Previous" (click)="pagedList.prevPage()"> <span aria-hidden="true">&laquo;</span>
 </a></li>
 <li [class.disabled]="pagedList.currentPage>=(pagedList.nbPages-1)">
 <a aria-label="Next" (click)="pagedList.nextPage()"> <span aria-hidden="true">&raquo;</span></a></li>
 </ul>
-</div></div><div class="error" *ngIf="error">{{error}}</div></div>`
-
+</div></div>`
 })
 
 export class UsersComponent {
-    title = 'Users';
 
-    error: any;
+    @Input() title: string = 'Users';
+
+    private error: Error = null;
 
     @ViewChild(PagedListDirective)
     private pagedList: PagedListDirective;
@@ -89,7 +89,7 @@ export class UsersComponent {
         console.debug("UsersComponent::onDelete(" + JSON.stringify(user) + ")");
         this.userService.del(user.username)
             .then(() => this.pagedList.refreshList())
-            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
+            .catch(response => { this.auth.handleErrorResponse(response); this.handleErrorResponse(response); });
     }
 
     searchUsername(username: string) {
@@ -103,15 +103,16 @@ export class UsersComponent {
     }
 
     private handleErrorResponse(response) {
-        console.debug("EnvironmentsComponent::handleErrorResponse(" + JSON.stringify(response) + ")");
-        this.error = {
-            errorCode: response.errorCode,
-            errorReason: response.errorReason
-        };
+        //console.debug("EnvironmentsComponent::handleErrorResponse(" + JSON.stringify(response) + ")");
 
-        setTimeout(() => {
-            this.error = null;
-        }, 3000);
+        let body = response.json() || null;
+        if (body !== null) {
+            this.error = Error.build(body.errorCode || -1, body.errorReason);
+            setTimeout(() => {
+                this.error = null;
+            }, 3000);
+        }
+
     }
 
 }

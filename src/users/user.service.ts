@@ -19,7 +19,7 @@ export class UserService {
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
-        return this.http.post(encodeURI(this.baseUrl + '/' + user.id), JSON.stringify(user), { headers: headers })
+        return this.http.post(encodeURI(this.baseUrl), JSON.stringify(user), { headers: headers })
             .toPromise()
             .then(res => res.json())
             .catch(this.handleError);

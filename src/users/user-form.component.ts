@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
 import { User } from './user';
+import { Error } from '../services/error';
 
 @Component({
     selector: 'kwp-user-form',
@@ -86,6 +87,7 @@ import { User } from './user';
 <input name="pw2" [(ngModel)]="password2" type="password" class="form-control" placeholder="password" [required]="newUser">
 </div></div></div>
 <div class="form-group">
+<div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
 <div class="col-sm-offset-2 col-lg-4 col-md-6 col-sm-10">
 <button type="submit" class="btn btn-default" [disabled]="!userForm.form.valid">Ok</button>
 </div></div></form>`
@@ -94,7 +96,7 @@ export class UserFormComponent implements OnInit {
 
     newUser: boolean = false;
     user: User;
-    error: any;
+    private error: Error = null;
     roles: any;
 
     constructor(
@@ -161,7 +163,12 @@ export class UserFormComponent implements OnInit {
                 let link = ['activation'];
                 console.debug("UserFormComponent::navigate(" + JSON.stringify(link) + ")");
                 this.router.navigate(link);
-            }).catch(error => this.auth.handleErrorResponse(error));
+            }).catch(resp => {
+                this.auth.handleErrorResponse(resp);
+                let body = resp.json() || null;
+                if (body !== null)
+                    this.error = Error.build(body.errorCode || -1, body.errorReason);
+            });
     }
 
     save(user: User) {
