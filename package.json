@@ -1,75 +1,69 @@
 {
-	"name": "kwp-angular2",
-	"version": "1.0.0",
-	"license": "MIT",
-	"angular-cli": {
-		
-	},
-	"scripts": {
-		"start": "ng serve",
-		"build": "rm -rf lib && npm run tsc:src",
-		"tsc:src": "tsc -p src",
-		"lint": "tslint \"src/**/*.ts\"",
-		"test": "ng test",
-		"pree2e": "webdriver-manager update",
-		"e2e": "protractor"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+ssh://kmoyse@akigrafsoft.com/home/kmoyse/workspace/kwp-angular2.git"
-	},
-	"keywords": [
-		"AkigrafSoft",
-		"KWP",
-		"Library"
-	],
-	"author": "akigrafsoft@gmail.com",
-	"files": [
-		"lib",
-		"auth.js",
-		"auth.d.ts",
-		"calendar.js",
-		"calendar.d.ts",
-		"configuration.js",
-		"configuration.d.ts",
-		"files.js",
-		"files.d.ts",
-		"jnlp.js",
-		"jnlp.d.ts",
-		"maps.js",
-		"maps.d.ts",
-		"mongodb.js",
-		"mongodb.d.ts",
-		"pagedlist.js",
-		"pagedlist.d.ts",
-		"pipes.js",
-		"pipes.d.ts",
-		"services.js",
-		"services.d.ts",
-		"users.js",
-		"users.d.ts"
-	],
-	"dependencies": {
-		"@angular/common": "^2.4.0",
-		"@angular/compiler": "^2.4.0",
-		"@angular/core": "^2.4.0",
-		"@angular/forms": "^2.4.0",
-		"@angular/http": "^2.4.0",
-		"@angular/platform-browser": "^2.4.0",
-		"@angular/platform-browser-dynamic": "^2.4.0",
-		"@angular/router": "^3.4.0",
-		"systemjs": "0.19.40",
-		"core-js": "^2.4.1",
-		"rxjs": "5.0.1",
-		"zone.js": "^0.7.4",
-		"bootstrap": "^3.3.7"
-	},
-	"devDependencies": {
-		"@types/node": "^6.0.46",
-		"concurrently": "^3.1.0",
-		"lite-server": "^2.2.2",
-		"typescript": "^2.0.10"
-	},
-	"repository": {
-	}
+  "name": "kwp-angular2",
+  "version": "1.0.0",
+  "license": "MIT",
+  "angular-cli": {},
+  "scripts": {
+    "start": "ng serve",
+    "build": "rm -rf lib && npm run tsc:src",
+    "tsc:src": "tsc -p src",
+    "lint": "tslint \"src/**/*.ts\"",
+    "test": "ng test",
+    "pree2e": "webdriver-manager update",
+    "e2e": "protractor"
+  },
+  "repository": {},
+  "keywords": [
+    "AkigrafSoft",
+    "KWP",
+    "Library"
+  ],
+  "author": "akigrafsoft@gmail.com",
+  "files": [
+    "lib",
+    "auth.js",
+    "auth.d.ts",
+    "calendar.js",
+    "calendar.d.ts",
+    "configuration.js",
+    "configuration.d.ts",
+    "files.js",
+    "files.d.ts",
+    "jnlp.js",
+    "jnlp.d.ts",
+    "maps.js",
+    "maps.d.ts",
+    "mongodb.js",
+    "mongodb.d.ts",
+    "pagedlist.js",
+    "pagedlist.d.ts",
+    "pipes.js",
+    "pipes.d.ts",
+    "services.js",
+    "services.d.ts",
+    "users.js",
+    "users.d.ts"
+  ],
+  "dependencies": {
+    "@angular/common": "^2.4.0",
+    "@angular/compiler": "^2.4.0",
+    "@angular/core": "^2.4.0",
+    "@angular/forms": "^2.4.0",
+    "@angular/http": "^2.4.0",
+    "@angular/platform-browser": "^2.4.0",
+    "@angular/platform-browser-dynamic": "^2.4.0",
+    "@angular/router": "^3.4.0",
+    "systemjs": "0.19.40",
+    "core-js": "^2.4.1",
+    "rxjs": "5.0.1",
+    "zone.js": "^0.7.4",
+    "bootstrap": "^3.3.7"
+  },
+  "devDependencies": {
+    "@types/core-js": "^0.9.35",
+    "@types/node": "^7.0.46",
+    "concurrently": "^3.1.0",
+    "lite-server": "^2.2.2",
+    "typescript": "^2.0.10"
+  }
 }
