@@ -2,6 +2,12 @@
 
 This project is initiated by AkigrafSoft.
 
+## Requirements
+
+Having last version of node and npm is usually better :
+
+Run `npm install npm@latest -g` to get last npm version.
+
 ## Build
 
 Run `npm install` once.
