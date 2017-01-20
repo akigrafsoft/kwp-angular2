@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Directive, Input, OnInit } from '@angular/core';
+import { Directive, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
 import { PagedListService } from './pagedlist.service';
@@ -24,8 +24,16 @@ export class PagedListDirective implements OnInit {
     @Input('searchCriteriasBase')
     searchCriteriasBase: any = null;
 
-    //@Input('searchCriterias')
     private _searchCriterias: any = null;
+    @Input('searchCriterias')
+    set searchCriterias(searchCriterias: any) {
+        if (this.created)
+            this.search(searchCriterias);
+        else
+            this._searchCriterias = searchCriterias;
+    }
+
+    @Output() onItemsSet = new EventEmitter<any[]>();
 
     items: any[];
 
@@ -75,14 +83,6 @@ export class PagedListDirective implements OnInit {
         return this.items;
     }
 
-    @Input('searchCriterias')
-    set searchCriterias(searchCriterias: any) {
-        if (this.created)
-            this.search(searchCriterias);
-        else
-            this._searchCriterias = searchCriterias;
-    }
-
     public search(searchCriterias: any): void;
     public search(searchCriterias: any, callback?: Function): void;
 
@@ -114,6 +114,9 @@ export class PagedListDirective implements OnInit {
     private handleSuccessResponse(response) {
         //console.debug("PagedListComponent::handleSuccessResponse(" + JSON.stringify(response) + ")");
         this.items = response.items;
+
+        this.onItemsSet.emit(this.items);
+
         //if (this.fullSize != response.itemsFullSize) {
         //this.onListModified();
         //}

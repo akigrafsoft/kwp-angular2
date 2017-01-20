@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Component, OnInit, Input } from '@angular/core';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+//import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 declare var google: any;
 
@@ -18,31 +18,40 @@ export class MapComponent implements OnInit {
     @Input() location: any;
 
     private map: any = null;
-    private marker: any = null;
+    //private marker: any = null;
 
-    private mySafeStyle: SafeStyle;
 
-    constructor(private sanitizer: DomSanitizer) {
+    private markers: Array<any> = new Array<any>();
+
+    //constructor(private sanitizer: DomSanitizer) {
+    constructor() {
         //     this.mySafeStyle = this.sanitizer.bypassSecurityTrustStyle("width:" + this.width + "px;height:" + this.height + "px");
         //     console.log("MapComponent::constructor|style=" + this.mySafeStyle);
     }
 
     //'7+rue+condorcet+75009+paris'
 
+    private clearMarkers() {
+        for (let marker of this.markers) {
+            marker.setMap(null);
+        }
+        this.markers = new Array<any>();
+    }
+
     public refreshLocation(location: any) {
-        if (this.marker !== null)
-            this.marker.setMap(null);
+        this.clearMarkers();
 
         if (this.map === null)
             this.createMap(location);
         else
             this.map.setCenter(location);
 
-        this.marker = new google.maps.Marker({
+        let marker = new google.maps.Marker({
             position: location
             //                    animation: google.maps.Animation.BOUNCE
         });
-        this.marker.setMap(this.map);
+        marker.setMap(this.map);
+        this.markers.push(marker);
     }
 
     private createMap(location: any) {
@@ -62,12 +71,49 @@ export class MapComponent implements OnInit {
         });
     }
 
-    //    public addMarker(location: any) {
-    //        var marker = new google.maps.Marker({
-    //            position: location
-    //        });
-    //        marker.setMap(this.map);
+    //    public fit(markers: Array<google.maps.Marker>) {
+    //        var bounds = new google.maps.LatLngBounds();
+    //        for (var i = 0; i < markers.length; i++) {
+    //            bounds.extend(markers[i].getPosition());
+    //        }
+    //        this.map.fitBounds(bounds);
     //    }
+
+    public setMarkers(locations: Array<any>) {
+        console.debug("MapComponent::setMarkers(" + JSON.stringify(locations) + ")");
+
+        this.clearMarkers();
+
+        if (locations.length === 0)
+            return;
+
+        if (locations.length === 1) {
+            this.refreshLocation(locations[0]);
+            return;
+        }
+
+        if (this.map === null) {
+            var mapProp = {
+                zoom: 10,
+                center: locations[0],
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            this.map = new google.maps.Map(document.getElementById("map"), mapProp);
+        }
+
+        var bounds = new google.maps.LatLngBounds();
+        for (let location of locations) {
+            var marker = new google.maps.Marker({
+                position: location
+            });
+            marker.setMap(this.map);
+            this.markers.push(marker);
+            bounds.extend(location);
+        }
+
+        if (locations.length > 1)
+            this.map.fitBounds(bounds);
+    }
 
     ngOnInit() {
 
