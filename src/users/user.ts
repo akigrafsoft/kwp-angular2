@@ -7,6 +7,7 @@ export class User {
     public username: string;
     public firstName: string;
     public lastName: string;
+    public phone: string;
     public address: any;
     public roles: string[];
     public activationTimeMillis: string;

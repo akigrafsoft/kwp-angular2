@@ -4,9 +4,11 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
-import { AuthService } from '../auth/auth.service';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
 
-import 'rxjs/add/operator/toPromise';
+import { AuthService } from '../auth/auth.service';
+import { ServiceUtils } from '../services/service-utils';
 
 @Injectable()
 export class MongoDBService {
@@ -16,7 +18,7 @@ export class MongoDBService {
     constructor(private http: Http, private auth: AuthService, private baseUrl: string) { }
 
     // if id is provided null, then mongodb will create its own
-    addDocument(collection: string, id: string, document: any) {
+    addDocument(collection: string, id: string, document: any): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -28,22 +30,29 @@ export class MongoDBService {
         }
         return this.http.post(encodeURI(uri),
             JSON.stringify(document), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.auth.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
+        //            .toPromise()
+        //            .then(res => res.json())
+        //            .catch(this.handleError);
     }
 
-    deleteDocument(collection: string, id: string) {
+    deleteDocument(collection: string, id: string): Observable<any> {
         let headers = new Headers({
             'SessionId': this.auth.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + collection + '/' + id), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.auth.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
-    getDistinctDocuments(collection: string, field: string) {
+    getDistinctDocuments(collection: string, field: string): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -52,22 +61,26 @@ export class MongoDBService {
             JSON.stringify({
                 'distinct': field
             }), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.auth.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
-    getDocument(collection: string, id: string) {
+    getDocument(collection: string, id: string): Observable<any> {
         let headers = new Headers({
             'SessionId': this.auth.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + collection + '/' + id), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.auth.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
-    getDocuments(collection: string, queryDocument: any) {
+    getDocuments(collection: string, queryDocument: any): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -76,12 +89,14 @@ export class MongoDBService {
             JSON.stringify({
                 'query': queryDocument
             }), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.auth.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
-    getDocumentsSorted(collection: string, queryDocument: any, sortDocument: any) {
+    getDocumentsSorted(collection: string, queryDocument: any, sortDocument: any): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -91,25 +106,29 @@ export class MongoDBService {
                 'query': queryDocument,
                 'sort': sortDocument
             }), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.auth.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
-    updateDocument(collection: string, id: string, updateDocument: any) {
+    updateDocument(collection: string, id: string, updateDocument: any): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + collection + '/' + id),
             JSON.stringify(updateDocument), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.auth.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
-    private handleError(error: any) {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
-    }
+    //    private handleError(error: any) {
+    //        console.error('An error occurred', error);
+    //        return Promise.reject(error.message || error);
+    //    }
 }
