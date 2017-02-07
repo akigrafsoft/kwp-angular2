@@ -101,8 +101,20 @@ export class UsersComponent {
     onDelete(user: User, event) {
         console.debug("UsersComponent::onDelete(" + JSON.stringify(user) + ")");
         this.userService.del(user.id)
-            .then(() => this.pagedList.refreshList())
-            .catch(response => { this.auth.handleErrorResponse(response); this.handleErrorResponse(response); });
+            .subscribe(() => this.pagedList.refreshList(),
+            error => {
+                if (error instanceof Error) {
+                    this.error = error;
+                    setTimeout(() => {
+                        this.error = null;
+                    }, 3000);
+                }
+                else {
+                    console.error("UsersComponent::onDelete|" + error);
+                }
+            });
+        //            .then(() => this.pagedList.refreshList())
+        //            .catch(response => { this.auth.handleErrorResponse(response); this.handleErrorResponse(response); });
     }
 
     searchUsername(username: string) {
@@ -114,18 +126,18 @@ export class UsersComponent {
             this.pagedList.search({ 'username': username });
         }
     }
-
-    private handleErrorResponse(response) {
-        //console.debug("EnvironmentsComponent::handleErrorResponse(" + JSON.stringify(response) + ")");
-
-        let body = response.json() || null;
-        if (body !== null) {
-            this.error = Error.build(body.errorCode || -1, body.errorReason);
-            setTimeout(() => {
-                this.error = null;
-            }, 3000);
-        }
-
-    }
+    //
+    //    private handleErrorResponse(response) {
+    //        //console.debug("EnvironmentsComponent::handleErrorResponse(" + JSON.stringify(response) + ")");
+    //
+    //        let body = response.json() || null;
+    //        if (body !== null) {
+    //            this.error = Error.build(body.errorCode || -1, body.errorReason);
+    //            setTimeout(() => {
+    //                this.error = null;
+    //            }, 3000);
+    //        }
+    //
+    //    }
 
 }

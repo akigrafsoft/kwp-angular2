@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
+import { Address } from './address';
 import { User } from './user';
 import { Error } from '../services/error';
 
@@ -131,26 +132,29 @@ export class UserFormComponent implements OnInit {
 
     newUser: boolean = false;
     user: User;
-    private error: Error = null;
+    error: Error = null;
     roles: any;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private userService: UserService,
-        private auth: AuthService) {
-        this.roles = this.auth.roles;
+        private authService: AuthService,
+        private userService: UserService) {
+        this.roles = this.authService.roles;
     }
 
     ngOnInit() {
         console.log("UserFormComponent::ngOnInit()");
         this.route.params.forEach((params: Params) => {
-            let id = params['id'];
-            if (typeof id !== 'undefined') {
-                console.log("UserFormComponent::ngOnInit: id=" + id);
-                this.userService.getUser(id)
-                    .then(user => this.doSetUser(user))
-                    .catch(error => this.auth.handleErrorResponse(error));
+            let username = params['username'];
+            if (typeof username !== 'undefined') {
+                console.log("UserFormComponent::ngOnInit: username=" + username);
+                this.userService.getUser(username)
+                    .subscribe(user => this.doSetUser(user),
+                    error => { }
+                    );
+                //                    .then(user => this.doSetUser(user))
+                //                    .catch(error => this.auth.handleErrorResponse(error));
             }
             else {
                 this.doSetNewUser();
@@ -166,7 +170,7 @@ export class UserFormComponent implements OnInit {
 
     private doSetUser(user: User) {
         if (user.address == null) {
-            user.address = {};
+            user.address = new Address();
         }
         this.user = user;
     }
@@ -185,30 +189,56 @@ export class UserFormComponent implements OnInit {
     onSubmit() {
         console.debug("UserFormComponent::onSubmit(" + JSON.stringify(this.user) + ")");
         if (!this.newUser) {
-            this.userService.update(this.user).then(() => {
-                console.debug("UserFormComponent::update() ok");
-            }).catch(error => this.auth.handleErrorResponse(error));
+            this.userService.update(this.user)
+                .subscribe(() => {
+                    console.debug("UserFormComponent::update() ok");
+                },
+                error => { }
+                );
+            //            .then(() => {
+            //                console.debug("UserFormComponent::update() ok");
+            //            }).catch(error => this.auth.handleErrorResponse(error));
         }
     }
 
     create(user: User) {
         user.id = user.username;
         this.userService.create(user)
-            .then(() => {
+            .subscribe(() => {
                 let link = ['activation'];
                 console.debug("UserFormComponent::navigate(" + JSON.stringify(link) + ")");
                 this.router.navigate(link);
-            }).catch(resp => {
-                this.auth.handleErrorResponse(resp);
-                let body = resp.json() || null;
-                if (body !== null)
-                    this.error = Error.build(body.errorCode || -1, body.errorReason);
+            },
+            error => {
+                if (error instanceof Error) {
+                    this.error = error;
+                    setTimeout(() => {
+                        this.error = null;
+                    }, 3000);
+                }
+                else {
+                    console.error("UserFormComponent::create|" + error);
+                }
             });
+        //            .then(() => {
+        //                let link = ['activation'];
+        //                console.debug("UserFormComponent::navigate(" + JSON.stringify(link) + ")");
+        //                this.router.navigate(link);
+        //            }).catch(resp => {
+        //                this.auth.handleErrorResponse(resp);
+        //                let body = resp.json() || null;
+        //                if (body !== null)
+        //                    this.error = Error.build(body.errorCode || -1, body.errorReason);
+        //            });
     }
 
     save(user: User) {
         this.userService.update(user)
-            .then().catch(error => this.auth.handleErrorResponse(error));
+            .subscribe(() => {
+                //console.debug("UserFormComponent::save() ok");
+            },
+            error => { });
+        // .then().catch(error => this.auth.handleErrorResponse(error));
     }
 
     //    goBack() {

@@ -4,4 +4,5 @@ exports.RegistrationComponent = require('./lib/users/registration.component').Re
 exports.UserFormComponent = require('./lib/users/user-form.component').UserFormComponent;
 exports.UserService = require('./lib/users/user.service').UserService;
 exports.UsersComponent = require('./lib/users/users.component').UsersComponent;
+exports.Address = require('./lib/users/address').Address;
 exports.User = require('./lib/users/user').User;

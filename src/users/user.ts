@@ -2,16 +2,18 @@
 // Author: Kevin Moyse
 //
 
+import { Address } from './address';
+
 export class User {
     public id: string;
     public username: string;
     public firstName: string;
     public lastName: string;
+    public email: string;
     public phone: string;
-    public address: any;
+    public address: Address;
     public roles: string[];
     public activationTimeMillis: string;
-    public email: string;
 
     //lastSuccessfulLoginTime
     public lSLTMs: string;

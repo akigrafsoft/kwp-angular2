@@ -80,10 +80,17 @@ export class RegistrationComponent implements OnInit {
     onSubmit() {
         console.debug("RegistrationComponent::onSubmit()");
         this.userService.create(this.user)
-            .then(() => {
+            .subscribe(() => {
                 let link = ['activation'];
                 //console.debug("RegistrationComponent::navigate(" + JSON.stringify(link) + ")");
                 this.router.navigate(link);
-            }).catch(error => this.auth.handleErrorResponse(error));
+            },
+            error => { }
+            );
+        //            .then(() => {
+        //                let link = ['activation'];
+        //                //console.debug("RegistrationComponent::navigate(" + JSON.stringify(link) + ")");
+        //                this.router.navigate(link);
+        //            }).catch(error => this.auth.handleErrorResponse(error));
     }
 }
