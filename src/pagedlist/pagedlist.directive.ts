@@ -10,7 +10,7 @@ import { PagedListService } from './pagedlist.service';
     selector: '[kwp-paged-list]'
 })
 export class PagedListDirective implements OnInit {
-    title = 'PagedList';
+    //    title = 'PagedList';
 
     @Input('kwp-paged-list')
     factory: string;
@@ -33,15 +33,15 @@ export class PagedListDirective implements OnInit {
             this._searchCriterias = searchCriterias;
     }
 
+    @Input() sortCriteria: string = null;
+    @Input() sortReverse: boolean = false;
+
     @Output() onItemsSet = new EventEmitter<any[]>();
 
     items: any[];
 
     fullSize: number;
     filteredSize: number;
-
-    sortCriteria: string = null;
-    sortReverse = false;
 
     fromIndex: number = 0;
 
@@ -61,7 +61,7 @@ export class PagedListDirective implements OnInit {
         let factoryParams = "";
         this.pagedListService.createList(this.factory, factoryParams,
             this.listId, this.searchCriteriasBase, this._searchCriterias,
-            null, false, this.fromIndex, this.pageSize)
+            this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
             .then(response => { this.created = true; this.handleSuccessResponse(response); })
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
