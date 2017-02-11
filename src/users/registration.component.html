@@ -20,8 +20,9 @@
  </div>
  <div *ngIf="withPhone" class="form-group">
   <label for="phone">{{LANG==='fr' ? 'Tél' : 'Phone'}}</label> <input name="phone" [(ngModel)]="user.phone" type="tel"
-   pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$" class="form-control"
+   pattern="^([0|\+[0-9]{1,5})?([1-9][0-9]{8})$" class="form-control"
    placeholder="{{LANG==='fr' ? 'Téléphone' : 'Phone number'}}" id="phone" required>
+  <p *ngIf="phoneHelp" class="help-block">{{phoneHelp}}</p>
  </div>
  <div class="form-group">
   <label for="password">{{LANG==='fr' ? 'Mot de passe' : 'Password'}}</label> <input name="pw1" [(ngModel)]="user.password"
@@ -35,5 +36,6 @@
   <div class="alert alert-danger" [hidden]="pw2.valid || (pw2.pristine && !f.submitted)">{{LANG==='fr' ? 'Les mots de
    passe doivent être les mêmes' : 'Passwords should match'}}</div>
  </div>
+ <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
  <button type="submit" class="btn btn-default" [disabled]="!f.form.valid">{{LANG==='fr' ? 'Valider' : 'Register'}}</button>
 </form>

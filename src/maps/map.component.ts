@@ -14,13 +14,10 @@ declare var google: any;
 export class MapComponent implements OnInit {
 
     @Input() address: string;
-
     @Input() location: any;
 
     private map: any = null;
     //private marker: any = null;
-
-
     private markers: Array<any> = new Array<any>();
 
     //constructor(private sanitizer: DomSanitizer) {
@@ -80,7 +77,7 @@ export class MapComponent implements OnInit {
     //    }
 
     public setMarkers(locations: Array<any>) {
-        console.debug("MapComponent::setMarkers(" + JSON.stringify(locations) + ")");
+        //console.debug("MapComponent::setMarkers(" + JSON.stringify(locations) + ")");
 
         this.clearMarkers();
 
@@ -118,7 +115,7 @@ export class MapComponent implements OnInit {
     ngOnInit() {
 
         if (typeof google === 'undefined') {
-            console.error("MapComponent|Google API not loaded");
+            console.error("MapComponent::ngOnInit()|Google API not loaded");
             return;
         }
 

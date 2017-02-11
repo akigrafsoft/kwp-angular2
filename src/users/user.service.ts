@@ -18,7 +18,7 @@ export class UserService {
 
     constructor(private http: Http, private authService: AuthService, private baseUrl: string) { }
 
-    create(user: User) {
+    create(user: User): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
@@ -34,7 +34,7 @@ export class UserService {
         //            .catch(this.handleError);
     }
 
-    getUser(username: string) {
+    getUser(username: string): Observable<any | Error> {
         let headers = new Headers({
             'SessionId': this.authService.sessionId
         });
@@ -46,7 +46,7 @@ export class UserService {
             });
     }
 
-    update(user: User) {
+    update(user: User): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
@@ -59,7 +59,7 @@ export class UserService {
             });
     }
 
-    del(id: string) {
+    del(id: string): Observable<any | Error> {
         let headers = new Headers({
             'SessionId': this.authService.sessionId
         });

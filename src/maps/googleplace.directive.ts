@@ -4,7 +4,7 @@ import { NgModel } from '@angular/forms';
 declare var google: any;
 
 @Directive({
-    selector: '[googleplace]',
+    selector: '[kwp-googleplace]',
     providers: [NgModel],
     host: {
         '(input)': 'onInputChange()'
@@ -12,7 +12,7 @@ declare var google: any;
 })
 export class GoogleplaceDirective implements OnInit {
 
-    @Input('googleplace') options: any;
+    @Input('kwp-googleplace') options: any;
     @Output() setAddress: EventEmitter<any> = new EventEmitter();
 
     //autocomplete: any;
@@ -29,12 +29,12 @@ export class GoogleplaceDirective implements OnInit {
             return;
         }
 
-        console.log("GoogleplaceDirective|" + JSON.stringify(this.options));
+        //        console.debug("GoogleplaceDirective::ngOnInit()|" + JSON.stringify(this.options));
         var autocomplete = new google.maps.places.Autocomplete(this._el, this.options);
         google.maps.event.addListener(autocomplete, 'place_changed', () => {
             var place = autocomplete.getPlace();
             if (!place.geometry) {
-                console.warn("Autocomplete's returned place contains no geometry");
+                console.warn("GoogleplaceDirective|Autocomplete's returned place contains no geometry");
                 this.invokeEvent(null);
                 return;
             }

@@ -1,12 +1,12 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
 import { User } from './user';
+import { Error } from '../services/error';
 
 @Component({
     selector: 'kwp-registration',
@@ -35,6 +35,7 @@ import { User } from './user';
   <label for="phone">{{LANG==='fr' ? 'Tél' : 'Phone'}}</label> <input name="phone" [(ngModel)]="user.phone" type="tel"
    pattern="^([0|\+[0-9]{1,5})?([1-9][0-9]{8})$" class="form-control"
    placeholder="{{LANG==='fr' ? 'Téléphone' : 'Phone number'}}" id="phone" required>
+  <p *ngIf="phoneHelp" class="help-block">{{phoneHelp}}</p>
  </div>
  <div class="form-group">
   <label for="password">{{LANG==='fr' ? 'Mot de passe' : 'Password'}}</label> <input name="pw1" [(ngModel)]="user.password"
@@ -48,6 +49,7 @@ import { User } from './user';
   <div class="alert alert-danger" [hidden]="pw2.valid || (pw2.pristine && !f.submitted)">{{LANG==='fr' ? 'Les mots de
    passe doivent être les mêmes' : 'Passwords should match'}}</div>
  </div>
+ <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
  <button type="submit" class="btn btn-default" [disabled]="!f.form.valid">{{LANG==='fr' ? 'Valider' : 'Register'}}</button>
 </form>`,
     styles: [
@@ -60,37 +62,45 @@ export class RegistrationComponent implements OnInit {
     @Input() LANG: string = 'en';
 
     @Input() withPhone: boolean = false;
+    @Input() phoneHelp: string = null;
 
     @Input() roles: string[] = null;
 
-    private user: User = new User();
+    @Output() onSuccess = new EventEmitter<boolean>();
 
-    constructor(private router: Router,
+    user: User = new User();
+
+    error: Error = null;
+
+    constructor(
         private userService: UserService,
         private auth: AuthService) {
     }
 
     ngOnInit() {
         if (this.roles !== null) {
-            console.debug("RegistrationComponent::constructor|User with roles" + JSON.stringify(this.roles));
+            //console.debug("RegistrationComponent::constructor|User with roles" + JSON.stringify(this.roles));
             this.user.roles = this.roles;
         }
     }
 
     onSubmit() {
-        console.debug("RegistrationComponent::onSubmit()");
+        //console.debug("RegistrationComponent::onSubmit()");
         this.userService.create(this.user)
             .subscribe(() => {
-                let link = ['activation'];
-                //console.debug("RegistrationComponent::navigate(" + JSON.stringify(link) + ")");
-                this.router.navigate(link);
+                this.onSuccess.emit(true);
             },
-            error => { }
-            );
-        //            .then(() => {
-        //                let link = ['activation'];
-        //                //console.debug("RegistrationComponent::navigate(" + JSON.stringify(link) + ")");
-        //                this.router.navigate(link);
-        //            }).catch(error => this.auth.handleErrorResponse(error));
+            error => {
+                if (error instanceof Error) {
+                    this.error = error;
+                    setTimeout(() => {
+                        this.error = null;
+                    }, 3000);
+                }
+                else {
+                    console.error("RegistrationComponent::onSubmit()|" + error);
+                }
+            });
+
     }
 }
