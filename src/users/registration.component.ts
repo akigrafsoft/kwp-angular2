@@ -50,7 +50,8 @@ import { Error } from '../services/error';
    passe doivent être les mêmes' : 'Passwords should match'}}</div>
  </div>
  <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
- <button type="submit" class="btn btn-default" [disabled]="!f.form.valid">{{LANG==='fr' ? 'Valider' : 'Register'}}</button>
+ <button type="submit" class="btn btn-default" [disabled]="!f.form.valid||inPrgs">{{LANG==='fr' ? 'Valider' :
+  'Register'}}</button>
 </form>`,
     styles: [
         `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
@@ -69,7 +70,7 @@ export class RegistrationComponent implements OnInit {
     @Output() onSuccess = new EventEmitter<boolean>();
 
     user: User = new User();
-
+    inPrgs: boolean = false;
     error: Error = null;
 
     constructor(
@@ -86,11 +87,14 @@ export class RegistrationComponent implements OnInit {
 
     onSubmit() {
         //console.debug("RegistrationComponent::onSubmit()");
+        this.inPrgs = true;
         this.userService.create(this.user)
             .subscribe(() => {
+                this.inPrgs = false;
                 this.onSuccess.emit(true);
             },
             error => {
+                this.inPrgs = false;
                 if (error instanceof Error) {
                     this.error = error;
                     setTimeout(() => {

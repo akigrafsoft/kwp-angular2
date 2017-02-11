@@ -9,6 +9,7 @@ import 'rxjs/add/operator/catch';
 
 import { AuthService } from '../auth/auth.service';
 import { ServiceUtils } from '../services/service-utils';
+import { Error } from '../services/error';
 
 @Injectable()
 export class MongoDBService {
@@ -18,7 +19,7 @@ export class MongoDBService {
     constructor(private http: Http, private auth: AuthService, private baseUrl: string) { }
 
     // if id is provided null, then mongodb will create its own
-    addDocument(collection: string, id: string, document: any): Observable<any> {
+    addDocument(collection: string, id: string, document: any): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -40,7 +41,7 @@ export class MongoDBService {
         //            .catch(this.handleError);
     }
 
-    deleteDocument(collection: string, id: string): Observable<any> {
+    deleteDocument(collection: string, id: string): Observable<any | Error> {
         let headers = new Headers({
             'SessionId': this.auth.sessionId
         });
@@ -52,7 +53,7 @@ export class MongoDBService {
             });
     }
 
-    getDistinctDocuments(collection: string, field: string): Observable<any> {
+    getDistinctDocuments(collection: string, field: string): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -68,7 +69,7 @@ export class MongoDBService {
             });
     }
 
-    getDocument(collection: string, id: string): Observable<any> {
+    getDocument(collection: string, id: string): Observable<any | Error> {
         let headers = new Headers({
             'SessionId': this.auth.sessionId
         });
@@ -80,7 +81,7 @@ export class MongoDBService {
             });
     }
 
-    getDocuments(collection: string, queryDocument: any): Observable<any> {
+    getDocuments(collection: string, queryDocument: any): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -96,7 +97,7 @@ export class MongoDBService {
             });
     }
 
-    getDocumentsSorted(collection: string, queryDocument: any, sortDocument: any): Observable<any> {
+    getDocumentsSorted(collection: string, queryDocument: any, sortDocument: any): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -113,7 +114,7 @@ export class MongoDBService {
             });
     }
 
-    updateDocument(collection: string, id: string, updateDocument: any): Observable<any> {
+    updateDocument(collection: string, id: string, updateDocument: any): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
@@ -126,9 +127,4 @@ export class MongoDBService {
                 return ServiceUtils.handleError(response);
             });
     }
-
-    //    private handleError(error: any) {
-    //        console.error('An error occurred', error);
-    //        return Promise.reject(error.message || error);
-    //    }
 }
