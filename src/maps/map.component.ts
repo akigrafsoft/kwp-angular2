@@ -36,6 +36,11 @@ export class MapComponent implements OnInit {
     }
 
     public refreshLocation(location: any) {
+        if (typeof google === 'undefined') {
+            console.error("MapComponent::refreshLocation()|Google API not loaded");
+            return;
+        }
+
         this.clearMarkers();
 
         if (this.map === null)
@@ -78,6 +83,11 @@ export class MapComponent implements OnInit {
 
     public setMarkers(locations: Array<any>) {
         //console.debug("MapComponent::setMarkers(" + JSON.stringify(locations) + ")");
+
+        if (typeof google === 'undefined') {
+            console.error("MapComponent::setMarkers()|Google API not loaded");
+            return;
+        }
 
         this.clearMarkers();
 

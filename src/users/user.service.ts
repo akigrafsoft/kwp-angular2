@@ -4,12 +4,12 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
-//import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { ServiceUtils } from '../services/service-utils';
+import { Error } from '../services/error';
 import { AuthService } from '../auth/auth.service';
 import { User } from './user';
 
