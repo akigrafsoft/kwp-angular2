@@ -41,9 +41,9 @@ export class ActivationComponent {
 
     onSubmit(key) {
         this.inPrgs = true;
-        this.activationService.activate(key).subscribe(user => {
+        this.activationService.activate(key).subscribe(json => {
             this.inPrgs = false;
-            this.onSuccess.emit(user);
+            this.onSuccess.emit(User.build(json));
             //let link = [''];
             //console.debug("ActivationComponent::goto(" + JSON.stringify(link) + ")");
             //this.router.navigate(['']);

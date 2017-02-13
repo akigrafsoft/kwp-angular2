@@ -11,19 +11,47 @@ export class User {
     public lastName: string;
     public email: string;
     public phone: string;
-    public address: Address;
+    public address: Address = null;
     public roles: string[];
     public activationTimeMillis: string;
 
     //lastSuccessfulLoginTime
     public lSLTMs: string;
 
-    public hasRole(i_role: string): boolean {
+    public static build(user: any): User {
+        let o_user = new User();
+        o_user.id = user.id;
+        o_user.username = user.username;
+        o_user.firstName = user.firstName;
+        o_user.lastName = user.lastName;
+        o_user.email = user.email;
+        if (typeof user.phone !== 'undefined')
+            o_user.phone = user.phone;
+        if (typeof user.address !== 'undefined')
+            o_user.address = user.address;
+        if (typeof user.roles !== 'undefined')
+            o_user.roles = user.roles;
+        if (typeof user.activationTimeMillis !== 'undefined')
+            o_user.activationTimeMillis = user.activationTimeMillis;
+        if (typeof user.lSLTMs !== 'undefined')
+            o_user.lSLTMs = user.lSLTMs;
+        return o_user;
+    }
+
+    public hasRole(role: string): boolean {
         for (var name of this.roles) {
-            if (i_role === name)
+            if (role === name)
                 return true;
         }
         return false;
     }
+
+    //    public static s_hasRole(user: User, role: string): boolean {
+    //        for (var name of user.roles) {
+    //            if (role === name)
+    //                return true;
+    //        }
+    //        return false;
+    //    }
 
 }
