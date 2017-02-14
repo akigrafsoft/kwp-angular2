@@ -43,7 +43,7 @@ import { Error } from '../services/error';
 export class AuthLoginComponent {
 
     @Input() LANG: string = 'en';
-    @Input() username: string = 'en';
+    @Input() username: string = null;
     @Output() onLogin = new EventEmitter<boolean>();
 
     password: string = null;
