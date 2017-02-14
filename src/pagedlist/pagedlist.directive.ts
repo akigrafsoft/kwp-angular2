@@ -40,7 +40,7 @@ export class PagedListDirective implements OnInit {
 
     items: any[];
 
-    fullSize: number;
+    public fullSize: number;
     filteredSize: number;
 
     fromIndex: number = 0;
