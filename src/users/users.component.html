@@ -39,9 +39,14 @@
     <th>Actions</th>
    </tr>
    <tr *ngFor="let user of pagedList.getPagedItems()">
-    <td (click)="onSelect(user)">{{user.id}}</td>
-    <td (click)="onSelect(user)">{{user.username}}</td>
-    <td><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true" (click)="onDelete(user)"></span></td>
+    <td>{{user.id}}</td>
+    <td (click)="doOpen(user)">{{user.username}}</td>
+    <td>
+     <button class="btn btn-warning btn-sm" [disabled]="delInPrgrs" data-toggle="modal" data-target="#myModal"
+      (click)="selectUser(user)">
+      <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
+     </button>
+    </td>
    </tr>
   </table>
   <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
@@ -53,5 +58,22 @@
      <span aria-hidden="true">&raquo;</span>
    </a></li>
   </ul>
+ </div>
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+   <div class="modal-content">
+    <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title" id="myModalLabel">Warning</h4>
+    </div>
+    <div class="modal-body">Sure you want to delete User '{{user ? user.username : ""}}' ?</div>
+    <div class="modal-footer">
+     <button type="button" class="btn btn-success" data-dismiss="modal">Keep</button>
+     <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="doDelete()">Delete</button>
+    </div>
+   </div>
+  </div>
  </div>
 </div>

@@ -132,8 +132,9 @@ export class UserFormComponent implements OnInit {
 
     newUser: boolean = false;
     user: User;
-    error: Error = null;
     roles: any;
+    
+    error: Error = null;
 
     constructor(
         private route: ActivatedRoute,

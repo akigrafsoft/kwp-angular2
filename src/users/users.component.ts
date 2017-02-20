@@ -60,9 +60,14 @@ margin-right: 10px;
     <th>Actions</th>
    </tr>
    <tr *ngFor="let user of pagedList.getPagedItems()">
-    <td (click)="onSelect(user)">{{user.id}}</td>
-    <td (click)="onSelect(user)">{{user.username}}</td>
-    <td><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true" (click)="onDelete(user)"></span></td>
+    <td>{{user.id}}</td>
+    <td (click)="doOpen(user)">{{user.username}}</td>
+    <td>
+     <button class="btn btn-warning btn-sm" [disabled]="delInPrgrs" data-toggle="modal" data-target="#myModal"
+      (click)="selectUser(user)">
+      <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
+     </button>
+    </td>
    </tr>
   </table>
   <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
@@ -75,6 +80,23 @@ margin-right: 10px;
    </a></li>
   </ul>
  </div>
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+   <div class="modal-content">
+    <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title" id="myModalLabel">Warning</h4>
+    </div>
+    <div class="modal-body">Sure you want to delete User '{{user ? user.username : ""}}' ?</div>
+    <div class="modal-footer">
+     <button type="button" class="btn btn-success" data-dismiss="modal">Keep</button>
+     <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="doDelete()">Delete</button>
+    </div>
+   </div>
+  </div>
+ </div>
 </div>`
 })
 
@@ -82,7 +104,10 @@ export class UsersComponent {
 
     @Input() title: string = 'Users';
 
-    private error: Error = null;
+    user: User = null;
+
+    delInPrgrs: boolean = false;
+    error: Error = null;
 
     @ViewChild(PagedListDirective)
     private pagedList: PagedListDirective;
@@ -92,17 +117,31 @@ export class UsersComponent {
         private userService: UserService) {
     }
 
-    onSelect(user: User) {
-        console.debug("UsersComponent::onSelect(" + JSON.stringify(user) + ")");
+    doOpen(user: User) {
+        //console.debug("UsersComponent::onSelect(" + JSON.stringify(user) + ")");
         let link = ['user', user.username];
         this.router.navigate(link);
     }
 
-    onDelete(user: User, event) {
-        console.debug("UsersComponent::onDelete(" + JSON.stringify(user) + ")");
-        this.userService.del(user.id)
-            .subscribe(() => this.pagedList.refreshList(),
+    selectUser(user: User) {
+        this.user = user;
+    }
+
+    doDelete() {
+        if (this.user === null) {
+            console.error("UsersComponent::doDelete(null)");
+            return;
+        }
+
+        //console.debug("UsersComponent::doDelete(" + JSON.stringify(this.user) + ")");
+        this.delInPrgrs = true;
+        this.userService.del(this.user.id)
+            .subscribe(() => {
+                this.delInPrgrs = false;
+                this.pagedList.refreshList();
+            },
             error => {
+                this.delInPrgrs = false;
                 if (error instanceof Error) {
                     this.error = error;
                     setTimeout(() => {
@@ -110,7 +149,7 @@ export class UsersComponent {
                     }, 3000);
                 }
                 else {
-                    console.error("UsersComponent::onDelete|" + error);
+                    console.error("UsersComponent::doDelete|" + error);
                 }
             });
         //            .then(() => this.pagedList.refreshList())
@@ -118,7 +157,7 @@ export class UsersComponent {
     }
 
     searchUsername(username: string) {
-        console.debug("EnvironmentsComponent::searchUsername(" + username + ")");
+        //console.debug("EnvironmentsComponent::searchUsername(" + username + ")");
         if (username === '') {
             this.pagedList.search(null);
         }

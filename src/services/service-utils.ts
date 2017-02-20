@@ -13,8 +13,9 @@ export class ServiceUtils {
         try {
             return res.json();
         } catch (e) {
-            console.error("ServiceUtils::extractData(" + res + ")");
-            return {};
+            // This happens when the body of the response is not JSON (or actually empty)
+            //console.error("ServiceUtils::extractData(" + res + ")|" + e);
+            return null;
         }
     }
 
@@ -34,7 +35,7 @@ export class ServiceUtils {
                 return Observable.throw(error);
             }
             catch (e) {
-                console.error("ServiceUtils::handleError|e=" + e);
+                console.error("ServiceUtils::handleError|" + e);
             }
             //            response.message ||
             const err = JSON.stringify(response);

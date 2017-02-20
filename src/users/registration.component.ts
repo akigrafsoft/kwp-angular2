@@ -61,12 +61,9 @@ import { Error } from '../services/error';
 export class RegistrationComponent implements OnInit {
 
     @Input() LANG: string = 'en';
-
     @Input() withPhone: boolean = false;
     @Input() phoneHelp: string = null;
-
     @Input() roles: string[] = null;
-
     @Output() onSuccess = new EventEmitter<boolean>();
 
     user: User = new User();
