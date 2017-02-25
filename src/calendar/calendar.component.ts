@@ -1,14 +1,16 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, OnInit, Input, DoCheck } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+//, DoCheck
 
 @Component({
     selector: 'kwp-calendar',
     //    templateUrl: 'app/kwp/calendar/calendar.component.html',
     template: '<ng-content></ng-content>'
 })
-export class CalendarComponent implements OnInit, DoCheck {
+export class CalendarComponent implements OnInit {
+    //    , DoCheck
 
     daysOfAWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 
@@ -19,9 +21,6 @@ export class CalendarComponent implements OnInit, DoCheck {
     @Input() getDateTime: Function;
 
     @Input() showDate: Date = null;
-
-    // used to detect changes
-    //private itemsSize: number;
 
     constructor() {
         //console.debug("CalendarComponent::constructor()");
@@ -124,14 +123,14 @@ export class CalendarComponent implements OnInit, DoCheck {
         //console.debug("CalendarComponent::buildCalendarArray(), calendarArray=" + JSON.stringify(this.calendarArray));
     }
 
-    ngDoCheck() {
-        //console.debug("CalendarComponent::ngDoCheck()");
-        //if (this.itemsSize !== this.items.length) {
-        //console.debug("CalendarComponent::ngDoCheck() detected change on items");
-        //    this.itemsSize = this.items.length;
-        //    this.buildCalendarArray(this.items);
-        //}
-    }
+    //   ngDoCheck() {
+    //console.debug("CalendarComponent::ngDoCheck()");
+    //if (this.itemsSize !== this.items.length) {
+    //console.debug("CalendarComponent::ngDoCheck() detected change on items");
+    //    this.itemsSize = this.items.length;
+    //    this.buildCalendarArray(this.items);
+    //}
+    //  }
 
     //
     //Date.getDay returns day of week, Sunday is 0, Monday is 1, and so on.
