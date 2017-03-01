@@ -7,7 +7,8 @@ import { AuthService } from '../auth/auth.service';
 import { PagedListService } from './pagedlist.service';
 
 @Directive({
-    selector: '[kwp-paged-list]'
+    selector: '[kwp-paged-list]',
+    exportAs:'kwpPagedList'
 })
 export class PagedListDirective implements OnInit {
     //    title = 'PagedList';
