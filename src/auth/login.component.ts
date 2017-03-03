@@ -14,18 +14,17 @@ import { Error } from '../services/error';
  <form name="loginForm" class="form-inline enabled" accept-charset="UTF-8" (ngSubmit)="login()" #loginForm="ngForm">
   <div class="form-group">
    <div class="input-group">
-    <span class="input-group-addon" id="username-addon"><span class="glyphicon glyphicon-user"></span></span> <input
-     ng-if="LANG=='en'" type="text" class="form-control" id="login-username" name="username"
-     placeholder="{{LANG=='fr' ? 'nom utilisateur' : 'username'}}" [(ngModel)]="username" value=""
-     aria-describedby="username-addon" required>
+    <span class="input-group-addon" id="username-addon"><span class="glyphicon glyphicon-user"></span></span> <input type="text"
+     class="form-control" id="login-username" name="username" placeholder="{{LANG=='fr' ? 'nom utilisateur' : 'username'}}"
+     [(ngModel)]="username" value="" aria-describedby="username-addon" required>
    </div>
   </div>
   <div class="form-group">
    <div class="input-group">
     <span class="input-group-addon" id="password-addon"> <span class="glyphicon glyphicon-lock"></span></span> <input
      type="password" class="form-control" id="login-password" name="password"
-     placeholder="{{LANG=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="password"
-     aria-describedby="password-addon" required>
+     placeholder="{{LANG=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="password" aria-describedby="password-addon"
+     required>
    </div>
   </div>
   <div class="form-group">
