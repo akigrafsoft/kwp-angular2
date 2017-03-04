@@ -97,6 +97,24 @@ export class MongoDBService {
             });
     }
 
+    //    match: any, group: any
+    getAggregation(collection: string, agg: any[]): Observable<any | Error> {
+        let headers = new Headers({
+            'Content-Type': 'application/json;charset=UTF-8',
+            'SessionId': this.auth.sessionId
+        });
+        //        { 'match': match, 'group': group }
+        return this.http.put(encodeURI(this.baseUrl + '/' + collection),
+            JSON.stringify({
+                'aggregate': agg
+            }), { headers: headers })
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.auth.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
+    }
+
     getDocumentsSorted(collection: string, queryDocument: any, sortDocument: any): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
