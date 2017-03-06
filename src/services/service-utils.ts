@@ -14,7 +14,7 @@ export class ServiceUtils {
             return res.json();
         } catch (e) {
             // This happens when the body of the response is not JSON (or actually empty)
-            //console.error("ServiceUtils::extractData(" + res + ")|" + e);
+            console.error("ServiceUtils::extractData(" + res + ")|" + e);
             return null;
         }
     }

@@ -19,80 +19,86 @@ import { Error } from '../services/error';
 .panel-title {
 margin-right: 10px;
 }`],
-    template: `<div class="panel panel-default">
- <div class="panel-heading">
-  <span class="panel-title">{{title}}&nbsp;<span class="badge"
-   title="{{pagedList.fullSize ? pagedList.fullSize : 0}} {{LANG=='fr' ? 'items au total' : 'items'}}">{{pagedList.fullSize
-    ? pagedList.fullSize : 0}}</span>
-  </span>
-  <button type="button" class="btn btn-default glyphicon glyphicon-search"
-   (click)="displayAction = displayAction==='search' ? '' : 'search'"></button>
-  <button type="button" class="btn btn-default glyphicon glyphicon-plus"
-   (click)="displayAction = displayAction==='add' ? '' : 'add'"></button>
+    template: `<div>
+ <div *ngIf="!authService.isAllowed('KWPUsers')">
+  <div class="alert alert-danger" role="alert">not authorized</div>
  </div>
- <div id="users_body" class="panel-body">
-  <div class="tools">
-   <div *ngIf="pagedList.error" class="alert alert-danger" role="alert">{{pagedList.error.errorReason}}</div>
-   <div *ngIf="error" class="alert alert-danger" role="alert">{{error.errorReason}}</div>
+ <div *ngIf="authService.isAllowed('KWPUsers')" class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'"
+  [pageSize]="5" #paged="kwpPagedList">
+  <div class="panel-heading">
+   <span class="panel-title">{{title}}&nbsp;<span class="badge"
+    title="{{paged.fullSize ? paged.fullSize : 0}} {{LANG=='fr' ? 'items au total' : 'items'}}">{{paged.fullSize ?
+     paged.fullSize : 0}}</span>
+   </span>
+   <button type="button" class="btn btn-default glyphicon glyphicon-search"
+    (click)="displayAction = displayAction==='search' ? '' : 'search'"></button>
+   <button type="button" class="btn btn-default glyphicon glyphicon-plus"
+    (click)="displayAction = displayAction==='add' ? '' : 'add'"></button>
   </div>
-  <div class="tools-details">
-   <div [ngSwitch]="displayAction">
-    <div *ngSwitchCase="'add'" class="well">
-     <kwp-user-form (close)="close($event)"></kwp-user-form>
-    </div>
-    <div *ngSwitchCase="'search'" class="well">
-     <div class="input-group">
-      <span class="input-group-addon" id="username-addon1">username</span> <input #username_input type="text"
-       class="form-control" placeholder="Username" aria-describedby="username-addon1"
-       (keyup.enter)="searchUsername(username_input.value)">
-     </div>
-    </div>
-    <span *ngSwitchDefault> </span>
+  <div id="users_body" class="panel-body">
+   <div class="tools">
+    <div *ngIf="paged.error" class="alert alert-danger" role="alert">{{paged.error.errorReason}}</div>
+    <div *ngIf="error" class="alert alert-danger" role="alert">{{error.errorReason}}</div>
    </div>
-  </div>
-  <table class="table table-striped" [kwp-paged-list]="'Users'" [listId]="'users'" [pageSize]="5">
-   <tr>
-    <th>Id</th>
-    <th (click)="pagedList.sort('username',usernameReverse);usernameReverse=!usernameReverse">Nom<span
-     [ngSwitch]="usernameReverse"> <span *ngSwitchCase="true" class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-      <span *ngSwitchCase="false" class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> <span *ngSwitchDefault>
-     </span></span></th>
-    <th>Actions</th>
-   </tr>
-   <tr *ngFor="let user of pagedList.getPagedItems()">
-    <td>{{user.id}}</td>
-    <td (click)="doOpen(user)">{{user.username}}</td>
-    <td>
-     <button class="btn btn-warning btn-sm" [disabled]="delInPrgrs" data-toggle="modal" data-target="#myModal"
-      (click)="selectUser(user)">
-      <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
-     </button>
-    </td>
-   </tr>
-  </table>
-  <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
-  <ul class="pagination">
-   <li [class.disabled]="pagedList.currentPage==0"><a aria-label="Previous" (click)="pagedList.prevPage()"> <span
-     aria-hidden="true">&laquo;</span>
-   </a></li>
-   <li [class.disabled]="pagedList.currentPage>=(pagedList.nbPages-1)"><a aria-label="Next" (click)="pagedList.nextPage()">
-     <span aria-hidden="true">&raquo;</span>
-   </a></li>
-  </ul>
- </div>
- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-   <div class="modal-content">
-    <div class="modal-header">
-     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-     </button>
-     <h4 class="modal-title" id="myModalLabel">Warning</h4>
+   <div class="tools-details">
+    <div [ngSwitch]="displayAction">
+     <div *ngSwitchCase="'add'" class="well">
+      <kwp-user-form (close)="close($event)"></kwp-user-form>
+     </div>
+     <div *ngSwitchCase="'search'" class="well">
+      <div class="input-group">
+       <span class="input-group-addon" id="username-addon1">username</span> <input #username_input type="text"
+        class="form-control" placeholder="Username" aria-describedby="username-addon1"
+        (keyup.enter)="searchUsername(username_input.value)">
+      </div>
+     </div>
+     <span *ngSwitchDefault> </span>
     </div>
-    <div class="modal-body">Sure you want to delete User '{{user ? user.username : ""}}' ?</div>
-    <div class="modal-footer">
-     <button type="button" class="btn btn-success" data-dismiss="modal">Keep</button>
-     <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="doDelete()">Delete</button>
+   </div>
+   <table class="table table-striped">
+    <tr>
+     <th>Id</th>
+     <th (click)="paged.sort('username',usernameReverse);usernameReverse=!usernameReverse">Nom<span
+      [ngSwitch]="usernameReverse"> <span *ngSwitchCase="true" class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+       <span *ngSwitchCase="false" class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> <span *ngSwitchDefault>
+      </span></span></th>
+     <th>Actions</th>
+    </tr>
+    <tr *ngFor="let user of paged.getPagedItems()">
+     <td>{{user.id}}</td>
+     <td (click)="doOpen(user)">{{user.username}}</td>
+     <td>
+      <button class="btn btn-warning btn-sm" [disabled]="delInPrgrs" data-toggle="modal" data-target="#myModal"
+       (click)="selectUser(user)">
+       <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
+      </button>
+     </td>
+    </tr>
+   </table>
+   <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
+   <ul class="pagination">
+    <li [class.disabled]="paged.currentPage==0"><a aria-label="Previous" (click)="paged.prevPage()"> <span
+      aria-hidden="true">&laquo;</span>
+    </a></li>
+    <li [class.disabled]="paged.currentPage>=(paged.nbPages-1)"><a aria-label="Next" (click)="paged.nextPage()"> <span
+      aria-hidden="true">&raquo;</span>
+    </a></li>
+   </ul>
+  </div>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+   <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="modal-title" id="myModalLabel">Warning</h4>
+     </div>
+     <div class="modal-body">Sure you want to delete User '{{user ? user.username : ""}}' ?</div>
+     <div class="modal-footer">
+      <button type="button" class="btn btn-success" data-dismiss="modal">Keep</button>
+      <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="doDelete()">Delete</button>
+     </div>
     </div>
    </div>
   </div>
@@ -113,7 +119,7 @@ export class UsersComponent {
     private pagedList: PagedListDirective;
 
     constructor(private router: Router,
-        private auth: AuthService,
+        private authService: AuthService,
         private userService: UserService) {
     }
 
