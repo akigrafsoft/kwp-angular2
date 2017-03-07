@@ -23,11 +23,11 @@ export class CalendarComponent implements OnInit {
     @Input() showDate: Date = null;
 
     constructor() {
-        //console.debug("CalendarComponent::constructor()");
+        //console.debug("Calendar::constructor()");
     }
 
     ngOnInit() {
-        //console.debug("CalendarComponent::ngOnInit()");
+        //console.debug("Calendar::ngOnInit()");
         // store itemsSize at init allows to detect changes
         //this.itemsSize = this.items.length;
         this.buildCalendarArray();
@@ -40,7 +40,7 @@ export class CalendarComponent implements OnInit {
 
     private buildCalendarArray() {
 
-        // console.debug("CalendarComponent::buildCalendarArray()");
+        // console.debug("Calendar::buildCalendarArray()");
 
         // First check array emptyness
         var arrayLength: number = this.items !== null ? this.items.length : 0;
@@ -56,7 +56,7 @@ export class CalendarComponent implements OnInit {
             //return Date.parse(a.dateTime) - Date.parse(b.dateTime);
             return _self.getDateTime(a) - _self.getDateTime(b);
         });
-        // console.debug("ActivityComponent::handleActivity(), sort done");
+        // console.debug("Activity::handleActivity(), sort done");
 
         // init with first slot date
         var previousDate: Date = this.getDateTime(this.items[0]);
@@ -66,14 +66,14 @@ export class CalendarComponent implements OnInit {
         var currentWeek = new Array();
         var currentDay = new Array();
 
-        //console.debug("CalendarComponent::buildCalendarArray(), arrayLength=" + arrayLength);
+        //console.debug("Calendar::buildCalendarArray(), arrayLength=" + arrayLength);
         for (var i = 0; i < arrayLength; i++) {
 
             var l_item = this.items[i];
 
             //var l_itemDate: Date = new Date(Date.parse(this.getDateTime(l_item)));
             var l_itemDate: Date = this.getDateTime(l_item);
-            //console.debug("CalendarComponent::buildCalendarArray(), loop i=" + i + ", l_item=" + JSON.stringify(l_item) + ", dayOfMonth=" + l_itemDate.getDate() + ", dayOfWeek=" + l_itemDate.getDay());
+            //console.debug("Calendar::buildCalendarArray(), loop i=" + i + ", l_item=" + JSON.stringify(l_item) + ", dayOfMonth=" + l_itemDate.getDate() + ", dayOfWeek=" + l_itemDate.getDay());
 
             if (l_itemDate.getMonth() != previousDate.getMonth()) {
                 // new month
@@ -84,12 +84,12 @@ export class CalendarComponent implements OnInit {
                 currentWeek = new Array();
                 calendarArray.push(currentMonth);
                 currentMonth = new Array();
-                //console.debug("CalendarComponent::buildCalendarArray(), changeMonth at i=" + i);
+                //console.debug("Calendar::buildCalendarArray(), changeMonth at i=" + i);
                 if (this.showDate != null) {
                     var firstDayOfMonth: Date = new Date(l_itemDate.getFullYear(), l_itemDate.getMonth(), 1);
-                    //console.debug("CalendarComponent::buildCalendarArray(), showDate=" + this.showDate + ", firstDayOfMonth=" + firstDayOfMonth);
+                    //console.debug("Calendar::buildCalendarArray(), showDate=" + this.showDate + ", firstDayOfMonth=" + firstDayOfMonth);
                     if (this.showDate >= firstDayOfMonth) {
-                        //console.debug("CalendarComponent::buildCalendarArray(), showDate=" + this.showDate + " >= firstDayOfMonth=" + firstDayOfMonth);
+                        //console.debug("Calendar::buildCalendarArray(), showDate=" + this.showDate + " >= firstDayOfMonth=" + firstDayOfMonth);
                         this.calendarMonthIndex = calendarArray.length;
                     }
                 }
@@ -101,13 +101,13 @@ export class CalendarComponent implements OnInit {
                 currentDay = new Array();
                 currentMonth.push(currentWeek);
                 currentWeek = new Array();
-                //console.debug("CalendarComponent::buildCalendarArray(), changeWeek at i=" + i);
+                //console.debug("Calendar::buildCalendarArray(), changeWeek at i=" + i);
             }
             else if (l_itemDate.getDate() > previousDate.getDate()) {
                 // new Day
                 currentWeek.push(currentDay);
                 currentDay = new Array();
-                //console.debug("CalendarComponent::buildCalendarArray(), changeDay at i=" + i);
+                //console.debug("Calendar::buildCalendarArray(), changeDay at i=" + i);
             }
 
             currentDay.push(l_item);
@@ -120,13 +120,13 @@ export class CalendarComponent implements OnInit {
 
         this.calendarArray = calendarArray;
 
-        //console.debug("CalendarComponent::buildCalendarArray(), calendarArray=" + JSON.stringify(this.calendarArray));
+        //console.debug("Calendar::buildCalendarArray(), calendarArray=" + JSON.stringify(this.calendarArray));
     }
 
     //   ngDoCheck() {
-    //console.debug("CalendarComponent::ngDoCheck()");
+    //console.debug("Calendar::ngDoCheck()");
     //if (this.itemsSize !== this.items.length) {
-    //console.debug("CalendarComponent::ngDoCheck() detected change on items");
+    //console.debug("Calendar::ngDoCheck() detected change on items");
     //    this.itemsSize = this.items.length;
     //    this.buildCalendarArray(this.items);
     //}
@@ -150,13 +150,13 @@ export class CalendarComponent implements OnInit {
     }
 
     public prevPage() {
-        //console.debug("PagedListComponent::prevPage:" + (this.currentPage - 1));
+        //console.debug("PagedList::prevPage:" + (this.currentPage - 1));
         if (this.calendarMonthIndex > 0) {
             this.calendarMonthIndex = this.calendarMonthIndex - 1;
         }
     };
     public nextPage() {
-        //console.debug("PagedListComponent::nextPage:" + (this.currentPage + 1));
+        //console.debug("PagedList::nextPage:" + (this.currentPage + 1));
         if (this.calendarMonthIndex < this.calendarArray.length - 1) {
             this.calendarMonthIndex = this.calendarMonthIndex + 1;
         }

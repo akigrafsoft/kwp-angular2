@@ -24,7 +24,7 @@ margin-right: 10px;
   <div class="alert alert-danger" role="alert">not authorized</div>
  </div>
  <div *ngIf="authService.isAllowed('KWPUsers')" class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'"
-  [pageSize]="5" #paged="kwpPagedList">
+  [pageSize]="_n" #paged="kwpPagedList">
   <div class="panel-heading">
    <span class="panel-title">{{title}}&nbsp;<span class="badge"
     title="{{paged.fullSize ? paged.fullSize : 0}} {{LANG=='fr' ? 'items au total' : 'items'}}">{{paged.fullSize ?
@@ -110,6 +110,11 @@ export class UsersComponent {
 
     @Input() title: string = 'Users';
 
+    _n: number = 16;
+    @Input() set n(n: number) {
+        this._n = n;
+    }
+
     user: User = null;
 
     delInPrgrs: boolean = false;
@@ -135,7 +140,7 @@ export class UsersComponent {
 
     doDelete() {
         if (this.user === null) {
-            console.error("UsersComponent::doDelete(null)");
+            console.error("Users::doDelete(null)");
             return;
         }
 
@@ -155,7 +160,7 @@ export class UsersComponent {
                     }, 3000);
                 }
                 else {
-                    console.error("UsersComponent::doDelete|" + error);
+                    console.error("Users::doDelete|" + error);
                 }
             });
         //            .then(() => this.pagedList.refreshList())

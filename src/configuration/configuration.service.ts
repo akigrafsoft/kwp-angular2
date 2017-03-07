@@ -24,7 +24,7 @@ export class ConfigurationService {
     }
 
     private handleError(error: any) {
-        console.error('An error occurred', error);
+        console.error('ConfigurationService::An error occurred', error);
         return Promise.reject(error.message || error);
     }
 

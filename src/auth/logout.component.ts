@@ -24,7 +24,7 @@ export class AuthLogoutComponent {
     }
 
     logout() {
-        //console.log("AuthLogoutComponent::logout()");
+        //console.log("AuthLogout::logout()");
         this.authService.logout(this.authService.sessionId)
             .subscribe(
             data => {
@@ -39,7 +39,7 @@ export class AuthLogoutComponent {
                     //                    }, 3000);
                 }
                 else {
-                    console.error("AuthLogoutComponent::logout|" + error);
+                    console.error("AuthLogout::logout|" + error);
                     this.error = Error.build(-1, error);
                 }
                 // whatever the result, consider logout

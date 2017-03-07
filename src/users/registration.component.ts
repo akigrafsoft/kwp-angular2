@@ -77,13 +77,13 @@ export class RegistrationComponent implements OnInit {
 
     ngOnInit() {
         if (this.roles !== null) {
-            //console.debug("RegistrationComponent::constructor|User with roles" + JSON.stringify(this.roles));
+            //console.debug("Registration::constructor|User with roles" + JSON.stringify(this.roles));
             this.user.roles = this.roles;
         }
     }
 
     onSubmit() {
-        //console.debug("RegistrationComponent::onSubmit()");
+        //console.debug("Registration::onSubmit()");
         this.inPrgs = true;
         this.userService.create(this.user)
             .subscribe(() => {
@@ -99,7 +99,7 @@ export class RegistrationComponent implements OnInit {
                     }, 3000);
                 }
                 else {
-                    console.error("RegistrationComponent::onSubmit()|" + error);
+                    console.error("Registration::onSubmit()|" + error);
                 }
             });
 

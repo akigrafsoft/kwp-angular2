@@ -37,7 +37,7 @@ export class MapComponent implements OnInit {
 
     public refreshLocation(location: any) {
         if (typeof google === 'undefined') {
-            console.error("MapComponent::refreshLocation()|Google API not loaded");
+            console.error("Map::refreshLocation()|Google API not loaded");
             return;
         }
 
@@ -82,10 +82,10 @@ export class MapComponent implements OnInit {
     //    }
 
     public setMarkers(locations: Array<any>) {
-        //console.debug("MapComponent::setMarkers(" + JSON.stringify(locations) + ")");
+        //console.debug("Map::setMarkers(" + JSON.stringify(locations) + ")");
 
         if (typeof google === 'undefined') {
-            console.error("MapComponent::setMarkers()|Google API not loaded");
+            console.error("Map::setMarkers()|Google API not loaded");
             return;
         }
 
@@ -125,20 +125,20 @@ export class MapComponent implements OnInit {
     ngOnInit() {
 
         if (typeof google === 'undefined') {
-            console.error("MapComponent::ngOnInit()|Google API not loaded");
+            console.error("Map::ngOnInit()|Google API not loaded");
             return;
         }
 
         var l_location: any;
 
         if (typeof this.location !== 'undefined' && this.location !== null) {
-            //console.debug("MapComponent::ngOnInit() by location");
+            //console.debug("Map::ngOnInit() by location");
             this.createMap(this.location);
             this.refreshLocation(this.location);
         }
         // otherwise to by address
         else if (typeof this.address !== 'undefined' && this.address !== null) {
-            //console.debug("MapComponent::ngOnInit() by address");
+            //console.debug("Map::ngOnInit() by address");
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode(
                 {

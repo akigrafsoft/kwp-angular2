@@ -25,16 +25,16 @@ export class GoogleplaceDirective implements OnInit {
 
     ngOnInit() {
         if (typeof google === 'undefined') {
-            console.error("GoogleplaceDirective|Google API not loaded");
+            console.error("Googleplace|Google API not loaded");
             return;
         }
 
-        //        console.debug("GoogleplaceDirective::ngOnInit()|" + JSON.stringify(this.options));
+        //        console.debug("Googleplace::ngOnInit()|" + JSON.stringify(this.options));
         var autocomplete = new google.maps.places.Autocomplete(this._el, this.options);
         google.maps.event.addListener(autocomplete, 'place_changed', () => {
             var place = autocomplete.getPlace();
             if (!place.geometry) {
-                console.warn("GoogleplaceDirective|Autocomplete's returned place contains no geometry");
+                console.warn("Googleplace|Autocomplete's returned place contains no geometry");
                 this.invokeEvent(null);
                 return;
             }
@@ -45,7 +45,7 @@ export class GoogleplaceDirective implements OnInit {
         //        var searchBox = new google.maps.places.SearchBox(this._el, this.options);
         //        google.maps.event.addListener(searchBox, 'place_changed', () => {
         //            var place = searchBox.getPlaces()[0];
-        //            console.info("GoogleplaceDirective|place="+JSON.stringify(place));
+        //            console.info("Googleplace|place="+JSON.stringify(place));
         //            if (!place.geometry) return;
         //            this.invokeEvent(place);
         //        });

@@ -32,7 +32,7 @@ export class ConfigurationResolver implements Resolve<any> {
 
         if (window.localStorage.getItem(AuthService.KEY_SESSION_ID) !== null) {
             sessionId = window.localStorage.getItem(AuthService.KEY_SESSION_ID);
-            console.debug("ConfigurationResolver::resolve|localStorage sessionId=" + sessionId);
+            //console.debug("ConfigurationResolver::resolve|localStorage sessionId=" + sessionId);
         }
         else {
             console.warn("ConfigurationResolver::resolve|localStorage sessionId not found");

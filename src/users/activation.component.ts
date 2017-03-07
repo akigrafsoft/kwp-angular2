@@ -45,7 +45,7 @@ export class ActivationComponent {
             this.inPrgs = false;
             this.onSuccess.emit(User.build(json));
             //let link = [''];
-            //console.debug("ActivationComponent::goto(" + JSON.stringify(link) + ")");
+            //console.debug("Activation::goto(" + JSON.stringify(link) + ")");
             //this.router.navigate(['']);
         }, error => {
             this.inPrgs = false;
@@ -56,7 +56,7 @@ export class ActivationComponent {
                 }, 3000);
             }
             else {
-                console.error("ActivationComponent::onSubmit(" + key + ")|" + error);
+                console.error("Activation::onSubmit(" + key + ")|" + error);
             }
         });
     }

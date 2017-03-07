@@ -18,8 +18,7 @@ export class SessionsService {
     private extractData(res: Response): any {
         //console.debug("SessionsService::extractData|" + res);
         try {
-            let body = res.json();
-            return body;
+            return res.json();
         } catch (e) {
             console.error("SessionsService::extractData|" + res);
             return {};

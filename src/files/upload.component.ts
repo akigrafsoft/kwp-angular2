@@ -36,13 +36,13 @@ export class UploadComponent {
         let files = this.elt_input.nativeElement.files;
         //        this.files = [];
         //        for (var i = 0; i < files.length; i++) {
-        //            console.debug("FileUploadComponent::upload:" + JSON.stringify(files[i]));
+        //            console.debug("FileUpload::upload:" + JSON.stringify(files[i]));
         //            this.filf;
         //        }
 
         var file = files[0], r = new FileReader();
 
-        // console.debug("FileUploadComponent::readAsArrayBuffer(" + file + ")");
+        // console.debug("FileUpload::readAsArrayBuffer(" + file + ")");
         r.readAsArrayBuffer(file);
 
         var fd = new FormData();
@@ -69,7 +69,7 @@ export class UploadComponent {
                     //console.debug('kwpUpload::onreadystatechange emit:' + JSON.stringify(xhr.responseText));
                     this.onUploaded.emit(JSON.parse(xhr.responseText));
                 } else {
-                    console.debug('UploadComponent::onreadystatechange error');
+                    console.debug('Upload::onreadystatechange error');
                 }
             }
         };

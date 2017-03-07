@@ -3,7 +3,7 @@
   <div class="alert alert-danger" role="alert">not authorized</div>
  </div>
  <div *ngIf="authService.isAllowed('KWPUsers')" class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'"
-  [pageSize]="5" #paged="kwpPagedList">
+  [pageSize]="_n" #paged="kwpPagedList">
   <div class="panel-heading">
    <span class="panel-title">{{title}}&nbsp;<span class="badge"
     title="{{paged.fullSize ? paged.fullSize : 0}} {{LANG=='fr' ? 'items au total' : 'items'}}">{{paged.fullSize ?

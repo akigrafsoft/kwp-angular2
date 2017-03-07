@@ -133,7 +133,7 @@ export class UserFormComponent implements OnInit {
     newUser: boolean = false;
     user: User;
     roles: any;
-    
+
     error: Error = null;
 
     constructor(
@@ -145,11 +145,11 @@ export class UserFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log("UserFormComponent::ngOnInit()");
+        console.log("UserForm::ngOnInit()");
         this.route.params.forEach((params: Params) => {
             let username = params['username'];
             if (typeof username !== 'undefined') {
-                console.log("UserFormComponent::ngOnInit: username=" + username);
+                console.log("UserForm::ngOnInit: username=" + username);
                 this.userService.getUser(username)
                     .subscribe(user => this.doSetUser(user),
                     error => { }
@@ -188,16 +188,16 @@ export class UserFormComponent implements OnInit {
     }
 
     onSubmit() {
-        console.debug("UserFormComponent::onSubmit(" + JSON.stringify(this.user) + ")");
+        //console.debug("UserForm::onSubmit(" + JSON.stringify(this.user) + ")");
         if (!this.newUser) {
             this.userService.update(this.user)
                 .subscribe(() => {
-                    console.debug("UserFormComponent::update() ok");
+                    console.debug("UserForm::update() ok");
                 },
                 error => { }
                 );
             //            .then(() => {
-            //                console.debug("UserFormComponent::update() ok");
+            //                console.debug("UserForm::update() ok");
             //            }).catch(error => this.auth.handleErrorResponse(error));
         }
     }
@@ -207,7 +207,7 @@ export class UserFormComponent implements OnInit {
         this.userService.create(user)
             .subscribe(() => {
                 let link = ['activation'];
-                console.debug("UserFormComponent::navigate(" + JSON.stringify(link) + ")");
+                //console.debug("UserForm::navigate(" + JSON.stringify(link) + ")");
                 this.router.navigate(link);
             },
             error => {
@@ -218,12 +218,12 @@ export class UserFormComponent implements OnInit {
                     }, 3000);
                 }
                 else {
-                    console.error("UserFormComponent::create|" + error);
+                    console.error("UserForm::create|" + error);
                 }
             });
         //            .then(() => {
         //                let link = ['activation'];
-        //                console.debug("UserFormComponent::navigate(" + JSON.stringify(link) + ")");
+        //                console.debug("UserForm::navigate(" + JSON.stringify(link) + ")");
         //                this.router.navigate(link);
         //            }).catch(resp => {
         //                this.auth.handleErrorResponse(resp);
@@ -236,7 +236,7 @@ export class UserFormComponent implements OnInit {
     save(user: User) {
         this.userService.update(user)
             .subscribe(() => {
-                //console.debug("UserFormComponent::save() ok");
+                //console.debug("UserForm::save() ok");
             },
             error => { });
         // .then().catch(error => this.auth.handleErrorResponse(error));

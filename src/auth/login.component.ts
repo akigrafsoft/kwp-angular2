@@ -66,7 +66,7 @@ export class AuthLoginComponent {
                     }, 3000);
                 }
                 else {
-                    console.error("AuthLoginComponent::login|" + error);
+                    console.error("AuthLogin::login|" + error);
                     this.error = Error.build(-1, error);
                 }
                 this.onLogin.emit(false);
