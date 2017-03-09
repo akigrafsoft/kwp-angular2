@@ -17,7 +17,7 @@ export class AuthLogoutComponent {
     @Input() LANG = 'en';
     @Output() onLogout = new EventEmitter<boolean>();
 
-    private error: Error = null;
+    error: Error = null;
 
     constructor(
         private authService: AuthService) {

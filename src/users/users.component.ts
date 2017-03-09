@@ -20,10 +20,10 @@ import { Error } from '../services/error';
 margin-right: 10px;
 }`],
     template: `<div>
- <div *ngIf="!authService.isAllowed('KWPUsers')">
+ <div *ngIf="!authS.isAllowed('KWPUsers')">
   <div class="alert alert-danger" role="alert">not authorized</div>
  </div>
- <div *ngIf="authService.isAllowed('KWPUsers')" class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'"
+ <div *ngIf="authS.isAllowed('KWPUsers')" class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'"
   [pageSize]="_n" #paged="kwpPagedList">
   <div class="panel-heading">
    <span class="panel-title">{{title}}&nbsp;<span class="badge"
@@ -117,15 +117,19 @@ export class UsersComponent {
 
     user: User = null;
 
+    authS: AuthService = null;
+
     delInPrgrs: boolean = false;
     error: Error = null;
 
     @ViewChild(PagedListDirective)
-    private pagedList: PagedListDirective;
+    pagedList: PagedListDirective;
 
     constructor(private router: Router,
         private authService: AuthService,
         private userService: UserService) {
+
+        this.authS = authService;
     }
 
     doOpen(user: User) {

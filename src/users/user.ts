@@ -15,6 +15,9 @@ export class User {
     public roles: string[];
     public activationTimeMillis: string;
 
+    password: string;
+    password2: string;
+
     //lastSuccessfulLoginTime
     public lSLTMs: string;
 

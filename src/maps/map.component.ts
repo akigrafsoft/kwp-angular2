@@ -16,9 +16,8 @@ export class MapComponent implements OnInit {
     @Input() address: string;
     @Input() location: any;
 
-    private map: any = null;
-    //private marker: any = null;
-    private markers: Array<any> = new Array<any>();
+    map: any = null;
+    markers: Array<any> = new Array<any>();
 
     //constructor(private sanitizer: DomSanitizer) {
     constructor() {

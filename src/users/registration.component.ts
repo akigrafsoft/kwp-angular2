@@ -70,6 +70,8 @@ export class RegistrationComponent implements OnInit {
     inPrgs: boolean = false;
     error: Error = null;
 
+    password2: string;
+
     constructor(
         private userService: UserService,
         private auth: AuthService) {

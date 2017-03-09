@@ -23,7 +23,7 @@ export class UploadComponent {
     @ViewChild('input') elt_input: ElementRef;
     @ViewChild('progress') elt_progress: ElementRef;
 
-    private compPercent: number = -1;
+    compPercent: number = -1;
 
     @Output() onUploaded = new EventEmitter<any>();
 

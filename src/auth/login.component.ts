@@ -48,7 +48,7 @@ export class AuthLoginComponent {
     password: string = null;
 
     //credentials = {};
-    private error: Error = null;
+    error: Error = null;
 
     constructor(
         private authService: AuthService) {
