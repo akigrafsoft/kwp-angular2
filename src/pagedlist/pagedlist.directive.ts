@@ -8,10 +8,9 @@ import { PagedListService } from './pagedlist.service';
 
 @Directive({
     selector: '[kwp-paged-list]',
-    exportAs:'kwpPagedList'
+    exportAs: 'kwpPagedList'
 })
 export class PagedListDirective implements OnInit {
-    //    title = 'PagedList';
 
     @Input('kwp-paged-list')
     factory: string;
@@ -28,10 +27,9 @@ export class PagedListDirective implements OnInit {
     private _searchCriterias: any = null;
     @Input('searchCriterias')
     set searchCriterias(searchCriterias: any) {
+        this._searchCriterias = searchCriterias;
         if (this.created)
             this.search(searchCriterias);
-        else
-            this._searchCriterias = searchCriterias;
     }
 
     @Input() sortCriteria: string = null;
