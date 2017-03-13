@@ -15,8 +15,20 @@ export class PagedListDirective implements OnInit {
     @Input('kwp-paged-list')
     factory: string;
 
+    private _listId: string;
     @Input('listId')
-    listId: string;
+    set listId(id: string) {
+        this._listId = id;
+        if (this.created) {
+            this.created = false;
+            let factoryParams = "";
+            this.pagedListService.createList(this.factory, factoryParams,
+                this._listId, this.searchCriteriasBase, this._searchCriterias,
+                this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
+                .then(response => { this.created = true; this.handleSuccessResponse(response); })
+                .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
+        }
+    }
 
     @Input('pageSize')
     pageSize: number = 25;
@@ -59,7 +71,7 @@ export class PagedListDirective implements OnInit {
         //console.debug("PagedListComponent::ngOnInit()");
         let factoryParams = "";
         this.pagedListService.createList(this.factory, factoryParams,
-            this.listId, this.searchCriteriasBase, this._searchCriterias,
+            this._listId, this.searchCriteriasBase, this._searchCriterias,
             this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
             .then(response => { this.created = true; this.handleSuccessResponse(response); })
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
@@ -67,13 +79,13 @@ export class PagedListDirective implements OnInit {
 
     refreshList() {
         //console.debug("PagedListComponent::refreshList()");
-        this.pagedListService.refreshList(this.listId)
+        this.pagedListService.refreshList(this._listId)
             .then(response => this.handleSuccessResponse(response))
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     private getItems(fromIndex, pageSize) {
-        this.pagedListService.getPage(this.listId, fromIndex, pageSize)
+        this.pagedListService.getPage(this._listId, fromIndex, pageSize)
             .then(response => this.handleSuccessResponse(response))
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
@@ -86,13 +98,13 @@ export class PagedListDirective implements OnInit {
     public search(searchCriterias: any, callback?: Function): void;
 
     public search(searchCriterias: any, callback?: Function): void {
-        this.pagedListService.searchList(this.listId, searchCriterias, this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
+        this.pagedListService.searchList(this._listId, searchCriterias, this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
             .then(response => { this.handleSuccessResponse(response); if (typeof callback !== 'undefined') { callback(); }; })
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public sort(sortCriteria: string, sortReverse: boolean) {
-        this.pagedListService.sortList(this.listId, sortCriteria, sortReverse, this.fromIndex, this.pageSize)
+        this.pagedListService.sortList(this._listId, sortCriteria, sortReverse, this.fromIndex, this.pageSize)
             .then(response => this.handleSuccessResponse(response))
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
