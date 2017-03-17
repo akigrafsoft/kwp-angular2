@@ -50,8 +50,8 @@ import { Error } from '../services/error';
    passe doivent être les mêmes' : 'Passwords should match'}}</div>
  </div>
  <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
- <button type="submit" class="btn btn-default" [disabled]="!f.form.valid||inPrgs">{{LANG==='fr' ? 'Valider' :
-  'Register'}}</button>
+ <button type="submit" class="btn btn-primary pull-right" [disabled]="!f.form.valid||inPrgs">{{LANG==='fr' ? 'Valider'
+  : 'Register'}}</button>
 </form>`,
     styles: [
         `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
