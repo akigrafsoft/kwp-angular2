@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Directive, Input, Output, EventEmitter, OnInit } from '@angular/core';
-
+//ApplicationRef
 import { AuthService } from '../auth/auth.service';
 import { PagedListService } from './pagedlist.service';
 
@@ -15,19 +15,14 @@ export class PagedListDirective implements OnInit {
     @Input('kwp-paged-list')
     factory: string;
 
-    private _listId: string;
+    //private listIdChanged: boolean = false;
+    private _listId: string = null;
     @Input('listId')
     set listId(id: string) {
+        //if (this._listId !== null && this._listId !== id) {
+        //    this.listIdChanged = true;
+        //}
         this._listId = id;
-        if (this.created) {
-            this.created = false;
-            let factoryParams = "";
-            this.pagedListService.createList(this.factory, factoryParams,
-                this._listId, this.searchCriteriasBase, this._searchCriterias,
-                this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
-                .then(response => { this.created = true; this.handleSuccessResponse(response); })
-                .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
-        }
     }
 
     @Input('pageSize')
@@ -36,11 +31,12 @@ export class PagedListDirective implements OnInit {
     @Input('searchCriteriasBase')
     searchCriteriasBase: any = null;
 
+    //private searchCriteriasChanged: boolean = false;
     private _searchCriterias: any = null;
     @Input('searchCriterias')
     set searchCriterias(searchCriterias: any) {
         this._searchCriterias = searchCriterias;
-        if (this.created)
+        if (this.initDone)
             this.search(searchCriterias);
     }
 
@@ -59,26 +55,48 @@ export class PagedListDirective implements OnInit {
     currentPage: number = 0;
     nbPages: number;
 
-    private created: boolean = false;
+    private initDone: boolean = false;
 
     public error: any = null;
 
-    constructor(private auth: AuthService, private pagedListService: PagedListService) {
-        //console.debug("PagedListComponent::constructor");
+    constructor(private auth: AuthService,
+        private pagedListService: PagedListService//,
+        //private applicationRef: ApplicationRef
+    ) {
+        //console.debug("PagedList::constructor");
     }
 
     ngOnInit() {
-        //console.debug("PagedListComponent::ngOnInit()");
+        //console.debug("PagedList::ngOnInit()");
         let factoryParams = "";
         this.pagedListService.createList(this.factory, factoryParams,
             this._listId, this.searchCriteriasBase, this._searchCriterias,
             this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
-            .then(response => { this.created = true; this.handleSuccessResponse(response); })
+            .then(response => { this.handleSuccessResponse(response); })
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
+
+        this.initDone = true;
     }
 
+    //    ngDoCheck() {
+    //        console.debug("PagedList::ngDoCheck()");
+    //        if (this.listIdChanged) {
+    //            let factoryParams = "";
+    //            this.pagedListService.createList(this.factory, factoryParams,
+    //                this._listId, this.searchCriteriasBase, this._searchCriterias,
+    //                this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
+    //                .then(response => { this.handleSuccessResponse(response); })
+    //                .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
+    //        }
+    //        else if (this.searchCriteriasChanged)
+    //            this.search(this._searchCriterias);
+    //
+    //        this.listIdChanged = false;
+    //        this.searchCriteriasChanged = false;
+    //    }
+
     refreshList() {
-        //console.debug("PagedListComponent::refreshList()");
+        //console.debug("PagedList::refreshList()");
         this.pagedListService.refreshList(this._listId)
             .then(response => this.handleSuccessResponse(response))
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
@@ -110,20 +128,20 @@ export class PagedListDirective implements OnInit {
     }
 
     public prevPage() {
-        //console.debug("PagedListComponent::prevPage:" + (this.currentPage - 1));
+        //console.debug("PagedList::prevPage:" + (this.currentPage - 1));
         if (this.currentPage > 0) {
             this.getItems((this.currentPage - 1) * this.pageSize, this.pageSize);
         }
     };
     public nextPage() {
-        //console.debug("PagedListComponent::nextPage:" + (this.currentPage + 1));
+        //console.debug("PagedList::nextPage:" + (this.currentPage + 1));
         if (this.currentPage < (this.nbPages - 1)) {
             this.getItems((this.currentPage + 1) * this.pageSize, this.pageSize);
         }
     };
 
     private handleSuccessResponse(response) {
-        //console.debug("PagedListComponent::handleSuccessResponse(" + JSON.stringify(response) + ")");
+        //console.debug("PagedList::handleSuccessResponse(" + JSON.stringify(response) + ")");
         this.items = response.items;
 
         this.onItemsSet.emit(this.items);
@@ -142,6 +160,9 @@ export class PagedListDirective implements OnInit {
         this.nbPages = Math
             .ceil(this.filteredSize
             / this.pageSize);
+
+        //        console.debug("PagedList::handleSuccessResponse|");
+        //this.applicationRef.tick();
     }
 
 
