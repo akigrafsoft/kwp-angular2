@@ -3,12 +3,23 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"target": "es5",
-		"module": "commonjs",
+		"module": "es2015",
 		"moduleResolution": "node",
 		"removeComments": true,
 		"sourceMap": true,
+		"mapRoot": "",
 		"outDir": "../lib",
-		"declaration": true
+		"rootDir": ".",
+		"declaration": true,
+		"noImplicitAny": false,
+		"skipLibCheck": true,
+		"typeRoots": [
+			"./node_modules/@types"
+		],
+		"lib": [
+			"dom",
+			"es2015"
+		]
 	},
 	"angularCompilerOptions": {
 		"genDir": "compiled"

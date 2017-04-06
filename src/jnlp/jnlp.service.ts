@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, Response } from '@angular/http';
 
 import { AuthService } from '../auth/auth.service';
 
