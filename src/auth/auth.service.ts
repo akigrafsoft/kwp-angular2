@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, RequestOptions, Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -32,7 +32,7 @@ export class AuthService {
     private userAuthenticationSubject = new Subject<User>();
     private userAuthentication$ = this.userAuthenticationSubject.asObservable();
 
-    constructor(private http: Http, private baseUrl: string) { }
+    constructor(private http: Http, @Inject("baseUrl") private baseUrl: string) { }
 
     public getAuthenticatedUser(): User {
         return this.authenticatedUser;

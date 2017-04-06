@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 
 import { AuthService } from '../auth/auth.service';
@@ -14,7 +14,7 @@ export class JnlpService {
     constructor(
         private http: Http,
         private authService: AuthService,
-        private baseUrl: string) {
+        @Inject("baseUrl") private baseUrl: string) {
         if (typeof this.baseUrl === 'undefined') {
             console.warn('JnlpService.baseUrl using default');
             this.baseUrl = 'jnlp';

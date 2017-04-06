@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http, ResponseContentType } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -16,7 +16,8 @@ export class MongoDBGridFSService {
 
     //private baseUrl = 'mongodbgridfs';
 
-    constructor(private http: Http, private auth: AuthService, private baseUrl: string) { }
+    constructor(private http: Http, private auth: AuthService,
+        @Inject("baseUrl") private baseUrl: string) { }
 
     getFile(bucket: string, id: string, responseType: ResponseContentType): Observable<any> {
         let headers = new Headers({

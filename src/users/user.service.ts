@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -16,7 +16,8 @@ import { User } from './user';
 @Injectable()
 export class UserService {
 
-    constructor(private http: Http, private authService: AuthService, private baseUrl: string) { }
+    constructor(private http: Http, private authService: AuthService,
+        @Inject("baseUrl") private baseUrl: string) { }
 
     create(user: User): Observable<any | Error> {
         let headers = new Headers({
@@ -29,9 +30,6 @@ export class UserService {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then(res => res.json())
-        //            .catch(this.handleError);
     }
 
     getUser(username: string): Observable<any | Error> {

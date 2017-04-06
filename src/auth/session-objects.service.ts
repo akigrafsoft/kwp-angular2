@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -14,7 +14,7 @@ import { ServiceUtils } from '../services/service-utils';
 @Injectable()
 export class SessionObjectsService {
 
-    constructor(private http: Http, private authService: AuthService, private baseUrl: string) { }
+    constructor(private http: Http, private authService: AuthService, @Inject("baseUrl") private baseUrl: string) { }
 
     //    private extractData(res: Response): any {
     //        //console.debug("SessionObjectsService::extractData|" + res);

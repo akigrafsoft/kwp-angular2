@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
@@ -9,7 +9,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class ConfigurationService {
 
-    constructor(private http: Http, private baseUrl: string) { }
+    constructor(private http: Http, @Inject("baseUrl") private baseUrl: string) { }
 
     getConfiguration(sessionId: string) {
 

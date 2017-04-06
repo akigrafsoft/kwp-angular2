@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -15,7 +15,7 @@ import { Error } from '../services/error';
 @Injectable()
 export class ActivationService {
 
-    constructor(private http: Http, private baseUrl: string) { }
+    constructor(private http: Http, @Inject("baseUrl") private baseUrl: string) { }
 
     activate(key): Observable<any | Error> {
         let headers = new Headers();

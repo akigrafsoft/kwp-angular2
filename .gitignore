@@ -4,7 +4,7 @@
 /lib
 /dist
 /tmp
-/src/compiled
+/compiled
 
 # dependencies
 /node_modules

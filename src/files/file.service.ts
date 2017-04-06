@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { AuthService } from '../auth/auth.service';
@@ -16,7 +16,7 @@ export class FileService {
     constructor(
         private http: Http,
         private authService: AuthService,
-        private baseUrl: string) {
+        @Inject("baseUrl") private baseUrl: string) {
         if (typeof this.baseUrl === 'undefined') {
             console.warn('FileService.baseUrl using default<' + this.default_baseUrl + '>');
             this.baseUrl = this.default_baseUrl;

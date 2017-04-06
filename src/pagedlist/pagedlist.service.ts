@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { AuthService } from '../auth/auth.service';
@@ -11,7 +11,8 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class PagedListService {
 
-    constructor(private http: Http, private auth: AuthService, private baseUrl: string) { }
+    constructor(private http: Http, private auth: AuthService,
+        @Inject("baseUrl") private baseUrl: string) { }
 
     createList(listFactory, listFactoryParams,
         listId, searchCriteriasBase, searchCriterias,

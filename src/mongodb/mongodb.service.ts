@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -16,7 +16,8 @@ export class MongoDBService {
 
     //private baseUrl = 'mongodb';
 
-    constructor(private http: Http, private auth: AuthService, private baseUrl: string) { }
+    constructor(private http: Http, private auth: AuthService,
+        @Inject("baseUrl") private baseUrl: string) { }
 
     // if id is provided null, then mongodb will create its own
     addDocument(collection: string, id: string, document: any): Observable<any | Error> {
