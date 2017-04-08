@@ -167,8 +167,6 @@ export class UsersComponent {
                     console.error("Users::doDelete|" + error);
                 }
             });
-        //            .then(() => this.pagedList.refreshList())
-        //            .catch(response => { this.auth.handleErrorResponse(response); this.handleErrorResponse(response); });
     }
 
     searchUsername(username: string) {
@@ -180,18 +178,5 @@ export class UsersComponent {
             this.pagedList.search({ 'username': username });
         }
     }
-    //
-    //    private handleErrorResponse(response) {
-    //        //console.debug("EnvironmentsComponent::handleErrorResponse(" + JSON.stringify(response) + ")");
-    //
-    //        let body = response.json() || null;
-    //        if (body !== null) {
-    //            this.error = Error.build(body.errorCode || -1, body.errorReason);
-    //            setTimeout(() => {
-    //                this.error = null;
-    //            }, 3000);
-    //        }
-    //
-    //    }
 
 }

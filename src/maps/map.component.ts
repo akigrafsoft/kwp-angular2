@@ -67,7 +67,7 @@ export class MapComponent implements OnInit {
         // In order to re-center map to location when window is resized
         let _self = this;
         google.maps.event.addDomListener(window, 'resize', function() {
-            console.log("map:resize");
+            //console.log("map:resize");
             _self.map.setCenter(_self.location);
         });
     }

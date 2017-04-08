@@ -154,8 +154,6 @@ export class UserFormComponent implements OnInit {
                     .subscribe(user => this.doSetUser(user),
                     error => { }
                     );
-                //                    .then(user => this.doSetUser(user))
-                //                    .catch(error => this.auth.handleErrorResponse(error));
             }
             else {
                 this.doSetNewUser();
@@ -196,9 +194,6 @@ export class UserFormComponent implements OnInit {
                 },
                 error => { }
                 );
-            //            .then(() => {
-            //                console.debug("UserForm::update() ok");
-            //            }).catch(error => this.auth.handleErrorResponse(error));
         }
     }
 
@@ -239,10 +234,5 @@ export class UserFormComponent implements OnInit {
                 //console.debug("UserForm::save() ok");
             },
             error => { });
-        // .then().catch(error => this.auth.handleErrorResponse(error));
     }
-
-    //    goBack() {
-    //        window.history.back();
-    //    }
 }
