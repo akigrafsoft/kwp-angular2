@@ -17,7 +17,7 @@ import { Error } from '../services/error';
    [(ngModel)]="user.username" type="text" pattern="[a-zA-Z0-9.-_]+" class="form-control"
    placeholder="{{LANG==='fr' ? 'nomUtilisateur (sans espaces)' : 'username'}}" id="username" required #username="ngModel">
   <div class="alert alert-danger" [hidden]="username.valid || (username.pristine && !f.submitted)">{{LANG==='fr' ? "Le nom
-   utilisateur est requis, il ne doit pas contenir d'espaces, ni d'accents, ni certains caractères spécieux" : 'Username is
+   utilisateur est requis, il ne doit pas contenir d'espaces, ni d'accents, ni certains caractères spéciaux" : 'Username is
    required (no spaces, no accents)'}}</div>
  </div>
  <div class="form-group">
