@@ -95,7 +95,7 @@ export class PagedListDirective implements OnInit {
     //        this.searchCriteriasChanged = false;
     //    }
 
-    refreshList() {
+    public refreshList() {
         //console.debug("PagedList::refreshList()");
         this.pagedListService.refreshList(this._listId)
             .then(response => this.handleSuccessResponse(response))
