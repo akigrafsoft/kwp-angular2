@@ -85,7 +85,7 @@ export class AuthService {
             .setItem(
             AuthService.KEY_SESSION_ID,
             sessionId);
-        console.debug("AuthService::setSessionId(" + sessionId + ")");
+        //console.debug("AuthService::setSessionId(" + sessionId + ")");
     }
 
     //    public successLogin(data: any): void {
@@ -147,7 +147,7 @@ export class AuthService {
             if (!this.isLoggedIn) {
                 this.setAuthenticatedUser(data.user, data.userRoles);
             }
-            console.info("AuthService::doMapCheck(" + JSON.stringify(data) + ")|true");
+            //console.info("AuthService::doMapCheck(" + JSON.stringify(data) + ")|true");
             return true;
         }
 

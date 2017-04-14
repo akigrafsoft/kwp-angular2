@@ -1,8 +1,11 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 //import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+
+import { LatLng } from './lat-lng';
+import { Marker } from './marker';
 
 declare var google: any;
 
@@ -11,13 +14,26 @@ declare var google: any;
     template: '<div id="map"></div>',
     styles: ['#map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
 
     @Input() address: string;
-    @Input() location: any;
+
+    private _l: LatLng = null;
+    @Input() set location(l: LatLng | any) {
+        if (l instanceof LatLng)
+            this._l = l;
+        else
+            this._l = new LatLng(l.lat, l.lng);
+    }
+
+    @Output() onClickMarker = new EventEmitter<string>();
+    @Output() onMouseOverMarker = new EventEmitter<string>();
+    @Output() onMouseOutMarker = new EventEmitter<string>();
 
     map: any = null;
-    markers: Array<any> = new Array<any>();
+
+    //markers: Array<Marker> = new Array<any>();
+    markersHashMap: Object = new Object();
 
     //constructor(private sanitizer: DomSanitizer) {
     constructor() {
@@ -28,13 +44,19 @@ export class MapComponent implements OnInit {
     //'7+rue+condorcet+75009+paris'
 
     private clearMarkers() {
-        for (let marker of this.markers) {
-            marker.setMap(null);
+        //        for (let marker of this.markers) {
+        //            marker.setMap(null);
+        //        }
+        for (var k in this.markersHashMap) {
+            this.markersHashMap[k].setMap(null);
+            google.maps.event.clearListeners(this.markersHashMap[k], 'click');
+            google.maps.event.clearListeners(this.markersHashMap[k], 'mouseover');
+            google.maps.event.clearListeners(this.markersHashMap[k], 'mouseout');
         }
-        this.markers = new Array<any>();
+        this.markersHashMap = new Object();
     }
 
-    public refreshLocation(location: any) {
+    public refreshLocation(location: LatLng | any) {
         if (typeof google === 'undefined') {
             console.error("Map::refreshLocation()|Google API not loaded");
             return;
@@ -45,31 +67,41 @@ export class MapComponent implements OnInit {
         if (this.map === null)
             this.createMap(location);
         else
-            this.map.setCenter(location);
+            this.map.setCenter(new google.maps.LatLng(location.lat, location.lng));
 
         let marker = new google.maps.Marker({
-            position: location
+            position: new google.maps.LatLng(location.lat, location.lng)
             //                    animation: google.maps.Animation.BOUNCE
         });
+
         marker.setMap(this.map);
-        this.markers.push(marker);
+
+        //this.markers.push(marker);
+        this.markersHashMap["location"] = marker;
     }
 
-    private createMap(location: any) {
+    public bounceMarker(markerId: string) {
+        var marker = this.markersHashMap[markerId];
+        if (typeof marker !== 'undefined' && marker !== null) {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
+
+    public unBounceMarker(markerId: string) {
+        var marker = this.markersHashMap[markerId];
+        if (typeof marker !== 'undefined' && marker !== null) {
+            marker.setAnimation(null);
+        }
+    }
+
+    private createMap(location: LatLng | any) {
+        let l_center = new google.maps.LatLng(location.lat, location.lng);
         var mapProp = {
-            //center: new google.maps.LatLng(results[0].geometry.location.lat, results[0].geometry.location.lng),
-            center: location,
+            center: l_center,
             zoom: 11,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.map = new google.maps.Map(document.getElementById("map"), mapProp);
-
-        // In order to re-center map to location when window is resized
-        let _self = this;
-        google.maps.event.addDomListener(window, 'resize', function() {
-            //console.log("map:resize");
-            _self.map.setCenter(_self.location);
-        });
     }
 
     //    public fit(markers: Array<google.maps.Marker>) {
@@ -80,8 +112,8 @@ export class MapComponent implements OnInit {
     //        this.map.fitBounds(bounds);
     //    }
 
-    public setMarkers(locations: Array<any>) {
-        //console.debug("Map::setMarkers(" + JSON.stringify(locations) + ")");
+    public setMarkers(markers: Array<Marker>) {
+        //console.debug("Map::setMarkers(" + JSON.stringify(markers) + ")");
 
         if (typeof google === 'undefined') {
             console.error("Map::setMarkers()|Google API not loaded");
@@ -90,35 +122,51 @@ export class MapComponent implements OnInit {
 
         this.clearMarkers();
 
-        if (locations.length === 0)
+        if (markers.length === 0)
             return;
 
-        if (locations.length === 1) {
-            this.refreshLocation(locations[0]);
+        if (markers.length === 1) {
+            this.refreshLocation(markers[0].location);
             return;
         }
 
         if (this.map === null) {
             var mapProp = {
                 zoom: 10,
-                center: locations[0],
+                center: markers[0].location,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             this.map = new google.maps.Map(document.getElementById("map"), mapProp);
         }
 
+        let _self = this;
         var bounds = new google.maps.LatLngBounds();
-        for (let location of locations) {
-            var marker = new google.maps.Marker({
-                position: location
+        for (let marker of markers) {
+            var g_marker = new google.maps.Marker({
+                position: marker.location
             });
-            marker.setMap(this.map);
-            this.markers.push(marker);
-            bounds.extend(location);
+            g_marker.setMap(this.map);
+            //this.markers.push(marker);
+            this.markersHashMap[marker.id] = g_marker;
+
+            google.maps.event.addListener(g_marker, 'click', function() {
+                //console.debug("Map::click|" + marker.id);
+                _self.onClickMarker.emit(marker.id);
+            });
+            google.maps.event.addListener(g_marker, 'mouseover', function() {
+                //console.debug("Map::mouseover|" + marker.id);
+                _self.onMouseOverMarker.emit(marker.id);
+            });
+            google.maps.event.addListener(g_marker, 'mouseout', function() {
+                //console.debug("Map::mouseout|" + marker.id);
+                _self.onMouseOutMarker.emit(marker.id);
+            });
+
+            bounds.extend(g_marker.getPosition());
         }
 
-        if (locations.length > 1)
-            this.map.fitBounds(bounds);
+        //if (markers.length > 1)
+        this.map.fitBounds(bounds);
     }
 
     ngOnInit() {
@@ -130,10 +178,20 @@ export class MapComponent implements OnInit {
 
         var l_location: any;
 
-        if (typeof this.location !== 'undefined' && this.location !== null) {
+        if (typeof this._l !== 'undefined' && this._l !== null) {
             //console.debug("Map::ngOnInit() by location");
-            this.createMap(this.location);
-            this.refreshLocation(this.location);
+            this.createMap(this._l);
+            this.refreshLocation(this._l);
+
+            // In order to re-center map to location when window is resized
+            let _self = this;
+            google.maps.event.addDomListener(window, 'resize', function() {
+                //console.debug("map:resize");
+                //            if (_self._l !== null) {
+                var l_center = new google.maps.LatLng(_self._l.lat, _self._l.lng);
+                _self.map.setCenter(l_center);
+                //            }
+            });
         }
         // otherwise to by address
         else if (typeof this.address !== 'undefined' && this.address !== null) {
@@ -155,5 +213,10 @@ export class MapComponent implements OnInit {
                 });
         }
 
+    }
+
+    ngOnDestroy() {
+        // prevent memory leak
+        this.clearMarkers();
     }
 }
