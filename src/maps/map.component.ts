@@ -22,8 +22,10 @@ export class MapComponent implements OnInit, OnDestroy {
     @Input() set location(l: LatLng | any) {
         if (l instanceof LatLng)
             this._l = l;
-        else
+        else if (typeof l !== 'undefined')
             this._l = new LatLng(l.lat, l.lng);
+        else
+            this._l = null;
     }
 
     @Output() onClickMarker = new EventEmitter<string>();
