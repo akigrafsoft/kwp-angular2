@@ -23,6 +23,7 @@ import { Error } from '../services/error';
  <div class="form-group">
   <label for="email">Email</label> <input name="email" [(ngModel)]="user.email" type="email"
    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" class="form-control" placeholder="email" id="email" required>
+  <p *ngIf="emailHelp" class="help-block">{{emailHelp}}</p>
  </div>
  <div class="form-group">
   <label for="firstName">{{LANG==='fr' ? 'Prénom' : 'First name'}}</label> <input name="firstName" [(ngModel)]="user.firstName"
@@ -46,7 +47,7 @@ import { Error } from '../services/error';
  <div class="form-group">
   <label for="pw2">{{LANG==='fr' ? 'Confirmation mot de passe' : 'Retype password'}}</label><input name="pw2"
    [(ngModel)]="password2" type="password" pattern="{{user.password}}" class="form-control"
-   placeholder="{{LANG==='fr' ? 'vérifier mot de passe' : 'verify password'}}" id="pw2" required #pw2="ngModel">
+   placeholder="{{LANG==='fr' ? 're-tapez votre mot de passe' : 'type password again'}}" id="pw2" required #pw2="ngModel">
   <div class="alert alert-danger" [hidden]="pw2.valid || (pw2.pristine && !f.submitted)">{{LANG==='fr' ? 'Les mots de
    passe doivent être les mêmes' : 'Passwords should match'}}</div>
  </div>
@@ -63,6 +64,7 @@ export class RegistrationComponent implements OnInit {
 
     @Input() LANG: string = 'en';
     @Input() withPhone: boolean = false;
+    @Input() emailHelp: string = null;
     @Input() phoneHelp: string = null;
     @Input() roles: string[] = null;
     @Output() onSuccess = new EventEmitter<boolean>();
