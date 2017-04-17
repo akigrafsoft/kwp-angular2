@@ -4,7 +4,7 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 //import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
-import { LatLng } from './lat-lng';
+//import { LatLng } from './lat-lng';
 import { Marker } from './marker';
 
 declare var google: any;
@@ -16,16 +16,28 @@ declare var google: any;
 })
 export class MapComponent implements OnInit, OnDestroy {
 
-    @Input() address: string;
+    @Input() address: string = null;
 
-    private _l: LatLng = null;
-    @Input() set location(l: LatLng | any) {
-        if (l instanceof LatLng)
-            this._l = l;
-        else if (typeof l !== 'undefined')
-            this._l = new LatLng(l.lat, l.lng);
-        else
-            this._l = null;
+    private init: boolean = false;
+
+    private _l: any = null;
+    @Input() set location(l: any) {
+
+        if (typeof l === 'undefined') {
+            return;
+        }
+
+        this._l = l;
+
+        //        if (l instanceof LatLng)
+        //            this._l = l;
+        //        else if (l !== null)
+        //            this._l = new LatLng(l.lat, l.lng);
+        //        else
+        //            this._l = null;
+
+        if (this._l !== null && this.init === true)
+            this.refreshLocation(this._l);
     }
 
     @Output() onClickMarker = new EventEmitter<string>();
@@ -58,11 +70,13 @@ export class MapComponent implements OnInit, OnDestroy {
         this.markersHashMap = new Object();
     }
 
-    public refreshLocation(location: LatLng | any) {
+    private refreshLocation(location: any) {
         if (typeof google === 'undefined') {
             console.error("Map::refreshLocation()|Google API not loaded");
             return;
         }
+
+        console.debug("Map::refreshLocation()|" + JSON.stringify(location));
 
         this.clearMarkers();
 
@@ -96,7 +110,7 @@ export class MapComponent implements OnInit, OnDestroy {
         }
     }
 
-    private createMap(location: LatLng | any) {
+    private createMap(location: any) {
         let l_center = new google.maps.LatLng(location.lat, location.lng);
         var mapProp = {
             center: l_center,
@@ -178,21 +192,17 @@ export class MapComponent implements OnInit, OnDestroy {
             return;
         }
 
-        var l_location: any;
-
         if (typeof this._l !== 'undefined' && this._l !== null) {
-            //console.debug("Map::ngOnInit() by location");
-            this.createMap(this._l);
+            console.debug("Map::ngOnInit() by location");
+            //this.createMap(this._l);
             this.refreshLocation(this._l);
 
             // In order to re-center map to location when window is resized
             let _self = this;
             google.maps.event.addDomListener(window, 'resize', function() {
                 //console.debug("map:resize");
-                //            if (_self._l !== null) {
                 var l_center = new google.maps.LatLng(_self._l.lat, _self._l.lng);
                 _self.map.setCenter(l_center);
-                //            }
             });
         }
         // otherwise to by address
@@ -210,11 +220,12 @@ export class MapComponent implements OnInit, OnDestroy {
                     }
                     // console.log("geocoder status=" + status);
                     // console.log("geocoder results=" + JSON.stringify(results[0]));
-                    this.createMap(results[0].geometry.location);
+                    //this.createMap(results[0].geometry.location);
                     this.refreshLocation(results[0].geometry.location);
                 });
         }
 
+        this.init = true;
     }
 
     ngOnDestroy() {
