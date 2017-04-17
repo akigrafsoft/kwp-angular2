@@ -1,10 +1,9 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 //import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
-//import { LatLng } from './lat-lng';
 import { Marker } from './marker';
 
 declare var google: any;
@@ -12,9 +11,12 @@ declare var google: any;
 @Component({
     selector: 'kwp-maps-map',
     template: '<div id="map"></div>',
-    styles: ['#map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }']
+    styles: [`
+#map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+`]
+    //    #map * { overflow:visible;}
 })
-export class MapComponent implements OnInit, OnDestroy {
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @Input() address: string = null;
 
@@ -29,16 +31,11 @@ export class MapComponent implements OnInit, OnDestroy {
 
         this._l = l;
 
-        //        if (l instanceof LatLng)
-        //            this._l = l;
-        //        else if (l !== null)
-        //            this._l = new LatLng(l.lat, l.lng);
-        //        else
-        //            this._l = null;
-
         if (this._l !== null && this.init === true)
             this.refreshLocation(this._l);
     }
+
+    @Input() zoom: number = 11;
 
     @Output() onClickMarker = new EventEmitter<string>();
     @Output() onMouseOverMarker = new EventEmitter<string>();
@@ -58,9 +55,6 @@ export class MapComponent implements OnInit, OnDestroy {
     //'7+rue+condorcet+75009+paris'
 
     private clearMarkers() {
-        //        for (let marker of this.markers) {
-        //            marker.setMap(null);
-        //        }
         for (var k in this.markersHashMap) {
             this.markersHashMap[k].setMap(null);
             google.maps.event.clearListeners(this.markersHashMap[k], 'click');
@@ -76,24 +70,20 @@ export class MapComponent implements OnInit, OnDestroy {
             return;
         }
 
-        console.debug("Map::refreshLocation()|" + JSON.stringify(location));
+        //console.debug("Map::refreshLocation()|" + JSON.stringify(location));
 
         this.clearMarkers();
 
         if (this.map === null)
             this.createMap(location);
-        else
-            this.map.setCenter(new google.maps.LatLng(location.lat, location.lng));
 
-        let marker = new google.maps.Marker({
-            position: new google.maps.LatLng(location.lat, location.lng)
-            //                    animation: google.maps.Animation.BOUNCE
+        let g_marker = new google.maps.Marker({
+            position: location
         });
+        this.markersHashMap["location"] = g_marker;
+        g_marker.setMap(this.map);
 
-        marker.setMap(this.map);
-
-        //this.markers.push(marker);
-        this.markersHashMap["location"] = marker;
+        this.map.setCenter(location);
     }
 
     public bounceMarker(markerId: string) {
@@ -111,22 +101,14 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     private createMap(location: any) {
-        let l_center = new google.maps.LatLng(location.lat, location.lng);
+        //console.debug("Map::createMap()|" + JSON.stringify(location));
         var mapProp = {
-            center: l_center,
-            zoom: 11,
+            center: location,
+            zoom: this.zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.map = new google.maps.Map(document.getElementById("map"), mapProp);
     }
-
-    //    public fit(markers: Array<google.maps.Marker>) {
-    //        var bounds = new google.maps.LatLngBounds();
-    //        for (var i = 0; i < markers.length; i++) {
-    //            bounds.extend(markers[i].getPosition());
-    //        }
-    //        this.map.fitBounds(bounds);
-    //    }
 
     public setMarkers(markers: Array<Marker>) {
         //console.debug("Map::setMarkers(" + JSON.stringify(markers) + ")");
@@ -185,6 +167,9 @@ export class MapComponent implements OnInit, OnDestroy {
         this.map.fitBounds(bounds);
     }
 
+
+    ngAfterViewInit() { }
+
     ngOnInit() {
 
         if (typeof google === 'undefined') {
@@ -193,16 +178,13 @@ export class MapComponent implements OnInit, OnDestroy {
         }
 
         if (typeof this._l !== 'undefined' && this._l !== null) {
-            console.debug("Map::ngOnInit() by location");
-            //this.createMap(this._l);
+            //console.debug("Map::ngOnInit() by location " + JSON.stringify(this._l));
             this.refreshLocation(this._l);
 
             // In order to re-center map to location when window is resized
             let _self = this;
             google.maps.event.addDomListener(window, 'resize', function() {
-                //console.debug("map:resize");
-                var l_center = new google.maps.LatLng(_self._l.lat, _self._l.lng);
-                _self.map.setCenter(l_center);
+                _self.map.setCenter(_self._l);
             });
         }
         // otherwise to by address

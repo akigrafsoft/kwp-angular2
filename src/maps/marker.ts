@@ -2,8 +2,6 @@
 // Author: Kevin Moyse
 //
 
-//import { LatLng } from './lat-lng';
-
 export class Marker {
 
     public id: string;
