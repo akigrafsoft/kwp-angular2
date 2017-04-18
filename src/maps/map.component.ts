@@ -43,6 +43,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     map: any = null;
 
+    private _bounds: any = null;
+
     //markers: Array<Marker> = new Array<any>();
     markersHashMap: Object = new Object();
 
@@ -138,7 +140,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         let _self = this;
-        var bounds = new google.maps.LatLngBounds();
+        let bounds = new google.maps.LatLngBounds();
         for (let marker of markers) {
             var g_marker = new google.maps.Marker({
                 position: marker.location
@@ -163,8 +165,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             bounds.extend(g_marker.getPosition());
         }
 
+        this._bounds = bounds;
+
         //if (markers.length > 1)
         this.map.fitBounds(bounds);
+
     }
 
 
@@ -180,12 +185,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (typeof this._l !== 'undefined' && this._l !== null) {
             //console.debug("Map::ngOnInit() by location " + JSON.stringify(this._l));
             this.refreshLocation(this._l);
-
-            // In order to re-center map to location when window is resized
-            let _self = this;
-            google.maps.event.addDomListener(window, 'resize', function() {
-                _self.map.setCenter(_self._l);
-            });
         }
         // otherwise to by address
         else if (typeof this.address !== 'undefined' && this.address !== null) {
@@ -206,6 +205,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.refreshLocation(results[0].geometry.location);
                 });
         }
+
+        // In order to re-center map to location when window is resized
+        let _self = this;
+        google.maps.event.addDomListener(window, 'resize', function() {
+            if (_self._bounds) {
+                console.log("map::resize|bounds");
+                _self.map.fitBounds(_self._bounds);
+            }
+            else {
+                console.log("map::resize|center");
+                _self.map.setCenter(_self._l);
+            }
+        });
 
         this.init = true;
     }
