@@ -46,6 +46,7 @@ export class AuthLoginComponent {
     }
     @Input() username: string = null;
     @Output() onLogin = new EventEmitter<boolean>();
+    @Output() onError = new EventEmitter<boolean>();
 
     password: string = null;
 
@@ -55,6 +56,10 @@ export class AuthLoginComponent {
         private authService: AuthService) {
     }
 
+    public getUsername(): string {
+        return this.username;
+    }
+
     login() {
         this.authService.login({ username: this.username, password: this.password })
             .subscribe(
@@ -62,7 +67,7 @@ export class AuthLoginComponent {
                 this.authService.setSessionId(json.sessionId);
                 this.authService.setAuthenticatedUser(json.user, json.userRoles);
                 this.error = null;
-                this.onLogin.emit(true);
+                this.onLogin.emit(json.tmpPasswordUsed);
             },
             error => {
                 if (error instanceof Error) {
@@ -75,7 +80,7 @@ export class AuthLoginComponent {
                     console.error("AuthLogin::login|" + error);
                     this.error = Error.build(-1, error);
                 }
-                this.onLogin.emit(false);
+                this.onError.emit(true);
             }
             );
     }
