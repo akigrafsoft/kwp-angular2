@@ -1,9 +1,9 @@
 <form name="userRegistrationForm" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()" #f="ngForm">
  <div class="form-group">
-  <label for="username">{{LANG==='fr' ? 'Nom utilisateur' : 'username'}}</label> <input name="username"
+  <label for="username">{{_l==='fr' ? 'Nom utilisateur' : 'username'}}</label> <input name="username"
    [(ngModel)]="user.username" type="text" pattern="[a-zA-Z0-9.-_]+" class="form-control"
-   placeholder="{{LANG==='fr' ? 'nomUtilisateur (sans espaces)' : 'username'}}" id="username" required #username="ngModel">
-  <div class="alert alert-danger" [hidden]="username.valid || (username.pristine && !f.submitted)">{{LANG==='fr' ? "Le nom
+   placeholder="{{_l==='fr' ? 'nomUtilisateur (sans espaces)' : 'username'}}" id="username" required #username="ngModel">
+  <div class="alert alert-danger" [hidden]="username.valid || (username.pristine && !f.submitted)">{{_l==='fr' ? "Le nom
    utilisateur est requis, il ne doit pas contenir d'espaces, ni d'accents, ni certains caractères spéciaux" : 'Username is
    required (no spaces, no accents)'}}</div>
  </div>
@@ -13,32 +13,32 @@
   <p *ngIf="emailHelp" class="help-block">{{emailHelp}}</p>
  </div>
  <div class="form-group">
-  <label for="firstName">{{LANG==='fr' ? 'Prénom' : 'First name'}}</label> <input name="firstName" [(ngModel)]="user.firstName"
-   type="text" class="form-control" placeholder="{{LANG==='fr' ? 'Prénom' : 'First name'}}" id="firstName" required>
+  <label for="firstName">{{_l==='fr' ? 'Prénom' : 'First name'}}</label> <input name="firstName" [(ngModel)]="user.firstName"
+   type="text" class="form-control" placeholder="{{_l==='fr' ? 'Prénom' : 'First name'}}" id="firstName" required>
  </div>
  <div class="form-group">
-  <label for="lastName">{{LANG==='fr' ? 'Nom' : 'Last name'}}</label> <input name="lastName" [(ngModel)]="user.lastName"
-   type="text" class="form-control" placeholder="{{LANG==='fr' ? 'Nom' : 'Last name'}}" id="lastName" required>
+  <label for="lastName">{{_l==='fr' ? 'Nom' : 'Last name'}}</label> <input name="lastName" [(ngModel)]="user.lastName"
+   type="text" class="form-control" placeholder="{{_l==='fr' ? 'Nom' : 'Last name'}}" id="lastName" required>
  </div>
  <div *ngIf="withPhone" class="form-group">
-  <label for="phone">{{LANG==='fr' ? 'Tél' : 'Phone'}}</label> <input name="phone" [(ngModel)]="user.phone" type="tel"
-   pattern="^([0|\+[0-9]{1,5})?([1-9][0-9]{8})$" class="form-control"
-   placeholder="{{LANG==='fr' ? 'Téléphone' : 'Phone number'}}" id="phone" required>
+  <label for="phone">{{_l==='fr' ? 'Tél' : 'Phone'}}</label> <input name="phone" [(ngModel)]="user.phone" type="tel"
+   pattern="^([0|\+[0-9]{1,5})?([1-9][0-9]{8})$" class="form-control" placeholder="{{_l==='fr' ? 'Téléphone' : 'Phone number'}}"
+   id="phone" required>
   <p *ngIf="phoneHelp" class="help-block">{{phoneHelp}}</p>
  </div>
  <div class="form-group">
-  <label for="password">{{LANG==='fr' ? 'Mot de passe' : 'Password'}}</label> <input name="pw1" [(ngModel)]="user.password"
+  <label for="pw1">{{_l==='fr' ? 'Mot de passe' : 'Password'}}</label> <input name="pw1" [(ngModel)]="user.password"
    type="password" pattern=".{6,}" class="form-control"
-   placeholder="{{LANG==='fr' ? 'mot de passe (6 caractères min)' : 'password (6 characters min)'}}" id="pw1" required>
+   placeholder="{{_l==='fr' ? 'mot de passe (6 caractères min)' : 'password (6 characters min)'}}" id="pw1" required>
  </div>
  <div class="form-group">
-  <label for="pw2">{{LANG==='fr' ? 'Confirmation mot de passe' : 'Retype password'}}</label><input name="pw2"
+  <label for="pw2">{{_l==='fr' ? 'Confirmation mot de passe' : 'Retype password'}}</label><input name="pw2"
    [(ngModel)]="password2" type="password" pattern="{{user.password}}" class="form-control"
-   placeholder="{{LANG==='fr' ? 're-tapez votre mot de passe' : 'type password again'}}" id="pw2" required #pw2="ngModel">
-  <div class="alert alert-danger" [hidden]="pw2.valid || (pw2.pristine && !f.submitted)">{{LANG==='fr' ? 'Les mots de
-   passe doivent être les mêmes' : 'Passwords should match'}}</div>
+   placeholder="{{_l==='fr' ? 're-tapez votre mot de passe' : 'type password again'}}" id="pw2" required #pw2="ngModel">
+  <div class="alert alert-danger" [hidden]="pw2.valid || (pw2.pristine && !f.submitted)">{{_l==='fr' ? 'Les mots de passe
+   doivent être les mêmes' : 'Passwords should match'}}</div>
  </div>
  <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
- <button type="submit" class="btn btn-primary pull-right" [disabled]="!f.form.valid||inPrgs">{{LANG==='fr' ? 'Valider'
-  : 'Register'}}</button>
+ <button type="submit" class="btn btn-primary pull-right" [disabled]="!f.form.valid||inPrgs">{{_l==='fr' ? 'Valider' :
+  'Register'}}</button>
 </form>

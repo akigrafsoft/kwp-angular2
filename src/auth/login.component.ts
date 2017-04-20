@@ -11,11 +11,11 @@ import { Error } from '../services/error';
     selector: 'auth-login',
     //    templateUrl: 'app/kwp/auth/login.component.html'
     template: `<div>
- <form name="loginForm" class="form-inline enabled" accept-charset="UTF-8" (ngSubmit)="login()" #loginForm="ngForm">
+ <form name="loginForm" class="form-inline enabled" accept-charset="UTF-8" (ngSubmit)="login()" #f="ngForm">
   <div class="form-group">
    <div class="input-group">
     <span class="input-group-addon" id="username-addon"><span class="glyphicon glyphicon-user"></span></span> <input type="text"
-     class="form-control" id="login-username" name="username" placeholder="{{LANG=='fr' ? 'nom utilisateur' : 'username'}}"
+     class="form-control" id="login-username" name="username" placeholder="{{_l=='fr' ? 'nom utilisateur' : 'username'}}"
      [(ngModel)]="username" value="" aria-describedby="username-addon" required>
    </div>
   </div>
@@ -23,14 +23,13 @@ import { Error } from '../services/error';
    <div class="input-group">
     <span class="input-group-addon" id="password-addon"> <span class="glyphicon glyphicon-lock"></span></span> <input
      type="password" class="form-control" id="login-password" name="password"
-     placeholder="{{LANG=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="password" aria-describedby="password-addon"
-     required>
+     placeholder="{{_l=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="password" aria-describedby="password-addon" required>
    </div>
   </div>
   <div class="form-group">
    &nbsp;
-   <button id='login-btn' type="submit" class="btn btn-success" [disabled]="!loginForm.form.valid">{{LANG=='fr' ?
-    'Connexion' : 'Login'}}</button>
+   <button id='login-btn' type="submit" class="btn btn-success" [disabled]="!f.form.valid">{{_l=='fr' ? 'Connexion' :
+    'Login'}}</button>
   </div>
  </form>
  <div *ngIf="error">
@@ -41,13 +40,15 @@ import { Error } from '../services/error';
 })
 export class AuthLoginComponent {
 
-    @Input() LANG: string = 'en';
+    _l: string = 'en';
+    @Input() set LANG(lang: string) {
+        this._l = lang;
+    }
     @Input() username: string = null;
     @Output() onLogin = new EventEmitter<boolean>();
 
     password: string = null;
 
-    //credentials = {};
     error: Error = null;
 
     constructor(
@@ -57,7 +58,12 @@ export class AuthLoginComponent {
     login() {
         this.authService.login({ username: this.username, password: this.password })
             .subscribe(
-            json => this.handleLoginResponse(json),
+            json => {
+                this.authService.setSessionId(json.sessionId);
+                this.authService.setAuthenticatedUser(json.user, json.userRoles);
+                this.error = null;
+                this.onLogin.emit(true);
+            },
             error => {
                 if (error instanceof Error) {
                     this.error = error;
@@ -72,20 +78,5 @@ export class AuthLoginComponent {
                 this.onLogin.emit(false);
             }
             );
-    }
-
-    private handleLoginResponse(json: any) {
-        //console.log("handleLoginResponse:" + JSON.stringify(json));
-        this.authService.setSessionId(json.sessionId);
-        this.authService.setAuthenticatedUser(json.user, json.userRoles);
-
-        this.error = null;
-
-        this.onLogin.emit(true);
-
-        // Redirect the user
-        // DO THIS IN onLogin implementation
-        //let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/';
-        //this.router.navigate([redirect]);
     }
 }

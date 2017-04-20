@@ -63,13 +63,8 @@ export class AuthService {
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.sessionId
         });
-        //        return this.http.post(this.baseUrl, JSON.stringify(credentials), { headers: headers })
-        //            .toPromise()
-        //            .then(this.extractData)
-        //            .catch(this.handleError);
         return this.http.post(this.baseUrl, JSON.stringify(credentials), { headers: headers })
             .map(ServiceUtils.extractData)
-            //.catch(this.handleError);
             .catch(response => {
                 this.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -87,10 +82,6 @@ export class AuthService {
             sessionId);
         //console.debug("AuthService::setSessionId(" + sessionId + ")");
     }
-
-    //    public successLogin(data: any): void {
-    //        this.setAuthenticatedUser(data.user, data.userRoles);
-    //    }
 
     // public acceptAuthenticatedUser(sessionId: string, user: User): void;
     // public acceptAuthenticatedUser(sessionId: string, user: User, userRoles: Array<Role>): void;
