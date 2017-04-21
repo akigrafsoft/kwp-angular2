@@ -42,7 +42,10 @@ import { Error } from '../services/error';
  <div class="form-group">
   <label for="pw1">{{_l==='fr' ? 'Mot de passe' : 'Password'}}</label> <input name="pw1" [(ngModel)]="user.password"
    type="password" pattern=".{6,}" class="form-control"
-   placeholder="{{_l==='fr' ? 'mot de passe (6 caractères min)' : 'password (6 characters min)'}}" id="pw1" required>
+   placeholder="{{_l==='fr' ? 'mot de passe (6 caractères min)' : 'password (6 characters min)'}}" id="pw1"
+   required #pw1="ngModel">
+  <div class="alert alert-danger" [hidden]="pw1.valid || (pw1.pristine && !f.submitted)">{{_l==='fr' ? '6 caractères min'
+   : '6 characters min'}}</div>
  </div>
  <div class="form-group">
   <label for="pw2">{{_l==='fr' ? 'Confirmation mot de passe' : 'Retype password'}}</label><input name="pw2"

@@ -8,3 +8,4 @@ export { UserService } from './lib/users/user.service';
 export { PasswordService } from './lib/users/password.service';
 export { Address } from './lib/users/address';
 export { User } from './lib/users/user';
+export { UsersModule } from './lib/users/users.module';

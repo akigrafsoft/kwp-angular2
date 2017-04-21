@@ -8,3 +8,4 @@ exports.UserService = require('./lib/users/user.service').UserService;
 exports.PasswordService = require('./lib/users/password.service').PasswordService;
 exports.Address = require('./lib/users/address').Address;
 exports.User = require('./lib/users/user').User;
+exports.UsersModule = require('./lib/users/users.module').UsersModule;

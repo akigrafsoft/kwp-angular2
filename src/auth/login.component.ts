@@ -70,6 +70,7 @@ export class AuthLoginComponent {
                 this.onLogin.emit(json.tmpPasswordUsed);
             },
             error => {
+                this.password = null;
                 if (error instanceof Error) {
                     this.error = error;
                     setTimeout(() => {
