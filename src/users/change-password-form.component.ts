@@ -32,8 +32,8 @@ import { Error } from '../services/error';
    doivent être les mêmes' : 'Passwords should match'}}</div>
  </div>
  <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
- <button type="submit" class="btn btn-primary pull-right" [disabled]="!f.form.valid||inPrgs">{{ _l==='fr' ? 'Valider' :
-  'Ok'}}</button>
+ <button id="chgpwd-btn" type="submit" class="btn btn-primary pull-right" [disabled]="!f.form.valid||inPrgs">{{ _l==='fr'
+  ? 'Valider' : 'Ok'}}</button>
 </form>`,
     styles: [
         `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
