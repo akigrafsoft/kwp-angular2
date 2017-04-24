@@ -26,7 +26,7 @@ export class PagedListDirective implements OnInit {
     }
 
     @Input('pageSize')
-    pageSize: number = 25;
+    public pageSize: number = 25;
 
     @Input('searchCriteriasBase')
     searchCriteriasBase: any = null;
@@ -48,12 +48,12 @@ export class PagedListDirective implements OnInit {
     items: any[];
 
     public fullSize: number;
-    filteredSize: number;
+    public filteredSize: number;
 
     fromIndex: number = 0;
 
-    currentPage: number = 0;
-    nbPages: number;
+    public currentPage: number = 0;
+    public nbPages: number;
 
     private initDone: boolean = false;
 
