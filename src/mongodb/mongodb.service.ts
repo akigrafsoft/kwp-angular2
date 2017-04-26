@@ -70,11 +70,20 @@ export class MongoDBService {
             });
     }
 
-    getDocument(collection: string, id: string): Observable<any | Error> {
+    /**
+     * excludeFields is a comma separated list of fields to exclude : field1,field2...
+     */
+    getDocument(collection: string, id: string, excludeFields?: string): Observable<any | Error> {
         let headers = new Headers({
             'SessionId': this.auth.sessionId
         });
-        return this.http.get(encodeURI(this.baseUrl + '/' + collection + '/' + id), { headers: headers })
+
+        let uri: string = this.baseUrl + '/' + collection + '/' + id;
+
+        if (excludeFields)
+            uri += "?exclude=" + excludeFields;
+
+        return this.http.get(encodeURI(uri), { headers: headers })
             .map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
