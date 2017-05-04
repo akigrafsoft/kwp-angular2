@@ -55,7 +55,7 @@ import { Error } from '../services/error';
    doivent être les mêmes' : 'Passwords should match'}}</div>
  </div>
  <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
- <button type="submit" class="btn btn-primary pull-right" [disabled]="!f.form.valid||inPrgs">{{_l==='fr' ? 'Valider' :
+ <button type="submit" class="btn btn-primary" [disabled]="!f.form.valid||inPrgs">{{_l==='fr' ? 'Valider' :
   'Register'}}</button>
 </form>`,
     styles: [
