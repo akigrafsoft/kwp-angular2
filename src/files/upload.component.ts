@@ -8,7 +8,7 @@ import { AuthService } from '../auth/auth.service';
 
 @Component({
     selector: 'kwp-file-upload',
-    template: `<div><input #input type='file' (change)='onChange()' name='{{name}}'/>
+    template: `<div><input #input type='file' accept="{{accept}}" (change)='onChange()' name='{{name}}'/>
 <div *ngIf="compPercent>=0" class="progress">
 <div #progress class="progress-bar" role="progressbar" [attr.aria-valuenow]="compPercent" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width: (compPercent < 100 ? compPercent : 100) + '%'}">
 <span class="sr-only">{{compPercent}}% Complete</span>
@@ -19,6 +19,7 @@ import { AuthService } from '../auth/auth.service';
 export class UploadComponent {
     @Input() name: string;
     @Input() uploadUrl: string;
+    @Input() accept: string;
 
     @ViewChild('input') elt_input: ElementRef;
     @ViewChild('progress') elt_progress: ElementRef;
