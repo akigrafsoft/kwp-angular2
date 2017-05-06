@@ -36,10 +36,8 @@ margin-right: 10px;
     (click)="displayAction = displayAction==='add' ? '' : 'add'"></button>
   </div>
   <div id="users_body" class="panel-body">
-   <div class="tools">
-    <div *ngIf="paged.error" class="alert alert-danger" role="alert">{{paged.error.errorReason}}</div>
-    <div *ngIf="error" class="alert alert-danger" role="alert">{{error.errorReason}}</div>
-   </div>
+   <div *ngIf="paged.error" class="alert alert-danger" role="alert">{{paged.error.reason}}</div>
+   <div *ngIf="error" class="alert alert-danger" role="alert">{{error.reason}}</div>
    <div class="tools-details">
     <div [ngSwitch]="displayAction">
      <div *ngSwitchCase="'add'" class="well">
@@ -133,7 +131,7 @@ export class UsersComponent {
     }
 
     doOpen(user: User) {
-        //console.debug("UsersComponent::onSelect(" + JSON.stringify(user) + ")");
+        //console.debug("Users::onSelect(" + JSON.stringify(user) + ")");
         let link = ['user', user.username];
         this.router.navigate(link);
     }
@@ -148,7 +146,7 @@ export class UsersComponent {
             return;
         }
 
-        //console.debug("UsersComponent::doDelete(" + JSON.stringify(this.user) + ")");
+        //console.debug("Users::doDelete(" + JSON.stringify(this.user) + ")");
         this.delInPrgrs = true;
         this.userService.del(this.user.id)
             .subscribe(() => {
@@ -170,7 +168,7 @@ export class UsersComponent {
     }
 
     searchUsername(username: string) {
-        //console.debug("EnvironmentsComponent::searchUsername(" + username + ")");
+        //console.debug("Users::searchUsername(" + username + ")");
         if (username === '') {
             this.pagedList.search(null);
         }

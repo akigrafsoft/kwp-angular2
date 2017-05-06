@@ -168,12 +168,12 @@ export class PagedListDirective implements OnInit {
 
     private handleErrorResponse(response: any) {
         this.error = {
-            errorCode: response.errorCode,
-            errorReason: response.errorReason
+            code: response.errorCode,
+            reason: response.errorReason
         };
-
-        setTimeout(() => {
-            this.error = null;
-        }, 3000);
+        //
+        //        setTimeout(() => {
+        //            this.error = null;
+        //        }, 3000);
     }
 }

@@ -15,10 +15,8 @@
     (click)="displayAction = displayAction==='add' ? '' : 'add'"></button>
   </div>
   <div id="users_body" class="panel-body">
-   <div class="tools">
-    <div *ngIf="paged.error" class="alert alert-danger" role="alert">{{paged.error.errorReason}}</div>
-    <div *ngIf="error" class="alert alert-danger" role="alert">{{error.errorReason}}</div>
-   </div>
+   <div *ngIf="paged.error" class="alert alert-danger" role="alert">{{paged.error.reason}}</div>
+   <div *ngIf="error" class="alert alert-danger" role="alert">{{error.reason}}</div>
    <div class="tools-details">
     <div [ngSwitch]="displayAction">
      <div *ngSwitchCase="'add'" class="well">
