@@ -19,6 +19,8 @@ import { AuthService } from '../auth/auth.service';
 export class UploadComponent {
     @Input() name: string;
     @Input() uploadUrl: string;
+
+    // comma separated list of accepted extensions
     @Input() accept: string;
 
     @ViewChild('input') elt_input: ElementRef;
