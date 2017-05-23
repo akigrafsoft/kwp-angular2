@@ -8,9 +8,9 @@
    required (no spaces, no accents)'}}</div>
  </div>
  <div class="form-group">
-  <label for="email">Email</label> <input name="email" [(ngModel)]="user.email" type="email"
-   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" class="form-control" placeholder="email" id="email" required>
-  <p *ngIf="emailHelp" class="help-block">{{emailHelp}}</p>
+  <label for="email">Email</label> <input id="email" name="email" [(ngModel)]="user.email" type="email"
+   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" class="form-control" placeholder="email" aria-describedby="e-h" required>
+  <p *ngIf="emailHelp" id="e-h" class="help-block">{{emailHelp}}</p>
  </div>
  <div class="form-group">
   <label for="firstName">{{_l==='fr' ? 'Prénom' : 'First name'}}</label> <input name="firstName" [(ngModel)]="user.firstName"
@@ -21,10 +21,10 @@
    type="text" class="form-control" placeholder="{{_l==='fr' ? 'Nom' : 'Last name'}}" id="lastName" required>
  </div>
  <div *ngIf="withPhone" class="form-group">
-  <label for="phone">{{_l==='fr' ? 'Tél' : 'Phone'}}</label> <input name="phone" [(ngModel)]="user.phone" type="tel"
+  <label for="phone">{{_l==='fr' ? 'Tél' : 'Phone'}}</label> <input id="phone" name="phone" [(ngModel)]="user.phone" type="tel"
    pattern="^([0|\+[0-9]{1,5})?([1-9][0-9]{8})$" class="form-control" placeholder="{{_l==='fr' ? 'Téléphone' : 'Phone number'}}"
-   id="phone" required>
-  <p *ngIf="phoneHelp" class="help-block">{{phoneHelp}}</p>
+   aria-describedby="p-h" required>
+  <p *ngIf="phoneHelp" id="p-h" class="help-block">{{phoneHelp}}</p>
  </div>
  <div class="form-group">
   <label for="pw1">{{_l==='fr' ? 'Mot de passe' : 'Password'}}</label> <input name="pw1" [(ngModel)]="user.password"
