@@ -1,10 +1,11 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, ViewChild, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-//ApplicationRef
+import { Component, ApplicationRef, ViewChild, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+//
 
 import { AuthService } from '../auth/auth.service';
+import { Error } from '../services/error';
 
 @Component({
     selector: 'kwp-file-upload',
@@ -30,9 +31,11 @@ export class UploadComponent {
 
     @Output() onUploaded = new EventEmitter<any>();
 
+    @Output() onError = new EventEmitter<Error>();
+
     constructor(
-        private authService: AuthService
-        //private ref: ApplicationRef
+        private authService: AuthService,
+        private ref: ApplicationRef
     ) { }
 
     onChange() {
@@ -57,7 +60,8 @@ export class UploadComponent {
         xhr.upload.onprogress = function(e) {
             if (e.lengthComputable) {
                 _self.compPercent = Math.round(e.loaded / e.total) * 100;
-                //_self.ref.tick();
+                //console.debug('Upload::onprogress ' + _self.compPercent);
+                _self.ref.tick();
             }
         };
 
@@ -71,8 +75,14 @@ export class UploadComponent {
                 if (xhr.status == 200) {
                     //console.debug('kwpUpload::onreadystatechange emit:' + JSON.stringify(xhr.responseText));
                     this.onUploaded.emit(JSON.parse(xhr.responseText));
-                } else {
-                    console.debug('Upload::onreadystatechange error');
+                } else if (xhr.status == 403) {
+                    console.error('Upload::onreadystatechange error 403');
+                    var body = JSON.parse(xhr.responseText);
+                    this.onError.emit(Error.build(body.errorCode || -1, body.errorReason));
+                }
+                else {
+                    console.error('Upload::onreadystatechange error ' + xhr.status);
+                    this.onError.emit(Error.build(xhr.status, "HTTP error"));
                 }
             }
         };
