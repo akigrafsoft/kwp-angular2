@@ -54,14 +54,15 @@ export class MongoDBService {
             });
     }
 
-    getDistinctDocuments(collection: string, field: string): Observable<any | Error> {
+    getDistinct(collection: string, field: string, query: any): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + collection),
             JSON.stringify({
-                'distinct': field
+                'distinct': field,
+                'query': query
             }), { headers: headers })
             .map(ServiceUtils.extractData)
             .catch(response => {
@@ -91,14 +92,14 @@ export class MongoDBService {
             });
     }
 
-    getDocuments(collection: string, queryDocument: any): Observable<any | Error> {
+    getDocuments(collection: string, query: any): Observable<any | Error> {
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + collection),
             JSON.stringify({
-                'query': queryDocument
+                'query': query
             }), { headers: headers })
             .map(ServiceUtils.extractData)
             .catch(response => {
