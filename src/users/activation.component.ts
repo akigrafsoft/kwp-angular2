@@ -13,16 +13,14 @@ import { Error } from '../services/error';
 @Component({
     selector: 'kwp-activation',
     //    templateUrl: 'app/kwp/users/activation.component.html',
-    template: `<form class="form-horizontal" name="activationForm" (ngSubmit)="onSubmit(key)" #f="ngForm">
+    template: `<form name="activationForm" (ngSubmit)="onSubmit(key)" #f="ngForm">
  <div class="form-group">
-  <label class="col-sm-2 control-label" for="a-key">{{LANG=='fr' ? 'Activation' : 'Activation key'}}</label>
-  <div class="col-lg-4 col-md-6 col-sm-10">
-   <input class="form-control" required type="text" id="a-key" name="a-key"
-    placeholder="{{LANG=='fr' ? 'Entrez la clef reçue par email' : 'Enter key received by email'}}" [(ngModel)]="key">
-  </div>
+  <label for="a-key">{{LANG=='fr' ? 'Activation' : 'Activation key'}}</label> <input class="form-control" required type="text"
+   id="a-key" name="a-key" placeholder="{{LANG=='fr' ? 'Entrez la clef reçue par email' : 'Enter key received by email'}}"
+   [(ngModel)]="key">
  </div>
  <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
- <button type="submit" class="btn btn-primary" [disabled]="!f.form.valid||inPrgs">Activer</button>
+ <button type="submit" class="btn btn-primary pull-right" [disabled]="!f.form.valid||inPrgs">Activer</button>
 </form>`
 })
 export class ActivationComponent {

@@ -25,10 +25,9 @@ import { Error } from '../services/error';
     placeholder="{{_l=='fr' ? 'mot de passe' : 'password'}}" [(ngModel)]="password" aria-describedby="password-addon" required>
   </div>
  </div>
- <div class="form-group">
-  &nbsp;
-  <button id='login-btn' type="submit" class="btn btn-success" [disabled]="!f.form.valid">{{_l=='fr' ? 'Connexion' :
-   'Login'}}</button>
+ <div class="form-group" [class.clearfix]="!inline">
+  <button id='login-btn' type="submit" class="btn btn-success" [class.pull-right]="!inline" [disabled]="!f.form.valid">{{_l=='fr'
+   ? 'Connexion' : 'Login'}}</button>
  </div>
  <div *ngIf="error">
   <span class="alert alert-warning" title="{{error.code}}">{{error.reason}}</span>
