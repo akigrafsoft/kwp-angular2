@@ -15,13 +15,9 @@ export class PagedListDirective implements OnInit {
     @Input('kwp-paged-list')
     factory: string;
 
-    //private listIdChanged: boolean = false;
     private _listId: string = null;
     @Input('listId')
     set listId(id: string) {
-        //if (this._listId !== null && this._listId !== id) {
-        //    this.listIdChanged = true;
-        //}
         this._listId = id;
     }
 
@@ -31,7 +27,6 @@ export class PagedListDirective implements OnInit {
     @Input('searchCriteriasBase')
     searchCriteriasBase: any = null;
 
-    //private searchCriteriasChanged: boolean = false;
     private _searchCriterias: any = null;
     @Input('searchCriterias')
     set searchCriterias(searchCriterias: any) {

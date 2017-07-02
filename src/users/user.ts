@@ -30,8 +30,12 @@ export class User {
         o_user.email = user.email;
         if (typeof user.phone !== 'undefined')
             o_user.phone = user.phone;
-        if (typeof user.address !== 'undefined')
-            o_user.address = user.address;
+
+        if ((typeof user.address !== 'undefined') && (user.address !== null))
+            o_user.address = Address.build(user.address);
+        else
+            o_user.address = null;
+
         if (typeof user.roles !== 'undefined')
             o_user.roles = user.roles;
         if (typeof user.activationTimeMillis !== 'undefined')
@@ -48,13 +52,5 @@ export class User {
         }
         return false;
     }
-
-    //    public static s_hasRole(user: User, role: string): boolean {
-    //        for (var name of user.roles) {
-    //            if (role === name)
-    //                return true;
-    //        }
-    //        return false;
-    //    }
 
 }
