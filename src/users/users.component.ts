@@ -72,7 +72,7 @@ import { UserService } from './user.service';
       <button class="btn btn-warning btn-xs" (click)="doEditUser(user)">
        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
       </button>
-      <button class="btn btn-warning btn-xs" [disabled]="delInPrgrs" data-toggle="modal" data-target="#myModal"
+      <button id="del" class="btn btn-warning btn-xs" [disabled]="delInPrgrs" data-toggle="modal" data-target="#myModal"
        (click)="modalSelectUser(user)">
        <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
       </button>
