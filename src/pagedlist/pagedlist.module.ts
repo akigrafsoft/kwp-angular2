@@ -14,5 +14,3 @@ import { PagedListDirective } from './pagedlist.directive';
     //providers: [PagedListService]
 })
 export class PagedListModule { }
-
-//export class PagedListDirective {};

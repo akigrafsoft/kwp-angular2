@@ -1,15 +1,16 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, OnInit, Input } from '@angular/core';
+import { Directive, OnInit, Input } from '@angular/core';
 //, DoCheck
 
-@Component({
-    selector: 'kwp-calendar',
+@Directive({
+    selector: '[kwp-calendar]',
     //    templateUrl: 'app/kwp/calendar/calendar.component.html',
-    template: '<ng-content></ng-content>'
+    //    template: '<ng-content></ng-content>',
+    exportAs: 'kwpCalendar'
 })
-export class CalendarComponent implements OnInit {
+export class CalendarDirective implements OnInit {
     //    , DoCheck
 
     daysOfAWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
@@ -17,10 +18,11 @@ export class CalendarComponent implements OnInit {
     calendarArray = new Array();
     calendarMonthIndex = 0;
 
-    @Input() items: Array<any>;
-    @Input() getDateTime: Function;
+    @Input('kwp-calendar') items: Array<any>;
 
-    @Input() showDate: Date = null;
+    @Input('getDateTime') getDateTime: Function;
+
+    @Input('showDate') showDate: Date = null;
 
     constructor() {
         //console.debug("Calendar::constructor()");

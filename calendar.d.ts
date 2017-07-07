@@ -1,1 +1,2 @@
-export { CalendarComponent } from './lib/calendar/calendar.component';
+export { CalendarDirective } from './lib/calendar/calendar.directive';
+export { CalendarModule } from './lib/calendar/calendar.module';
