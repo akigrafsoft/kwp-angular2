@@ -3,14 +3,13 @@
 //
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
 import { User } from './user';
 import { Error } from '../services/error';
 
 @Component({
     selector: 'kwp-registration',
-    //    templateUrl: 'app/kwp/users/registration.component.html',
+    //    templateUrl: 'registration.component.html',
     template: `<form name="userRegistrationForm" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()" #f="ngForm">
  <div class="form-group">
   <label for="username">{{_l==='fr' ? 'Nom utilisateur' : 'username'}}</label> <input name="username"
@@ -60,7 +59,7 @@ import { Error } from '../services/error';
 </form>`,
     styles: [
         `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
-        `.ng-invalid:not(form)  {border-left: 5px solid #a94442;`
+        `.ng-invalid:not(form)  {border-left: 5px solid #a94442;}`
     ]
 })
 export class RegistrationComponent implements OnInit {
@@ -83,8 +82,7 @@ export class RegistrationComponent implements OnInit {
     password2: string;
 
     constructor(
-        private userService: UserService,
-        private auth: AuthService) {
+        private userService: UserService) {
     }
 
     ngOnInit() {
