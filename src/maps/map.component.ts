@@ -210,11 +210,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         let _self = this;
         google.maps.event.addDomListener(window, 'resize', function() {
             if (_self._bounds) {
-                console.log("map::resize|bounds");
+                //console.debug("Map::resize|bounds");
                 _self.map.fitBounds(_self._bounds);
             }
             else {
-                console.log("map::resize|center");
+                //console.debug("Map::resize|center");
                 _self.map.setCenter(_self._l);
             }
         });
