@@ -32,11 +32,11 @@ export class UserService {
             });
     }
 
-    getUser(username: string): Observable<any | Error> {
+    getUser(userIdOrName: string): Observable<any | Error> {
         let headers = new Headers({
             'SessionId': this.authService.sessionId
         });
-        return this.http.get(encodeURI(this.baseUrl + '/' + username), { headers: headers })
+        return this.http.get(encodeURI(this.baseUrl + '/' + userIdOrName), { headers: headers })
             .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
@@ -67,17 +67,5 @@ export class UserService {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then()
-        //            .catch(this.handleError);
     }
-
-    //    private handleError(error: any) {
-    //        //let content = error.json();
-    //        console.error('UserService::handleError: An error occurred', error);
-    //        //this.auth.handleStatus(content);
-    //        //console.error('An error occurred', response);
-    //        return Promise.reject(error.message || error);
-    //    }
-
 }
