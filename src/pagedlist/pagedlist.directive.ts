@@ -36,7 +36,7 @@ export class PagedListDirective implements OnInit {
     }
 
     @Input() sortCriteria: string = null;
-    @Input() sortReverse: boolean = false;
+    @Input() reverse: boolean = false;
 
     @Output() onItemsSet = new EventEmitter<any[]>();
 
@@ -66,29 +66,12 @@ export class PagedListDirective implements OnInit {
         let factoryParams = "";
         this.pagedListService.createList(this.factory, factoryParams,
             this._listId, this.searchCriteriasBase, this._searchCriterias,
-            this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
+            this.sortCriteria, this.reverse, this.fromIndex, this.pageSize)
             .then(response => { this.handleSuccessResponse(response); })
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
 
         this.initDone = true;
     }
-
-    //    ngDoCheck() {
-    //        console.debug("PagedList::ngDoCheck()");
-    //        if (this.listIdChanged) {
-    //            let factoryParams = "";
-    //            this.pagedListService.createList(this.factory, factoryParams,
-    //                this._listId, this.searchCriteriasBase, this._searchCriterias,
-    //                this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
-    //                .then(response => { this.handleSuccessResponse(response); })
-    //                .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
-    //        }
-    //        else if (this.searchCriteriasChanged)
-    //            this.search(this._searchCriterias);
-    //
-    //        this.listIdChanged = false;
-    //        this.searchCriteriasChanged = false;
-    //    }
 
     public refreshList() {
         //console.debug("PagedList::refreshList()");
@@ -111,13 +94,13 @@ export class PagedListDirective implements OnInit {
     public search(searchCriterias: any, callback?: Function): void;
 
     public search(searchCriterias: any, callback?: Function): void {
-        this.pagedListService.searchList(this._listId, searchCriterias, this.sortCriteria, this.sortReverse, this.fromIndex, this.pageSize)
+        this.pagedListService.searchList(this._listId, searchCriterias, this.sortCriteria, this.reverse, this.fromIndex, this.pageSize)
             .then(response => { this.handleSuccessResponse(response); if (typeof callback !== 'undefined') { callback(); }; })
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
-    public sort(sortCriteria: string, sortReverse: boolean) {
-        this.pagedListService.sortList(this._listId, sortCriteria, sortReverse, this.fromIndex, this.pageSize)
+    public sort(sortCriteria: string, reverse: boolean) {
+        this.pagedListService.sortList(this._listId, sortCriteria, reverse, this.fromIndex, this.pageSize)
             .then(response => this.handleSuccessResponse(response))
             .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
@@ -141,23 +124,17 @@ export class PagedListDirective implements OnInit {
 
         this.onItemsSet.emit(this.items);
 
-        //if (this.fullSize != response.itemsFullSize) {
-        //this.onListModified();
-        //}
         this.fullSize = response.itemsFullSize;
         this.filteredSize = response.itemsFilteredSize;
         this.fromIndex = response.fromIndex;
         this.sortCriteria = response.sortCriteria;
-        this.sortReverse = response.sortReverse;
+        this.reverse = response.reverse;
         this.currentPage = Math
             .ceil(response.fromIndex
             / this.pageSize);
         this.nbPages = Math
             .ceil(this.filteredSize
             / this.pageSize);
-
-        //        console.debug("PagedList::handleSuccessResponse|");
-        //this.applicationRef.tick();
     }
 
 
@@ -166,9 +143,5 @@ export class PagedListDirective implements OnInit {
             code: response.errorCode,
             reason: response.errorReason
         };
-        //
-        //        setTimeout(() => {
-        //            this.error = null;
-        //        }, 3000);
     }
 }
