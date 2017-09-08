@@ -46,13 +46,19 @@ export class UploadComponent {
         //            this.filf;
         //        }
 
-        var file = files[0], r = new FileReader();
+        var file = files[0];
 
+        //var r = new FileReader();
         // console.debug("FileUpload::readAsArrayBuffer(" + file + ")");
-        r.readAsArrayBuffer(file);
+        //r.readAsArrayBuffer(file);
 
-        var fd = new FormData();
-        fd.append("file", file);
+        var formData = new FormData();
+        formData.append("file", file);
+
+        for (let i = 0; i < files.length; i++) {
+            //https://developer.mozilla.org/en-US/docs/Web/API/FormData/append
+            formData.append("files[]", files[i], files[i].name);
+        }
 
         let _self = this;
 
@@ -87,6 +93,6 @@ export class UploadComponent {
             }
         };
 
-        xhr.send(fd);
+        xhr.send(formData);
     }
 }

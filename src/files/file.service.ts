@@ -24,11 +24,9 @@ export class FileService {
     }
 
     getFile(filename: string) {
-
         let headers = new Headers({
             'SessionId': this.authService.sessionId
         });
-
         return this.http.get(encodeURI(this.baseUrl + '/' + filename), { headers: headers })
             .toPromise()
             .then(res => res.json())
