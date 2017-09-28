@@ -4,19 +4,25 @@
 import { Injectable, Inject } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
-import { AuthService } from '../auth/auth.service';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
-import 'rxjs/add/operator/toPromise';
+import { AuthService } from '../auth/auth.service';
+import { ServiceUtils } from '../services/service-utils';
+import { Error } from '../services/error';
+
+//import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class PagedListService {
 
-    constructor(private http: Http, private auth: AuthService,
+    constructor(private http: Http, private authService: AuthService,
         @Inject("baseUrl") private baseUrl: string) { }
 
     createList(listFactory, listFactoryParams,
         listId, searchCriteriasBase, searchCriterias,
-        sortCriteria, reverse, fromIndex, pageSize) {
+        sortCriteria, reverse, fromIndex, pageSize): Observable<any | Error> {
 
         let request = {
             "listFactory": listFactory,
@@ -30,12 +36,17 @@ export class PagedListService {
         };
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
-            'SessionId': this.auth.sessionId
+            'SessionId': this.authService.sessionId
         });
         return this.http.post(this.baseUrl + '/' + listId, JSON.stringify(request), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
+        //            .toPromise()
+        //            .then(res => res.json())
+        //            .catch(this.handleError);
     }
 
     refreshList(listId) {
@@ -43,12 +54,17 @@ export class PagedListService {
         let request = {};
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
-            'SessionId': this.auth.sessionId
+            'SessionId': this.authService.sessionId
         });
         return this.http.post(this.baseUrl + '/' + listId, JSON.stringify(request), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
+        //            .toPromise()
+        //            .then(res => res.json())
+        //            .catch(this.handleError);
     }
 
     searchList(listId, searchCriterias,
@@ -62,12 +78,17 @@ export class PagedListService {
         };
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
-            'SessionId': this.auth.sessionId
+            'SessionId': this.authService.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + listId), JSON.stringify(request), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
+        //            .toPromise()
+        //            .then(res => res.json())
+        //            .catch(this.handleError);
     }
 
     sortList(listId, sortCriteria, reverse, fromIndex,
@@ -80,27 +101,37 @@ export class PagedListService {
         };
         let headers = new Headers({
             'Content-Type': 'application/json;charset=UTF-8',
-            'SessionId': this.auth.sessionId
+            'SessionId': this.authService.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + listId), JSON.stringify(request), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
+        //            .toPromise()
+        //            .then(res => res.json())
+        //            .catch(this.handleError);
     }
 
     getPage(listId, fromIndex, pageSize) {
         let headers = new Headers({
-            'SessionId': this.auth.sessionId
+            'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + listId + '/' + fromIndex + '/' + pageSize), { headers: headers })
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            .map(ServiceUtils.extractData)
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
+        //            .toPromise()
+        //            .then(res => res.json())
+        //            .catch(this.handleError);
     }
 
-    private handleError(error: any) {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
-    }
+    //    private handleError(error: any) {
+    //        console.error('An error occurred', error);
+    //        return Promise.reject(error.message || error);
+    //    }
 
 }

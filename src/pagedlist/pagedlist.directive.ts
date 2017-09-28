@@ -5,6 +5,7 @@ import { Directive, Input, Output, EventEmitter, OnInit } from '@angular/core';
 //ApplicationRef
 import { AuthService } from '../auth/auth.service';
 import { PagedListService } from './pagedlist.service';
+import { Error } from '../services/error';
 
 @Directive({
     selector: '[kwp-paged-list]',
@@ -48,11 +49,12 @@ export class PagedListDirective implements OnInit {
     fromIndex: number = 0;
 
     public currentPage: number = 0;
-    public nbPages: number;
+    // This is important to set default to 0 so that pagination buttons are disabled if the createList returned error
+    public nbPages: number = 0;
 
     private initDone: boolean = false;
 
-    public error: any = null;
+    public error: Error = null;
 
     constructor(private auth: AuthService,
         private pagedListService: PagedListService//,
@@ -67,23 +69,66 @@ export class PagedListDirective implements OnInit {
         this.pagedListService.createList(this.factory, factoryParams,
             this._listId, this.searchCriteriasBase, this._searchCriterias,
             this.sortCriteria, this.reverse, this.fromIndex, this.pageSize)
-            .then(response => { this.handleSuccessResponse(response); })
-            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
-
-        this.initDone = true;
+            .subscribe(data => {
+                this.handleSuccessResponse(data);
+                this.initDone = true;
+            },
+            error => {
+                if (error instanceof Error) {
+                    this.error = error;
+                }
+                else {
+                    console.error("PagedList::ngOnInit|" + error);
+                    this.error = Error.build(-1, error);
+                }
+            });
+        //            .then(response => {
+        //                this.handleSuccessResponse(response);
+        //                this.initDone = true;
+        //            })
+        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public refreshList() {
         //console.debug("PagedList::refreshList()");
+        if (!this.initDone) {
+            console.error("PagedList::refreshList()|init not done");
+            return;
+        }
+
         this.pagedListService.refreshList(this._listId)
-            .then(response => this.handleSuccessResponse(response))
-            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
+            .subscribe(data => {
+                this.handleSuccessResponse(data);
+            },
+            error => {
+                if (error instanceof Error) {
+                    this.error = error;
+                }
+                else {
+                    console.error("PagedList::refreshList|" + error);
+                    this.error = Error.build(-1, error);
+                }
+            });
+        //            .then(response => this.handleSuccessResponse(response))
+        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     private getItems(fromIndex, pageSize) {
         this.pagedListService.getPage(this._listId, fromIndex, pageSize)
-            .then(response => this.handleSuccessResponse(response))
-            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
+            .subscribe(data => {
+                this.handleSuccessResponse(data);
+            },
+            error => {
+                if (error instanceof Error) {
+                    this.error = error;
+                }
+                else {
+                    console.error("PagedList::getItems|" + error);
+                    this.error = Error.build(-1, error);
+                }
+            });
+        //            .then(response => this.handleSuccessResponse(response))
+        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public getPagedItems(): any[] {
@@ -95,14 +140,39 @@ export class PagedListDirective implements OnInit {
 
     public search(searchCriterias: any, callback?: Function): void {
         this.pagedListService.searchList(this._listId, searchCriterias, this.sortCriteria, this.reverse, this.fromIndex, this.pageSize)
-            .then(response => { this.handleSuccessResponse(response); if (typeof callback !== 'undefined') { callback(); }; })
-            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
+            .subscribe(data => {
+                this.handleSuccessResponse(data);
+                if (typeof callback !== 'undefined') { callback(); };
+            },
+            error => {
+                if (error instanceof Error) {
+                    this.error = error;
+                }
+                else {
+                    console.error("PagedList::refreshList|" + error);
+                    this.error = Error.build(-1, error);
+                }
+            });
+        //            .then(response => { this.handleSuccessResponse(response); if (typeof callback !== 'undefined') { callback(); }; })
+        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public sort(sortCriteria: string, reverse: boolean) {
         this.pagedListService.sortList(this._listId, sortCriteria, reverse, this.fromIndex, this.pageSize)
-            .then(response => this.handleSuccessResponse(response))
-            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
+            .subscribe(data => {
+                this.handleSuccessResponse(data);
+            },
+            error => {
+                if (error instanceof Error) {
+                    this.error = error;
+                }
+                else {
+                    console.error("PagedList::refreshList|" + error);
+                    this.error = Error.build(-1, error);
+                }
+            });
+        //            .then(response => this.handleSuccessResponse(response))
+        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public prevPage() {
@@ -118,30 +188,29 @@ export class PagedListDirective implements OnInit {
         }
     };
 
-    private handleSuccessResponse(response) {
+    private handleSuccessResponse(data: any) {
         //console.debug("PagedList::handleSuccessResponse(" + JSON.stringify(response) + ")");
-        this.items = response.items;
+        this.items = data.items;
 
         this.onItemsSet.emit(this.items);
 
-        this.fullSize = response.itemsFullSize;
-        this.filteredSize = response.itemsFilteredSize;
-        this.fromIndex = response.fromIndex;
-        this.sortCriteria = response.sortCriteria;
-        this.reverse = response.reverse;
+        this.fullSize = data.itemsFullSize;
+        this.filteredSize = data.itemsFilteredSize;
+        this.fromIndex = data.fromIndex;
+        this.sortCriteria = data.sortCriteria;
+        this.reverse = data.reverse;
         this.currentPage = Math
-            .ceil(response.fromIndex
+            .ceil(data.fromIndex
             / this.pageSize);
         this.nbPages = Math
             .ceil(this.filteredSize
             / this.pageSize);
     }
 
-
-    private handleErrorResponse(response: any) {
-        this.error = {
-            code: response.errorCode,
-            reason: response.errorReason
-        };
-    }
+    //    private handleErrorResponse(response: any) {
+    //        this.error = {
+    //            code: response.errorCode,
+    //            reason: response.errorReason
+    //        };
+    //    }
 }
