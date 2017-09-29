@@ -23,7 +23,10 @@ export class User {
 
     public static build(user: any): User {
         let o_user = new User();
-        o_user.id = user.id;
+
+        if (typeof user._id !== 'undefined')
+            o_user.id = user._id.$oid;
+
         o_user.username = user.username;
         o_user.firstName = user.firstName;
         o_user.lastName = user.lastName;
@@ -42,6 +45,7 @@ export class User {
             o_user.activationTimeMillis = user.activationTimeMillis;
         if (typeof user.lSLTMs !== 'undefined')
             o_user.lSLTMs = user.lSLTMs;
+
         return o_user;
     }
 

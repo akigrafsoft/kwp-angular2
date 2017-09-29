@@ -19,7 +19,7 @@ import { Error } from '../services/error';
   <label for="username" class="col-sm-2 control-label">{{_l==='fr' ? 'Utilisateur' : 'Username'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
    <input name="username" [(ngModel)]="_user.username" type="text" class="form-control" placeholder="username" id="username"
-    required="newUser" disabled="!newUser">
+    [required]="newUser" disabled="!newUser">
   </div>
  </div>
  <div class="form-group" *ngIf="!newUser">
@@ -39,21 +39,21 @@ import { Error } from '../services/error';
   <label for="firstName" class="col-sm-2 control-label">{{_l==='fr' ? 'Prénom' : 'Firstname'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
    <input name="firstName" [(ngModel)]="_user.firstName" type="text" class="form-control" placeholder="FirstName" id="firstName"
-    required="newUser">
+    [required]="newUser">
   </div>
  </div>
  <div class="form-group">
   <label for="lastName" class="col-sm-2 control-label">{{_l==='fr' ? 'Nom' : 'LastName'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
    <input name="lastName" [(ngModel)]="_user.lastName" type="text" class="form-control" placeholder="LastName" id="lastName"
-    required="newUser">
+    [required]="newUser">
   </div>
  </div>
  <div class="form-group">
   <label for="phone" class="col-sm-2 control-label">{{_l==='fr' ? 'Téléphone' : 'Phone'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
    <input name="phone" [(ngModel)]="_user.phone" type="tel" class="form-control" placeholder="Phone" id="phone"
-    required="newUser">
+    [required]="newUser">
   </div>
  </div>
  <div class="form-group">
