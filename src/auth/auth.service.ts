@@ -159,10 +159,13 @@ export class AuthService {
         if (!this.authenticatedRoles)
             return false;
 
+        if (this.hasRole('ROOT'))
+            return true;
+
         for (var role of this.authenticatedRoles) {
             for (var right of role.frontendRights) {
-                if (right === 'all')
-                    return true;
+                //                if (right === 'all')
+                //                    return true;
                 if (i_right === right)
                     return true;
             }

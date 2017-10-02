@@ -9,15 +9,15 @@ import { ActivationComponent } from './activation.component';
 import { RegistrationComponent } from './registration.component';
 
 import { UserFormComponent } from './user-form.component';
-import { UsersComponent } from './users.component';
+import { UsersListComponent } from './users-list.component';
 import { ChangePasswordFormComponent } from './change-password-form.component';
 
 @NgModule({
     imports: [
         CommonModule, FormsModule, PagedListModule
     ],
-    declarations: [ActivationComponent, RegistrationComponent, UserFormComponent, UsersComponent, ChangePasswordFormComponent],
-    exports: [ActivationComponent, RegistrationComponent, UserFormComponent, UsersComponent, ChangePasswordFormComponent]
+    declarations: [ActivationComponent, RegistrationComponent, UserFormComponent, UsersListComponent, ChangePasswordFormComponent],
+    exports: [ActivationComponent, RegistrationComponent, UserFormComponent, UsersListComponent, ChangePasswordFormComponent]
     //Do not specify app-wide singleton providers in a shared module. A lazy-loaded module that imports that shared module makes its own copy of the service.
     //providers: [ActivationService, UserService]
 })

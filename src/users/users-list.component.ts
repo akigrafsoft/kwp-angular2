@@ -11,7 +11,7 @@ import { Error } from '../services/error';
 import { UserService } from './user.service';
 
 @Component({
-    selector: 'kwp-users',
+    selector: 'kwp-users-list',
     styles: [`
 `],
     template: `<div class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'" [pageSize]="_n" #paged="kwpPagedList">
@@ -106,7 +106,7 @@ import { UserService } from './user.service';
 </div>`
 })
 
-export class UsersComponent {
+export class UsersListComponent {
 
     _l: string = 'en';
     @Input() set LANG(l: string) {

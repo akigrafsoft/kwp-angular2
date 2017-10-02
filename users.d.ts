@@ -3,7 +3,7 @@ export { ActivationService } from './lib/users/activation.service';
 export { RegistrationComponent } from './lib/users/registration.component';
 export { UserFormComponent } from './lib/users/user-form.component';
 export { ChangePasswordFormComponent } from './lib/users/change-password-form.component';
-export { UsersComponent } from './lib/users/users.component';
+export { UsersListComponent } from './lib/users/users-list.component';
 export { UserService } from './lib/users/user.service';
 export { PasswordService } from './lib/users/password.service';
 export { Address } from './lib/users/address';
