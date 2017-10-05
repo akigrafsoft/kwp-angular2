@@ -1,6 +1,6 @@
 import { KwpAngular2Page } from './app.po';
 
-describe('kwp-angular2 App', function() {
+describe('kwp-angular App', function() {
   let page: KwpAngular2Page;
 
   beforeEach(() => {

@@ -1,4 +1,4 @@
-# KwpAngular2
+# KwpAngular
 
 This project is initiated by AkigrafSoft.
 
@@ -28,7 +28,7 @@ It will create a tgz file like kwp-angular2-1.0.0.tgz
 
 `cd path/to/your/project/`
 
-`npm install /home/kmoyse/akgsworkspace/kwp-angular2/kwp-angular2-1.0.0.tgz`
+`npm install /path/to/kwp-angular-1.0.0.tgz`
 
 ## Running unit tests
 
