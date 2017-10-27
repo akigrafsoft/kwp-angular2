@@ -20,13 +20,13 @@ export class PagedListService {
     constructor(private http: Http, private authService: AuthService,
         @Inject("baseUrl") private baseUrl: string) { }
 
-    createList(listFactory, listFactoryParams,
-        listId, searchCriteriasBase, searchCriterias,
-        sortCriteria, reverse, fromIndex, pageSize): Observable<any | Error> {
+    createList(factory: string, factoryParams: Object,
+        listId: string, searchCriteriasBase: Object, searchCriterias: Object,
+        sortCriteria: string, reverse: boolean, fromIndex: number, pageSize: number): Observable<any | Error> {
 
         let request = {
-            "listFactory": listFactory,
-            "listFactoryParams": listFactoryParams,
+            "factory": factory,
+            "factoryParams": factoryParams,
             "searchCriteriasBase": searchCriteriasBase,
             "searchCriterias": searchCriterias,
             "sortCriteria": sortCriteria,

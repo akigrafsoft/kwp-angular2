@@ -16,6 +16,9 @@ export class PagedListDirective implements OnInit {
     @Input('kwp-paged-list')
     factory: string;
 
+    @Input('factory-params')
+    public factoryParams: Object = null;
+
     private _listId: string = null;
     @Input('listId')
     set listId(id: string) {
@@ -65,8 +68,8 @@ export class PagedListDirective implements OnInit {
 
     ngOnInit() {
         //console.debug("PagedList::ngOnInit()");
-        let factoryParams = "";
-        this.pagedListService.createList(this.factory, factoryParams,
+        //        let factoryParams = "";
+        this.pagedListService.createList(this.factory, this.factoryParams,
             this._listId, this.searchCriteriasBase, this._searchCriterias,
             this.sortCriteria, this.reverse, this.fromIndex, this.pageSize)
             .subscribe(data => {
