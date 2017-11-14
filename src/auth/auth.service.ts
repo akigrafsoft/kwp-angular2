@@ -136,9 +136,13 @@ export class AuthService {
         let data = ServiceUtils.extractData(response);
         if (data.user) {
             if (!this.isLoggedIn) {
-                this.setAuthenticatedUser(data.user, data.userRoles);
+                var userRoles = new Array<Role>();
+                if (typeof data.userRoles !== 'undefined')
+                    for (var role of data.userRoles) {
+                        userRoles.push(Role.build(role));
+                    }
+                this.setAuthenticatedUser(User.build(data.user), userRoles);
             }
-            //console.info("AuthService::doMapCheck(" + JSON.stringify(data) + ")|true");
             return true;
         }
 
@@ -164,8 +168,6 @@ export class AuthService {
 
         for (var role of this.authenticatedRoles) {
             for (var right of role.frontendRights) {
-                //                if (right === 'all')
-                //                    return true;
                 if (i_right === right)
                     return true;
             }
@@ -207,24 +209,4 @@ export class AuthService {
         { console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status); }
     }
 
-    //    private handleError(error: Response | any): Observable<string> {
-    //        // In a real world app, we might use a remote logging infrastructure
-    //        let errMsg: string;
-    //        if (error instanceof Response) {
-    //            let body;
-    //            try {
-    //                body = error.json();
-    //            }
-    //            catch (e) {
-    //                body = '';
-    //            }
-    //
-    //            const err = body.error || JSON.stringify(body);
-    //            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    //        } else {
-    //            errMsg = error.message ? error.message : error.toString();
-    //        }
-    //        console.error("AuthService::handleError|" + errMsg);
-    //        return Observable.throw(errMsg + "(AuthService)");
-    //    }
 }
