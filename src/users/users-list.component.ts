@@ -3,6 +3,7 @@
 //
 import { Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 
+import { AuthService } from '../auth/auth.service';
 import { PagedListDirective } from '../pagedlist/pagedlist.directive';
 
 import { User } from './user';
@@ -15,14 +16,14 @@ import { UserService } from './user.service';
     styles: [`
 `],
     template: `<div class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'" [pageSize]="_n" #paged="kwpPagedList">
- <div class="panel-heading">
+ <div class="panel-heading clearfix">
   <span>{{_l==='fr' ? 'Utilisateurs' : 'Users'}}</span> &nbsp;<span class="badge">{{paged.fullSize ? paged.fullSize : 0}}</span>
   <div class="btn-toolbar pull-right" role="toolbar" aria-label="...">
    <div class="btn-group btn-group-xs" role="group" aria-label="...">
     <button type="button" class="btn btn-default glyphicon glyphicon-search"
      (click)="displayAction = displayAction==='search' ? '' : 'search'"></button>
-    <!--     <button type="button" class="btn btn-default glyphicon glyphicon-plus" -->
-    <!--      (click)="displayAction = displayAction==='add' ? '' : 'add'"></button> -->
+    <button *ngIf="_as.isAllowed('Create_User')" type="button" class="btn btn-default glyphicon glyphicon-plus"
+     (click)="createUser=true"></button>
    </div>
    <div class="btn-group btn-group-xs" role="group" aria-label="...">
     <button class="btn btn-default" (click)="paged.refreshList()">
@@ -39,6 +40,9 @@ import { UserService } from './user.service';
  <div id="users_body" class="panel-body">
   <div *ngIf="paged.error" class="alert alert-danger" role="alert">{{paged.error.reason}}</div>
   <div *ngIf="error" class="alert alert-danger" role="alert">{{error.reason}}</div>
+  <div *ngIf="createUser" class="well">
+   <kwp-user-form [LANG]="_l" [user]="null" (onCreated)="createUser=false;paged.refreshList()" (onCancelled)="createUser=false"></kwp-user-form>
+  </div>
   <div class="table-responsive">
    <table class="table table-striped">
     <tr>
@@ -64,7 +68,7 @@ import { UserService } from './user.service';
     </tr>
     <tr *ngFor="let user of paged.getPagedItems()">
      <td><button class="btn btn-xs btn-default" type="button" (click)="doSelectUser(user)">{{user.username}}</button></td>
-     <td>{{user.id}}</td>
+     <td>{{user | objectId}}</td>
      <td>{{user.firstName}}</td>
      <td>{{user.lastName}}</td>
      <td>{{user.roles}}</td>
@@ -80,10 +84,10 @@ import { UserService } from './user.service';
     </tr>
    </table>
   </div>
+  <div *ngIf="e_user" class="well">
+   <kwp-user-form [LANG]="_l" [user]="e_user" (onUpdated)="closeEdit();paged.refreshList()" (onCancelled)="cancelEdit()"></kwp-user-form>
+  </div>
   <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
- </div>
- <div class="panel-footer" *ngIf="e_user">
-  <kwp-user-form [LANG]="_l" [user]="e_user" (onUpdated)="closeEdit()" (onCancelled)="cancelEdit()"></kwp-user-form>
  </div>
  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -123,6 +127,8 @@ export class UsersListComponent {
     user: User = null;
     e_user: User = null;
 
+    createUser: boolean = false;
+
     usernameReverse: boolean = false;
     displayAction: string = '';
 
@@ -133,7 +139,8 @@ export class UsersListComponent {
     pagedList: PagedListDirective;
 
     constructor(
-        private userService: UserService) {
+        private userService: UserService,
+        public _as: AuthService) {
     }
 
     doSelectUser(user: any) {

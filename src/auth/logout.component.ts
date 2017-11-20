@@ -2,7 +2,6 @@
 // Author: Kevin Moyse
 //
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-//import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 import { Error } from '../services/error';
@@ -27,16 +26,14 @@ export class AuthLogoutComponent {
         //console.log("AuthLogout::logout()");
         this.authService.logout(this.authService.sessionId)
             .subscribe(
-            data => {
+            resp => {
+                //console.log("AuthLogout::logout resp received");
                 this.authService.successLogout();
                 this.onLogout.emit(true);
             },
             error => {
                 if (error instanceof Error) {
                     this.error = error;
-                    //                    setTimeout(() => {
-                    //                        this.error = null;
-                    //                    }, 3000);
                 }
                 else {
                     console.error("AuthLogout::logout|" + error);

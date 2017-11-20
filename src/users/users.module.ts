@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { PagedListModule } from '../pagedlist/pagedlist.module';
+import { PipesModule } from '../pipes/pipes.module';
 
 import { ActivationComponent } from './activation.component';
 
@@ -14,7 +15,7 @@ import { ChangePasswordFormComponent } from './change-password-form.component';
 
 @NgModule({
     imports: [
-        CommonModule, FormsModule, PagedListModule
+        CommonModule, FormsModule, PagedListModule, PipesModule
     ],
     declarations: [ActivationComponent, RegistrationComponent, UserFormComponent, UsersListComponent, ChangePasswordFormComponent],
     exports: [ActivationComponent, RegistrationComponent, UserFormComponent, UsersListComponent, ChangePasswordFormComponent]

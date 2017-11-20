@@ -2,8 +2,6 @@
 // Author: Kevin Moyse
 //
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-//import { ActivatedRoute, Params } from '@angular/router';
-//import { Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
@@ -19,7 +17,7 @@ import { Error } from '../services/error';
   <label for="username" class="col-sm-2 control-label">{{_l==='fr' ? 'Utilisateur' : 'Username'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
    <input name="username" [(ngModel)]="_user.username" type="text" class="form-control" placeholder="username" id="username"
-    [required]="newUser" disabled="!newUser">
+    [required]="newUser" [disabled]="!newUser">
   </div>
  </div>
  <div class="form-group" *ngIf="!newUser">
@@ -132,6 +130,7 @@ export class UserFormComponent implements OnInit {
         this._l = l;
     }
 
+    @Output() onCreated = new EventEmitter<User>();
     @Output() onUpdated = new EventEmitter<User>();
     @Output() onCancelled = new EventEmitter<boolean>();
 
@@ -142,10 +141,12 @@ export class UserFormComponent implements OnInit {
         if (user === null) {
             this.newUser = true;
             this._user = new User();
+            console.log("UserForm::user() new");
         }
         else {
             this.newUser = false;
             this._user = user;
+            console.log("UserForm::user() update");
         }
 
         if (this._user.address === null)
@@ -164,19 +165,6 @@ export class UserFormComponent implements OnInit {
 
     ngOnInit() {
         console.log("UserForm::ngOnInit()");
-        //        this.route.params.forEach((params: Params) => {
-        //            let username = params['username'];
-        //            if (typeof username !== 'undefined') {
-        //                console.log("UserForm::ngOnInit: username=" + username);
-        //                this.userService.getUser(username)
-        //                    .subscribe(user => this.doSetUser(user),
-        //                    error => { }
-        //                    );
-        //            }
-        //            else {
-        //                this.doSetNewUser();
-        //            }
-        //        });
     }
 
     addRolebyName(roleName) {
@@ -195,7 +183,6 @@ export class UserFormComponent implements OnInit {
         if (!this.newUser) {
             this.userService.update(this._user)
                 .subscribe(json => {
-                    //console.debug("UserForm::update() ok");
                     this.onUpdated.emit(User.build(json.user));
                 },
                 error => {
@@ -204,28 +191,18 @@ export class UserFormComponent implements OnInit {
                     }
                 });
         }
+        else {
+            this.userService.create(this._user)
+                .subscribe(json => {
+                    this.onCreated.emit(User.build(json.user));
+                },
+                error => {
+                    if (error instanceof Error) {
+                        this.error = error;
+                    }
+                });
+        }
     }
-
-    //    create(user: User) {
-    //        user.id = user.username;
-    //        this.userService.create(user)
-    //            .subscribe(() => {
-    //                let link = ['activation'];
-    //                //console.debug("UserForm::navigate(" + JSON.stringify(link) + ")");
-    //                this.router.navigate(link);
-    //            },
-    //            error => {
-    //                if (error instanceof Error) {
-    //                    this.error = error;
-    //                    setTimeout(() => {
-    //                        this.error = null;
-    //                    }, 3000);
-    //                }
-    //                else {
-    //                    console.error("UserForm::create|" + error);
-    //                }
-    //            });
-    //    }
 
     doCancel() {
         this.onCancelled.emit(true);

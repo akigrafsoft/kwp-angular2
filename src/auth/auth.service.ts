@@ -97,8 +97,7 @@ export class AuthService {
             'SessionId': this.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
-            .map(ServiceUtils.extractData)
-            //.catch(this.handleError);
+            //            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);

@@ -12,7 +12,7 @@ export class User {
     public email: string;
     public phone: string;
     public address: Address = null;
-    public roles: string[];
+    public roles: Array<string>;
     public activationTimeMillis: string;
 
     password: string;
@@ -20,6 +20,10 @@ export class User {
 
     //lastSuccessfulLoginTime
     public lSLTMs: string;
+
+    constructor() {
+        this.roles = new Array<string>();
+    }
 
     public static build(user: any): User {
         let o_user = new User();
@@ -39,8 +43,9 @@ export class User {
         else
             o_user.address = null;
 
-        if (typeof user.roles !== 'undefined')
-            o_user.roles = user.roles;
+        if (typeof user.roles !== 'undefined' && user.roles != null)
+            o_user.roles = new Array<string>(user.roles);
+
         if (typeof user.activationTimeMillis !== 'undefined')
             o_user.activationTimeMillis = user.activationTimeMillis;
         if (typeof user.lSLTMs !== 'undefined')

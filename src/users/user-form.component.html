@@ -3,7 +3,7 @@
   <label for="username" class="col-sm-2 control-label">{{_l==='fr' ? 'Utilisateur' : 'Username'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
    <input name="username" [(ngModel)]="_user.username" type="text" class="form-control" placeholder="username" id="username"
-    [required]="newUser" disabled="!newUser">
+    [required]="newUser" [disabled]="!newUser">
   </div>
  </div>
  <div class="form-group" *ngIf="!newUser">

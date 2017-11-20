@@ -2,7 +2,6 @@
 // Author: Kevin Moyse
 //
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-//import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 import { Error } from '../services/error';
