@@ -22,15 +22,15 @@ export class ConfigurationResolver implements Resolve<any> {
         state: RouterStateSnapshot
     ): Observable<any> | Promise<any> | any {
 
-        if (typeof this.authService.sessionId !== 'undefined' && this.authService.sessionId !== null) {
-            //sessionId = this.authService.sessionId;
-            //console.debug("ConfigurationResolver::resolve, this.auth.sessionId=" + sessionId);
-            return null;
-        }
-
         let sessionId: string = null;
 
-        if (window.localStorage.getItem(AuthService.KEY_SESSION_ID) !== null) {
+        // same as typeof this.authService.sessionId !== 'undefined' && this.authService.sessionId !== null
+        if (this.authService.sessionId != null) {
+            sessionId = this.authService.sessionId;
+            //console.debug("ConfigurationResolver::resolve, this.auth.sessionId=" + sessionId);
+            //return null;
+        }
+        else if (window.localStorage.getItem(AuthService.KEY_SESSION_ID) !== null) {
             sessionId = window.localStorage.getItem(AuthService.KEY_SESSION_ID);
             //console.debug("ConfigurationResolver::resolve|localStorage sessionId=" + sessionId);
         }
@@ -38,7 +38,10 @@ export class ConfigurationResolver implements Resolve<any> {
             console.warn("ConfigurationResolver::resolve|localStorage sessionId not found");
         }
 
-        return this.configurationService.getConfiguration(sessionId).then(data => this.handleResponse(data));
+        if (this.authService.sessionId == null || this.authService.roles == null)
+            return this.configurationService.getConfiguration(sessionId).then(data => this.handleResponse(data));
+        else
+            return null;
     }
 
     handleResponse(data) {
@@ -50,9 +53,7 @@ export class ConfigurationResolver implements Resolve<any> {
 
         // authenticatedUser
         if (data.user) {
-            //if (!this.authService.isLoggedIn) {
             this.authService.setAuthenticatedUser(data.user, data.userRoles);
-            // }
         }
 
         // roles
