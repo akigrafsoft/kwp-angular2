@@ -101,8 +101,8 @@ import { Error } from '../services/error';
    <ul class="list-group">
     <li class="list-group-item" *ngFor="let role of _user.roles">{{role}}<span class="glyphicon glyphicon-remove"
      aria-hidden="true" (click)="_user.roles.splice(_user.roles.indexOf(role),1)"></span></li>
-    <li class="list-group-item"><select name="role" [(ngModel)]="roleName"
-     (ngModelChange)="_user.roles.push($event);rolename='';">
+    <li class="list-group-item"><select name="role" [ngModel]="roleName"
+     (ngModelChange)="addRolebyName($event);rolename='';">
       <option *ngFor="let name of roles">{{name}}</option>
     </select></li>
    </ul>
@@ -153,7 +153,7 @@ export class UserFormComponent implements OnInit {
             this._user.address = new Address();
     }
 
-    roles: any;
+    roles: Array<string>;
 
     error: Error = null;
 
@@ -167,16 +167,16 @@ export class UserFormComponent implements OnInit {
         console.log("UserForm::ngOnInit()");
     }
 
-    addRolebyName(roleName) {
+    addRolebyName(roleName: string) {
         this._user.roles.push(roleName);
     }
 
-    removeRolebyName(roleName) {
-        var index = this._user.roles.indexOf(roleName);
-        if (index > -1) {
-            this._user.roles.splice(index, 1);
-        }
-    }
+    //    removeRolebyName(roleName) {
+    //        var index = this._user.roles.indexOf(roleName);
+    //        if (index > -1) {
+    //            this._user.roles.splice(index, 1);
+    //        }
+    //    }
 
     onSubmit() {
         //console.debug("UserForm::onSubmit(" + JSON.stringify(this._user) + ")");

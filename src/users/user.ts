@@ -43,8 +43,11 @@ export class User {
         else
             o_user.address = null;
 
-        if (typeof user.roles !== 'undefined' && user.roles != null)
-            o_user.roles = new Array<string>(user.roles);
+        if (typeof user.roles !== 'undefined' && user.roles != null) {
+            for (var name of user.roles) {
+                o_user.roles.push(name);
+            }
+        }
 
         if (typeof user.activationTimeMillis !== 'undefined')
             o_user.activationTimeMillis = user.activationTimeMillis;
