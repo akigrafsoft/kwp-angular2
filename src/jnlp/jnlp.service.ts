@@ -2,7 +2,8 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
+//import { Headers, Http } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { AuthService } from '../auth/auth.service';
 
@@ -12,7 +13,7 @@ import 'rxjs/add/operator/toPromise';
 export class JnlpService {
 
     constructor(
-        private http: Http,
+        private http: HttpClient,
         private authService: AuthService,
         @Inject("baseUrl") private baseUrl: string) {
         if (typeof this.baseUrl === 'undefined') {
@@ -22,7 +23,7 @@ export class JnlpService {
     }
 
     run(id: string) {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + id), { headers: headers })

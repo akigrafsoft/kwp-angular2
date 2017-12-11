@@ -2,10 +2,10 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+//import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { AuthService } from './auth.service';
@@ -13,65 +13,53 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class SessionsService {
 
-    constructor(private http: Http, private authService: AuthService, @Inject("baseUrl") private baseUrl: string) { }
-
-    private extractData(res: Response): any {
-        //console.debug("SessionsService::extractData|" + res);
-        try {
-            return res.json();
-        } catch (e) {
-            console.error("SessionsService::extractData|" + res);
-            return {};
-        }
-    }
+    constructor(private http: HttpClient,
+        private authService: AuthService,
+        @Inject("baseUrl") private baseUrl: string) { }
 
     public getSessions(): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
         return this.http.get(this.baseUrl, { headers: headers })
-            .map(this.extractData)
             .catch(this.handleError);
     }
 
     public getSession(sessionId: string): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
-            .map(this.extractData)
             .catch(this.handleError);
     }
 
     public getSessionObject(key: string): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/session/' + key), { headers: headers })
-            .map(this.extractData)
             .catch(this.handleError);
     }
 
     public destroySession(sessionId: string): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
-            .map(this.extractData)
             .catch(this.handleError);
     }
 
-    private handleError(error: Response | any) {
+    private handleError(error: HttpResponse<any> | any) {
         // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;
-        if (error instanceof Response) {
+        if (error instanceof HttpResponse) {
             let body;
             try {
-                body = error.json();
+                body = error;
             }
             catch (e) {
                 body = '';

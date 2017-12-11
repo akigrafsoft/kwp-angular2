@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { AuthService } from '../auth/auth.service';
 
@@ -14,7 +14,7 @@ export class FileService {
     private default_baseUrl = 'updwnld';  // URL to web api
 
     constructor(
-        private http: Http,
+        private http: HttpClient,
         private authService: AuthService,
         @Inject("baseUrl") private baseUrl: string) {
         if (typeof this.baseUrl === 'undefined') {
@@ -24,12 +24,13 @@ export class FileService {
     }
 
     getFile(filename: string) {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + filename), { headers: headers })
             .toPromise()
-            .then(res => res.json())
+            //.then(res => res.json())
+            .then()
             .catch(this.handleError);
     }
 

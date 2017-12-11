@@ -39,7 +39,15 @@ export class ConfigurationResolver implements Resolve<any> {
         }
 
         if (this.authService.sessionId == null || this.authService.roles == null)
-            return this.configurationService.getConfiguration(sessionId).then(data => this.handleResponse(data));
+            return this.configurationService.getConfiguration(sessionId).subscribe(
+                json => {
+                    this.handleResponse(json);
+                },
+                error => {
+                    console.warn("ConfigurationResolver::getConfiguration|error " + error);
+                }
+            );
+        //.then(data => this.handleResponse(data));
         else
             return null;
     }

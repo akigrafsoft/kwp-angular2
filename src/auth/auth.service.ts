@@ -2,7 +2,8 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { Headers, RequestOptions, Http, Response } from '@angular/http';
+//import { Headers, Http, Response } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -20,7 +21,19 @@ export class AuthService {
     public static KEY_SESSION_ID: string = 'kwp-sessionId';
 
     public isLoggedIn: boolean = false;
-    public sessionId: string;
+
+    private _sessionId: string;
+
+    public get sessionId(): string {
+        if (typeof this._sessionId !== 'undefined' && this._sessionId !== null)
+            return this._sessionId;
+
+        this._sessionId = window.localStorage.getItem(AuthService.KEY_SESSION_ID);
+        if (this._sessionId !== null)
+            return this._sessionId;
+
+        return "";
+    }
     public authenticatedUser: User = null;
     public authenticatedRoles: Array<Role>;
 
@@ -32,7 +45,7 @@ export class AuthService {
     private userAuthenticationSubject = new Subject<User>();
     private userAuthentication$ = this.userAuthenticationSubject.asObservable();
 
-    constructor(private http: Http, @Inject("baseUrl") private baseUrl: string) { }
+    constructor(private http: HttpClient, @Inject("baseUrl") private baseUrl: string) { }
 
     public getAuthenticatedUser(): User {
         return this.authenticatedUser;
@@ -59,12 +72,12 @@ export class AuthService {
     }
 
     public login(credentials: any): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.sessionId
         });
         return this.http.post(this.baseUrl, JSON.stringify(credentials), { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -75,7 +88,7 @@ export class AuthService {
     public setSessionId(sessionId: string) {
         //if (sessionId === null)
         //    alert("AuthService::setSessionId(null)!");
-        this.sessionId = sessionId;
+        this._sessionId = sessionId;
         window.localStorage
             .setItem(
             AuthService.KEY_SESSION_ID,
@@ -93,11 +106,10 @@ export class AuthService {
     }
 
     public logout(sessionId: string): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'SessionId': this.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
-            //            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -108,7 +120,7 @@ export class AuthService {
         //alert("AuthService::cleanUp()!");
         window.localStorage.removeItem(AuthService.KEY_SESSION_ID);
         this.isLoggedIn = false;
-        this.sessionId = null;
+        this._sessionId = null;
         this.authenticatedUser = null;
         this.userAuthenticationSubject.next(this.authenticatedUser);
     }
@@ -121,7 +133,7 @@ export class AuthService {
      * 
      */
     public check(sessionId: string, redirectUrl: string): Observable<boolean> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'SessionId': sessionId
         });
         return this.http.get(encodeURI(this.baseUrl), { headers: headers })
@@ -132,15 +144,15 @@ export class AuthService {
     }
 
     private doMapCheck(redirectUrl: string, response: any): boolean {
-        let data = ServiceUtils.extractData(response);
-        if (data.user) {
+        //let data = ServiceUtils.extractData(response);
+        if (response.user) {
             if (!this.isLoggedIn) {
                 var userRoles = new Array<Role>();
-                if (typeof data.userRoles !== 'undefined')
-                    for (var role of data.userRoles) {
+                if (typeof response.userRoles !== 'undefined')
+                    for (var role of response.userRoles) {
                         userRoles.push(Role.build(role));
                     }
-                this.setAuthenticatedUser(User.build(data.user), userRoles);
+                this.setAuthenticatedUser(User.build(response.user), userRoles);
             }
             return true;
         }
@@ -148,7 +160,7 @@ export class AuthService {
         // Store the attempted URL for redirecting
         this.redirectUrl = redirectUrl;
 
-        console.warn("AuthService::doMapCheck(" + JSON.stringify(data) + ")|false");
+        console.warn("AuthService::doMapCheck(" + JSON.stringify(response) + ")|false");
         return false;
     }
 
@@ -191,7 +203,7 @@ export class AuthService {
     /**
      * Takes the promise response Object (do not provide it as json !)
      */
-    public handleErrorResponse(response: Response) {
+    public handleErrorResponse(response: HttpResponse<any>) {
         //console.debug("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")");
         let status = +response.status;
         if (status == 403) {

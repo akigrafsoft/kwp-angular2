@@ -2,10 +2,11 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
+//import { Headers, Http, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+//import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { AuthService } from './auth.service';
@@ -14,21 +15,10 @@ import { ServiceUtils } from '../services/service-utils';
 @Injectable()
 export class SessionObjectsService {
 
-    constructor(private http: Http, private authService: AuthService, @Inject("baseUrl") private baseUrl: string) { }
-
-    //    private extractData(res: Response): any {
-    //        //console.debug("SessionObjectsService::extractData|" + res);
-    //        try {
-    //            let body = res.json();
-    //            return body;
-    //        } catch (e) {
-    //            console.error("SessionObjectsService::extractData|" + res);
-    //            return {};
-    //        }
-    //    }
+    constructor(private http: HttpClient, private authService: AuthService, @Inject("baseUrl") private baseUrl: string) { }
 
     public setSessionObject(key: string, object: any): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
@@ -40,7 +30,7 @@ export class SessionObjectsService {
                 ]
             }),
             { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -48,7 +38,7 @@ export class SessionObjectsService {
     }
 
     public getSessionObject(key: string): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
@@ -58,7 +48,7 @@ export class SessionObjectsService {
                 'keys': [key]
             }),
             { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -66,7 +56,7 @@ export class SessionObjectsService {
     }
 
     public getSessionObjects(keys: Array<string>): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
@@ -75,7 +65,7 @@ export class SessionObjectsService {
                 'keys': keys
             }),
             { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);

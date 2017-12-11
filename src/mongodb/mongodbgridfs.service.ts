@@ -2,7 +2,8 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { Headers, Http, ResponseContentType } from '@angular/http';
+//import { Headers, Http, ResponseContentType } from '@angular/http';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -15,30 +16,34 @@ import { Error } from '../services/error';
 @Injectable()
 export class MongoDBGridFSService {
 
-    //private baseUrl = 'mongodbgridfs';
-
-    constructor(private http: Http, private authService: AuthService,
+    constructor(private http: HttpClient,
+        private authService: AuthService,
         @Inject("baseUrl") private baseUrl: string) { }
 
-    getFile(bucket: string, id: string, responseType: ResponseContentType): Observable<any> {
-        let headers = new Headers({
+    getTextFile(bucket: string, id: string): Observable<any> {
+        let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
-        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, responseType: responseType })
+        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, responseType: 'text' })
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then()
-        //            .catch(error => {
-        //                console.error('An error occurred', error);
-        //                return Promise.reject(error.message || error);
-        //            });
+    }
+
+    getBlobFile(bucket: string, id: string): Observable<any> {
+        let headers = new HttpHeaders({
+            'SessionId': this.authService.sessionId
+        });
+        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, responseType: 'blob' })
+            .catch(response => {
+                this.authService.handleErrorResponse(response);
+                return ServiceUtils.handleError(response);
+            });
     }
 
     getMetadata(bucket: string, id: string): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
         //        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id + '/metadata'), { headers: headers })
@@ -47,7 +52,6 @@ export class MongoDBGridFSService {
         //      .catch(this.handleError);
 
         return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id + '/metadata'), { headers: headers })
-            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -99,7 +103,7 @@ export class MongoDBGridFSService {
     }
 
     addFile(bucket: string, fromfile: string, filename: string, metadata: any): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
@@ -112,7 +116,6 @@ export class MongoDBGridFSService {
 
         return this.http.post(encodeURI(this.baseUrl + '/' + bucket),
             JSON.stringify(document), { headers: headers })
-            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -120,11 +123,10 @@ export class MongoDBGridFSService {
     }
 
     deleteFile(bucket: string, id: string): Observable<any> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers })
-            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);

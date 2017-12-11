@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -14,14 +14,12 @@ import { Error } from '../services/error';
 @Injectable()
 export class MongoDBService {
 
-    //private baseUrl = 'mongodb';
-
-    constructor(private http: Http, private auth: AuthService,
+    constructor(private http: HttpClient, private auth: AuthService,
         @Inject("baseUrl") private baseUrl: string) { }
 
     // if id is provided null, then mongodb will create its own
     addDocument(collection: string, id: string, document: any): Observable<any | Error> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
@@ -32,7 +30,7 @@ export class MongoDBService {
         }
         return this.http.post(encodeURI(uri),
             JSON.stringify(document), { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -43,11 +41,11 @@ export class MongoDBService {
     }
 
     deleteDocument(collection: string, id: string): Observable<any | Error> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'SessionId': this.auth.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + collection + '/' + id), { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -55,7 +53,7 @@ export class MongoDBService {
     }
 
     getDistinct(collection: string, field: string, query: any): Observable<any | Error> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
@@ -64,7 +62,7 @@ export class MongoDBService {
                 'distinct': field,
                 'query': query
             }), { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -75,17 +73,26 @@ export class MongoDBService {
      * excludeFields is a comma separated list of fields to exclude : field1,field2...
      */
     getDocument(collection: string, id: string, excludeFields?: string): Observable<any | Error> {
-        let headers = new Headers({
+
+        //        console.debug("getDocument hello");
+        //        console.debug("getDocument, this.auth=" + this.auth);
+        //        console.debug("getDocument, sessionId=" + this.auth.sessionId);
+        //        console.debug("getDocument hello 2");
+
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
+
+        //        console.debug("getDocument, headers=" + JSON.stringify(headers));
 
         let uri: string = this.baseUrl + '/' + collection + '/' + id;
 
         if (excludeFields)
             uri += "?exclude=" + excludeFields;
 
-        return this.http.get(encodeURI(uri), { headers: headers })
-            .map(ServiceUtils.extractData)
+        return this.http.get(encodeURI(uri), { headers: headers, responseType: 'json' })
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -93,7 +100,7 @@ export class MongoDBService {
     }
 
     getDocuments(collection: string, query: any): Observable<any | Error> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
@@ -101,7 +108,7 @@ export class MongoDBService {
             JSON.stringify({
                 'query': query
             }), { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -110,7 +117,7 @@ export class MongoDBService {
 
     //    match: any, group: any
     getAggregation(collection: string, agg: any[]): Observable<any | Error> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
@@ -119,7 +126,7 @@ export class MongoDBService {
             JSON.stringify({
                 'aggregate': agg
             }), { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -127,7 +134,7 @@ export class MongoDBService {
     }
 
     getDocumentsSorted(collection: string, queryDocument: any, sortDocument: any): Observable<any | Error> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
@@ -136,7 +143,7 @@ export class MongoDBService {
                 'query': queryDocument,
                 'sort': sortDocument
             }), { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
@@ -144,13 +151,13 @@ export class MongoDBService {
     }
 
     updateDocument(collection: string, id: string, updateDocument: any): Observable<any | Error> {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.auth.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + collection + '/' + id),
             JSON.stringify(updateDocument), { headers: headers })
-            .map(ServiceUtils.extractData)
+            //.map(ServiceUtils.extractData)
             .catch(response => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);

@@ -2,10 +2,10 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+//import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { AuthService } from '../auth/auth.service';
@@ -17,7 +17,7 @@ import { Error } from '../services/error';
 @Injectable()
 export class PagedListService {
 
-    constructor(private http: Http, private authService: AuthService,
+    constructor(private http: HttpClient, private authService: AuthService,
         @Inject("baseUrl") private baseUrl: string) { }
 
     createList(factory: string, factoryParams: Object,
@@ -34,37 +34,29 @@ export class PagedListService {
             "fromIndex": fromIndex,
             "pageSize": pageSize
         };
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
         return this.http.post(this.baseUrl + '/' + listId, JSON.stringify(request), { headers: headers })
-            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then(res => res.json())
-        //            .catch(this.handleError);
     }
 
     refreshList(listId) {
         //console.log("PagedListService::refreshList()");
         let request = {};
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
         return this.http.post(this.baseUrl + '/' + listId, JSON.stringify(request), { headers: headers })
-            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then(res => res.json())
-        //            .catch(this.handleError);
     }
 
     searchList(listId, searchCriterias,
@@ -76,19 +68,15 @@ export class PagedListService {
             "fromIndex": fromIndex,
             "pageSize": pageSize
         };
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + listId), JSON.stringify(request), { headers: headers })
-            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then(res => res.json())
-        //            .catch(this.handleError);
     }
 
     sortList(listId, sortCriteria, reverse, fromIndex,
@@ -99,39 +87,26 @@ export class PagedListService {
             "fromIndex": fromIndex,
             "pageSize": pageSize
         };
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'Content-Type': 'application/json;charset=UTF-8',
             'SessionId': this.authService.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + listId), JSON.stringify(request), { headers: headers })
-            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then(res => res.json())
-        //            .catch(this.handleError);
     }
 
     getPage(listId, fromIndex, pageSize) {
-        let headers = new Headers({
+        let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + listId + '/' + fromIndex + '/' + pageSize), { headers: headers })
-            .map(ServiceUtils.extractData)
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then(res => res.json())
-        //            .catch(this.handleError);
     }
-
-    //    private handleError(error: any) {
-    //        console.error('An error occurred', error);
-    //        return Promise.reject(error.message || error);
-    //    }
 
 }
