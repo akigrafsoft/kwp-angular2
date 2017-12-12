@@ -31,11 +31,22 @@ export class MongoDBGridFSService {
             });
     }
 
-    getBlobFile(bucket: string, id: string): Observable<any> {
+    //    getBlobFile(bucket: string, id: string): Observable<any> {
+    //        let headers = new HttpHeaders({
+    //            'SessionId': this.authService.sessionId
+    //        });
+    //        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, responseType: 'blob' })
+    //            .catch(response => {
+    //                this.authService.handleErrorResponse(response);
+    //                return ServiceUtils.handleError(response);
+    //            });
+    //    }
+
+    getFile(bucket: string, id: string, observe: any, responseType: any): Observable<any> {
         let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
-        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, responseType: 'blob' })
+        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, observe: observe, responseType: responseType })
             .catch(response => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
