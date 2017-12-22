@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 //import { Response } from '@angular/http';
-import { HttpResponse  } from '@angular/common/http';
+import { HttpErrorResponse  } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
@@ -22,7 +22,7 @@ export class ServiceUtils {
     //    }
 
     //| Response 
-    public static handleError(response: HttpResponse<any> | any): Observable<Error> | Observable<any> {
+    public static handleError(response: HttpErrorResponse | any): Observable<Error> | Observable<any> {
         // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;
         //        if (response instanceof Response) {
@@ -44,14 +44,14 @@ export class ServiceUtils {
         //            const err = JSON.stringify(response);
         //            errMsg = `${response.status} - ${response.statusText || ''} ${err}`;
         //        }
-        if (response instanceof HttpResponse) {
+        if (response instanceof HttpErrorResponse) {
             try {
-                let body = response.body;
-                let error: Error = Error.build(body.errorCode || -1, body.errorReason);
+                let err = response.error;
+                let error: Error = Error.build(err.errorCode || -1, err.errorReason);
                 var data = new Object();
-                for (var k in body) {
+                for (var k in err) {
                     if ((k !== 'errorCode') && (k !== 'errorReason'))
-                        data[k] = body[k];
+                        data[k] = err[k];
                 }
                 error.setData(data);
                 return Observable.throw(error);

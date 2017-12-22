@@ -3,7 +3,7 @@
 //
 import { Injectable, Inject } from '@angular/core';
 //import { Headers, Http, Response } from '@angular/http';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -203,7 +203,7 @@ export class AuthService {
     /**
      * Takes the promise response Object (do not provide it as json !)
      */
-    public handleErrorResponse(response: HttpResponse<any>) {
+    public handleErrorResponse(response: HttpErrorResponse) {
         //console.debug("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")");
         let status = +response.status;
         if (status == 403) {
