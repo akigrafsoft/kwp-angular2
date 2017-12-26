@@ -68,7 +68,6 @@ export class PagedListDirective implements OnInit {
 
     ngOnInit() {
         //console.debug("PagedList::ngOnInit()");
-        //        let factoryParams = "";
         this.pagedListService.createList(this.factory, this.factoryParams,
             this._listId, this.searchCriteriasBase, this._searchCriterias,
             this.sortCriteria, this.reverse, this.fromIndex, this.pageSize)
@@ -85,11 +84,6 @@ export class PagedListDirective implements OnInit {
                     this.error = Error.build(-1, error);
                 }
             });
-        //            .then(response => {
-        //                this.handleSuccessResponse(response);
-        //                this.initDone = true;
-        //            })
-        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public refreshList() {
@@ -112,8 +106,6 @@ export class PagedListDirective implements OnInit {
                     this.error = Error.build(-1, error);
                 }
             });
-        //            .then(response => this.handleSuccessResponse(response))
-        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     private getItems(fromIndex, pageSize) {
@@ -130,8 +122,6 @@ export class PagedListDirective implements OnInit {
                     this.error = Error.build(-1, error);
                 }
             });
-        //            .then(response => this.handleSuccessResponse(response))
-        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public getPagedItems(): any[] {
@@ -156,8 +146,6 @@ export class PagedListDirective implements OnInit {
                     this.error = Error.build(-1, error);
                 }
             });
-        //            .then(response => { this.handleSuccessResponse(response); if (typeof callback !== 'undefined') { callback(); }; })
-        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public sort(sortCriteria: string, reverse: boolean) {
@@ -174,8 +162,6 @@ export class PagedListDirective implements OnInit {
                     this.error = Error.build(-1, error);
                 }
             });
-        //            .then(response => this.handleSuccessResponse(response))
-        //            .catch(error => { this.auth.handleErrorResponse(error); this.handleErrorResponse(error.json()) });
     }
 
     public prevPage() {
@@ -210,10 +196,4 @@ export class PagedListDirective implements OnInit {
             / this.pageSize);
     }
 
-    //    private handleErrorResponse(response: any) {
-    //        this.error = {
-    //            code: response.errorCode,
-    //            reason: response.errorReason
-    //        };
-    //    }
 }

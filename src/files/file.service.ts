@@ -29,7 +29,6 @@ export class FileService {
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + filename), { headers: headers })
             .toPromise()
-            //.then(res => res.json())
             .then()
             .catch(this.handleError);
     }

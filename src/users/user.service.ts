@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -25,7 +25,7 @@ export class UserService {
             'SessionId': this.authService.sessionId
         });
         return this.http.post(encodeURI(this.baseUrl), JSON.stringify(user), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -36,7 +36,7 @@ export class UserService {
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + userIdOrName), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -48,7 +48,7 @@ export class UserService {
             'SessionId': this.authService.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + user.id), JSON.stringify(user), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -59,7 +59,7 @@ export class UserService {
             'SessionId': this.authService.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + id), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });

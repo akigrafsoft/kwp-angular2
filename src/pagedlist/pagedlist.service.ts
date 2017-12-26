@@ -2,17 +2,14 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
-//import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { AuthService } from '../auth/auth.service';
 import { ServiceUtils } from '../services/service-utils';
 import { Error } from '../services/error';
-
-//import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class PagedListService {
@@ -39,7 +36,7 @@ export class PagedListService {
             'SessionId': this.authService.sessionId
         });
         return this.http.post(this.baseUrl + '/' + listId, JSON.stringify(request), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -53,7 +50,7 @@ export class PagedListService {
             'SessionId': this.authService.sessionId
         });
         return this.http.post(this.baseUrl + '/' + listId, JSON.stringify(request), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -73,7 +70,7 @@ export class PagedListService {
             'SessionId': this.authService.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + listId), JSON.stringify(request), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -92,7 +89,7 @@ export class PagedListService {
             'SessionId': this.authService.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + listId), JSON.stringify(request), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -103,7 +100,7 @@ export class PagedListService {
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + listId + '/' + fromIndex + '/' + pageSize), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });

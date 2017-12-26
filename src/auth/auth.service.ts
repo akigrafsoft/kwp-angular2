@@ -77,8 +77,7 @@ export class AuthService {
             'SessionId': this.sessionId
         });
         return this.http.post(this.baseUrl, JSON.stringify(credentials), { headers: headers })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -110,7 +109,7 @@ export class AuthService {
             'SessionId': this.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });

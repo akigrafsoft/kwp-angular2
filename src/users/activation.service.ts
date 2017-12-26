@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -18,7 +18,7 @@ export class ActivationService {
     activate(key): Observable<any | Error> {
         let headers = new HttpHeaders();
         return this.http.get(encodeURI(this.baseUrl + '/' + key), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 return ServiceUtils.handleError(response);
             });
     }

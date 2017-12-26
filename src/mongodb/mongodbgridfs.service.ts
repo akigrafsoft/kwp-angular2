@@ -3,11 +3,10 @@
 //
 import { Injectable, Inject } from '@angular/core';
 //import { Headers, Http, ResponseContentType } from '@angular/http';
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
-//import 'rxjs/add/operator/toPromise';
 
 import { AuthService } from '../auth/auth.service';
 import { ServiceUtils } from '../services/service-utils';
@@ -25,29 +24,18 @@ export class MongoDBGridFSService {
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, responseType: 'text' })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
     }
-
-    //    getBlobFile(bucket: string, id: string): Observable<any> {
-    //        let headers = new HttpHeaders({
-    //            'SessionId': this.authService.sessionId
-    //        });
-    //        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, responseType: 'blob' })
-    //            .catch(response => {
-    //                this.authService.handleErrorResponse(response);
-    //                return ServiceUtils.handleError(response);
-    //            });
-    //    }
 
     getFile(bucket: string, id: string, observe: any, responseType: any): Observable<any> {
         let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
         return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers, observe: observe, responseType: responseType })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -57,13 +45,9 @@ export class MongoDBGridFSService {
         let headers = new HttpHeaders({
             'SessionId': this.authService.sessionId
         });
-        //        return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id + '/metadata'), { headers: headers })
-        //            .toPromise()
-        //            .then(res => res.json())
-        //      .catch(this.handleError);
-
+                
         return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id + '/metadata'), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -127,7 +111,7 @@ export class MongoDBGridFSService {
 
         return this.http.post(encodeURI(this.baseUrl + '/' + bucket),
             JSON.stringify(document), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -138,7 +122,7 @@ export class MongoDBGridFSService {
             'SessionId': this.authService.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + bucket + '/' + id), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });

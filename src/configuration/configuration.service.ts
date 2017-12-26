@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -20,13 +20,13 @@ export class ConfigurationService {
                 'SessionId': sessionId
             });
             return this.http.get(this.baseUrl, { headers: headers })
-                .catch(response => {
+                .catch((response: HttpErrorResponse) => {
                     return ServiceUtils.handleError(response);
                 });
         }
 
         return this.http.get(this.baseUrl)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 return ServiceUtils.handleError(response);
             });
 

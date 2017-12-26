@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -24,7 +24,7 @@ export class PasswordService {
             'SessionId': this.authService.sessionId
         });
         return this.http.post(encodeURI(this.baseUrl + "/" + username), JSON.stringify({}), { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -36,7 +36,7 @@ export class PasswordService {
             'SessionId': this.authService.sessionId
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + user.id), { cp: currentPassword, np: newPassword }, { headers: headers })
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.authService.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });

@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -30,14 +30,10 @@ export class MongoDBService {
         }
         return this.http.post(encodeURI(uri),
             JSON.stringify(document), { headers: headers })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
-        //            .toPromise()
-        //            .then(res => res.json())
-        //            .catch(this.handleError);
     }
 
     deleteDocument(collection: string, id: string): Observable<any | Error> {
@@ -45,8 +41,7 @@ export class MongoDBService {
             'SessionId': this.auth.sessionId
         });
         return this.http.delete(encodeURI(this.baseUrl + '/' + collection + '/' + id), { headers: headers })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -62,8 +57,7 @@ export class MongoDBService {
                 'distinct': field,
                 'query': query
             }), { headers: headers })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -92,8 +86,7 @@ export class MongoDBService {
             uri += "?exclude=" + excludeFields;
 
         return this.http.get(encodeURI(uri), { headers: headers, responseType: 'json' })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -108,8 +101,7 @@ export class MongoDBService {
             JSON.stringify({
                 'query': query
             }), { headers: headers })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -126,8 +118,7 @@ export class MongoDBService {
             JSON.stringify({
                 'aggregate': agg
             }), { headers: headers })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -143,8 +134,7 @@ export class MongoDBService {
                 'query': queryDocument,
                 'sort': sortDocument
             }), { headers: headers })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
@@ -157,8 +147,7 @@ export class MongoDBService {
         });
         return this.http.put(encodeURI(this.baseUrl + '/' + collection + '/' + id),
             JSON.stringify(updateDocument), { headers: headers })
-            //.map(ServiceUtils.extractData)
-            .catch(response => {
+            .catch((response: HttpErrorResponse) => {
                 this.auth.handleErrorResponse(response);
                 return ServiceUtils.handleError(response);
             });
