@@ -2,7 +2,6 @@
 // Author: Kevin Moyse
 //
 import { Injectable, Inject } from '@angular/core';
-//import { Headers, Http, Response } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -85,8 +84,6 @@ export class AuthService {
 
 
     public setSessionId(sessionId: string) {
-        //if (sessionId === null)
-        //    alert("AuthService::setSessionId(null)!");
         this._sessionId = sessionId;
         window.localStorage
             .setItem(
