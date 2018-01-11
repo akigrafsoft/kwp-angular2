@@ -1,25 +1,19 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
-import { AuthService } from '../auth/auth.service';
-import { UserService } from './user.service';
-import { Address } from './address';
-import { User } from './user';
-import { Error } from '../services/error';
+import {AuthService} from '../auth/auth.service';
+import {UserService} from './user.service';
+import {Address} from './address';
+import {User} from './user';
+import {Error} from '../services/error';
 
 @Component({
-    selector: 'kwp-user-form',
-    //    templateUrl: 'app/kwp/users/user-form.component.html',
-    template: `<form *ngIf="_user" name="userForm" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()" #userForm="ngForm">
- <div class="form-group">
-  <label for="username" class="col-sm-2 control-label">{{_l==='fr' ? 'Utilisateur' : 'Username'}}</label>
-  <div class="col-lg-4 col-md-6 col-sm-10">
-   <input name="username" [(ngModel)]="_user.username" type="text" class="form-control" placeholder="username" id="username"
-    [required]="newUser" [disabled]="!newUser">
-  </div>
- </div>
+  selector: 'kwp-user-form',
+  //    templateUrl: 'app/kwp/users/user-form.component.html',
+  template: `<form *ngIf="_user" name="userForm" autocomplete="on" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()"
+ #userForm="ngForm">
  <div class="form-group" *ngIf="!newUser">
   <label for="activationTime" class="col-sm-2 control-label">{{_l==='fr' ? 'Date activation' : 'ActivationTime'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
@@ -27,31 +21,30 @@ import { Error } from '../services/error';
   </div>
  </div>
  <div class="form-group">
-  <label for="email" class="col-sm-2 control-label">Email</label>
-  <div class="col-lg-4 col-md-6 col-sm-10">
-   <input name="email" [(ngModel)]="_user.email" type="email" class="form-control" placeholder="email" id="email"
-    [required]="newUser">
-  </div>
- </div>
- <div class="form-group">
   <label for="firstName" class="col-sm-2 control-label">{{_l==='fr' ? 'Prénom' : 'Firstname'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
-   <input name="firstName" [(ngModel)]="_user.firstName" type="text" class="form-control" placeholder="FirstName" id="firstName"
-    [required]="newUser">
+   <input name="firstName" [(ngModel)]="_user.firstName" type="text" class="form-control"
+    placeholder="{{_l==='fr' ? 'Prénom' : 'Firstname'}}" id="firstName" [required]="newUser">
   </div>
  </div>
  <div class="form-group">
   <label for="lastName" class="col-sm-2 control-label">{{_l==='fr' ? 'Nom' : 'LastName'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
-   <input name="lastName" [(ngModel)]="_user.lastName" type="text" class="form-control" placeholder="LastName" id="lastName"
+   <input name="lastName" [(ngModel)]="_user.lastName" type="text" class="form-control"
+    placeholder="{{_l==='fr' ? 'Nom' : 'LastName'}}" id="lastName" [required]="newUser">
+  </div>
+ </div>
+ <div class="form-group">
+  <label for="email" class="col-sm-2 control-label">Email</label>
+  <div class="col-lg-4 col-md-6 col-sm-10">
+   <input name="email" [(ngModel)]="_user.email" type="email" class="form-control" placeholder="email@domain.com" id="email"
     [required]="newUser">
   </div>
  </div>
  <div class="form-group">
   <label for="phone" class="col-sm-2 control-label">{{_l==='fr' ? 'Téléphone' : 'Phone'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
-   <input name="phone" [(ngModel)]="_user.phone" type="tel" class="form-control" placeholder="Phone" id="phone"
-    [required]="newUser">
+   <input name="phone" [(ngModel)]="_user.phone" type="tel" class="form-control" id="phone" [required]="newUser">
   </div>
  </div>
  <div class="form-group">
@@ -109,12 +102,20 @@ import { Error } from '../services/error';
   </div>
  </div>
  <div class="form-group">
+  <label for="username" class="col-sm-2 control-label">{{_l==='fr' ? 'Nom Utilisateur' : 'Username'}}</label>
+  <div class="col-lg-4 col-md-6 col-sm-10">
+   <input name="username" [(ngModel)]="_user.username" type="text" autocomplete="off" pattern="[a-z0-9_]+" class="form-control"
+    placeholder="{{_l==='fr' ? 'nomutilisateur' : 'username'}}" id="username" [required]="newUser" [disabled]="!newUser">
+  </div>
+ </div>
+ <div class="form-group">
   <label for="password" class="col-sm-2 control-label">{{_l==='fr' ? 'Mot de passe' : 'Password'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
    <div id="password">
-    <input name="pw1" [(ngModel)]="_user.password" type="password" class="form-control" placeholder="password"
-     [required]="newUser"> <input name="pw2" [(ngModel)]="password2" type="password" class="form-control"
-     placeholder="password" [required]="newUser">
+    <input name="pw1" [(ngModel)]="_user.password" type="password" autocomplete="new-password" class="form-control"
+     placeholder="{{_l==='fr' ? 'mot de passe' : 'password'}}" [required]="newUser"> <input name="pw2"
+     [(ngModel)]="password2" type="password" autocomplete="new-password" pattern="{{_user.password}}" class="form-control"
+     placeholder="{{_l==='fr' ? 'retapez le mot de passe' : 'password afain'}}" [required]="newUser">
    </div>
   </div>
  </div>
@@ -125,86 +126,89 @@ import { Error } from '../services/error';
 })
 export class UserFormComponent implements OnInit {
 
-    _l: string = 'en';
-    @Input() set LANG(l: string) {
-        this._l = l;
+  _l: string = 'en';
+  @Input() set LANG(l: string) {
+    this._l = l;
+  }
+
+  @Output() onCreated = new EventEmitter<User>();
+  @Output() onUpdated = new EventEmitter<User>();
+  @Output() onCancelled = new EventEmitter<boolean>();
+
+  newUser: boolean = false;
+
+  roleName: string;
+  password2: string;
+
+  _user: User;
+  @Input() set user(user: User) {
+    if (user === null) {
+      this.newUser = true;
+      this._user = new User();
+      console.log("UserForm::user() new");
+    }
+    else {
+      this.newUser = false;
+      this._user = user;
+      console.log("UserForm::user() update");
     }
 
-    @Output() onCreated = new EventEmitter<User>();
-    @Output() onUpdated = new EventEmitter<User>();
-    @Output() onCancelled = new EventEmitter<boolean>();
+    if (this._user.address === null)
+      this._user.address = new Address();
+  }
 
-    newUser: boolean = false;
+  roles: Array<string>;
 
-    _user: User;
-    @Input() set user(user: User) {
-        if (user === null) {
-            this.newUser = true;
-            this._user = new User();
-            console.log("UserForm::user() new");
-        }
-        else {
-            this.newUser = false;
-            this._user = user;
-            console.log("UserForm::user() update");
-        }
+  error: Error = null;
 
-        if (this._user.address === null)
-            this._user.address = new Address();
+  constructor(
+    private authService: AuthService,
+    private userService: UserService) {
+    this.roles = this.authService.roles;
+  }
+
+  ngOnInit() {
+    console.log("UserForm::ngOnInit()");
+  }
+
+  addRolebyName(roleName: string) {
+    this._user.roles.push(roleName);
+  }
+
+  //    removeRolebyName(roleName) {
+  //        var index = this._user.roles.indexOf(roleName);
+  //        if (index > -1) {
+  //            this._user.roles.splice(index, 1);
+  //        }
+  //    }
+
+  onSubmit() {
+    //console.debug("UserForm::onSubmit(" + JSON.stringify(this._user) + ")");
+    if (!this.newUser) {
+      this.userService.update(this._user)
+        .subscribe(json => {
+          this.onUpdated.emit(User.build(json.user));
+        },
+        error => {
+          if (error instanceof Error) {
+            this.error = error;
+          }
+        });
     }
-
-    roles: Array<string>;
-
-    error: Error = null;
-
-    constructor(
-        private authService: AuthService,
-        private userService: UserService) {
-        this.roles = this.authService.roles;
+    else {
+      this.userService.create(this._user)
+        .subscribe(json => {
+          this.onCreated.emit(User.build(json.user));
+        },
+        error => {
+          if (error instanceof Error) {
+            this.error = error;
+          }
+        });
     }
+  }
 
-    ngOnInit() {
-        console.log("UserForm::ngOnInit()");
-    }
-
-    addRolebyName(roleName: string) {
-        this._user.roles.push(roleName);
-    }
-
-    //    removeRolebyName(roleName) {
-    //        var index = this._user.roles.indexOf(roleName);
-    //        if (index > -1) {
-    //            this._user.roles.splice(index, 1);
-    //        }
-    //    }
-
-    onSubmit() {
-        //console.debug("UserForm::onSubmit(" + JSON.stringify(this._user) + ")");
-        if (!this.newUser) {
-            this.userService.update(this._user)
-                .subscribe(json => {
-                    this.onUpdated.emit(User.build(json.user));
-                },
-                error => {
-                    if (error instanceof Error) {
-                        this.error = error;
-                    }
-                });
-        }
-        else {
-            this.userService.create(this._user)
-                .subscribe(json => {
-                    this.onCreated.emit(User.build(json.user));
-                },
-                error => {
-                    if (error instanceof Error) {
-                        this.error = error;
-                    }
-                });
-        }
-    }
-
-    doCancel() {
-        this.onCancelled.emit(true);
-    }
+  doCancel() {
+    this.onCancelled.emit(true);
+  }
 }

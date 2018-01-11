@@ -40,9 +40,6 @@ import { UserService } from './user.service';
  <div id="users_body" class="panel-body">
   <div *ngIf="paged.error" class="alert alert-danger" role="alert">{{paged.error.reason}}</div>
   <div *ngIf="error" class="alert alert-danger" role="alert">{{error.reason}}</div>
-  <div *ngIf="createUser" class="well">
-   <kwp-user-form [LANG]="_l" [user]="null" (onCreated)="createUser=false;paged.refreshList()" (onCancelled)="createUser=false"></kwp-user-form>
-  </div>
   <div class="table-responsive">
    <table class="table table-striped">
     <tr>
@@ -88,6 +85,9 @@ import { UserService } from './user.service';
    <kwp-user-form [LANG]="_l" [user]="e_user" (onUpdated)="closeEdit();paged.refreshList()" (onCancelled)="cancelEdit()"></kwp-user-form>
   </div>
   <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
+ </div>
+ <div class="panel-footer" *ngIf="createUser">
+  <kwp-user-form [LANG]="_l" [user]="null" (onCreated)="createUser=false;paged.refreshList()" (onCancelled)="createUser=false"></kwp-user-form>
  </div>
  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
