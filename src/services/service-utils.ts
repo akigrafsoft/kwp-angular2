@@ -46,8 +46,8 @@ export class ServiceUtils {
         //        }
         if (response instanceof HttpErrorResponse) {
             try {
-                let err = response.error;
-                let error: Error = Error.build(err.errorCode || -1, err.errorReason);
+                const err = response.error instanceof Object ?  response.error : JSON.parse(response.error);
+                const error: Error = Error.build(err.errorCode || -1, err.errorReason);
                 var data = new Object();
                 for (var k in err) {
                     if ((k !== 'errorCode') && (k !== 'errorReason'))
