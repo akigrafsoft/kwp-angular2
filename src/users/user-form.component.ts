@@ -102,6 +102,12 @@ import {Error} from '../services/error';
   </div>
  </div>
  <div class="form-group">
+  <label for="auth" class="col-sm-2 control-label">Auth</label> <select id="auth" name="role" [ngModel]="authName"
+   (ngModelChange)="setAuthName($event);">
+   <option *ngFor="let aname of authNames">{{aname}}</option>
+  </select>
+ </div>
+ <div class="form-group">
   <label for="username" class="col-sm-2 control-label">{{_l==='fr' ? 'Nom Utilisateur' : 'Username'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
    <input name="username" [(ngModel)]="_user.username" type="text" autocomplete="off" pattern="[a-z0-9_]+" class="form-control"
@@ -137,7 +143,12 @@ export class UserFormComponent implements OnInit {
 
   newUser: boolean = false;
 
+  roles: Array<string>;
   roleName: string;
+  
+  authNames: Array<string>;
+  authName: string;
+  
   password2: string;
 
   _user: User;
@@ -157,14 +168,13 @@ export class UserFormComponent implements OnInit {
       this._user.address = new Address();
   }
 
-  roles: Array<string>;
-
   error: Error = null;
 
   constructor(
     private authService: AuthService,
     private userService: UserService) {
     this.roles = this.authService.roles;
+    this.authNames = this.authService.authNames;
   }
 
   ngOnInit() {
@@ -174,13 +184,10 @@ export class UserFormComponent implements OnInit {
   addRolebyName(roleName: string) {
     this._user.roles.push(roleName);
   }
-
-  //    removeRolebyName(roleName) {
-  //        var index = this._user.roles.indexOf(roleName);
-  //        if (index > -1) {
-  //            this._user.roles.splice(index, 1);
-  //        }
-  //    }
+  
+  setAuthName(authName: string) {
+	    this._user.authName=authName;
+  }
 
   onSubmit() {
     //console.debug("UserForm::onSubmit(" + JSON.stringify(this._user) + ")");

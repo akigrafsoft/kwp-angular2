@@ -13,6 +13,8 @@ export class User {
     public phone: string;
     public address: Address = null;
     public roles: Array<string>;
+    public authName: string;
+    
     public activationTimeMillis: string;
 
     password: string;

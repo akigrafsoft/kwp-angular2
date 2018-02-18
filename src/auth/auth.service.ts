@@ -38,6 +38,10 @@ export class AuthService {
 
     // All existing role names...
     roles: Array<string>;
+    
+    // All configured authentication names.
+    authNames: Array<string>;
+    
     // Store the URL so we can redirect after logging in
     redirectUrl: string = null;
 
@@ -56,6 +60,10 @@ export class AuthService {
 
     public getAllRolesNames(): Array<string> {
         return this.roles;
+    }
+    
+    public getAllAuthNames(): Array<string> {
+        return this.authNames;
     }
 
     public setRedirectUrl(redirectUrl: string) {
