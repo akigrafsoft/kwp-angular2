@@ -66,9 +66,6 @@ export class ConfigurationResolver implements Resolve<any> {
 
         // roles
         this.authService.roles = data.roles;
-        
-        // authNames
-        this.authService.authNames = data.authNames;
     }
 
 }
