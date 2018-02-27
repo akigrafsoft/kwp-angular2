@@ -44,7 +44,7 @@ import {Error} from '../services/error';
  <div class="form-group">
   <label for="phone" class="col-sm-2 control-label">{{_l==='fr' ? 'Téléphone' : 'Phone'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
-   <input name="phone" [(ngModel)]="_user.phone" type="tel" class="form-control" id="phone" [required]="newUser">
+   <input name="phone" [(ngModel)]="_user.phone" type="tel" class="form-control" placeholder="{{_l==='fr' ? 'numéro' : 'number'}}" id="phone" [required]="newUser">
   </div>
  </div>
  <div class="form-group">
@@ -135,7 +135,7 @@ export class UserFormComponent implements OnInit {
   @Output() onUpdated = new EventEmitter<User>();
   @Output() onCancelled = new EventEmitter<boolean>();
 
-  newUser: boolean = false;
+  newUser = false;
 
   roles: Array<string>;
   roleName: string;
@@ -155,8 +155,9 @@ export class UserFormComponent implements OnInit {
       console.log("UserForm::user() update");
     }
 
-    if (this._user.address === null)
+    if (this._user.address === null) {
       this._user.address = new Address();
+    }
   }
 
   error: Error = null;

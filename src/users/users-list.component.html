@@ -5,7 +5,7 @@
    <div class="btn-group btn-group-xs" role="group" aria-label="...">
     <button type="button" class="btn btn-default glyphicon glyphicon-search"
      (click)="displayAction = displayAction==='search' ? '' : 'search'"></button>
-    <button *ngIf="_as.isAllowed('Create_User')" type="button" class="btn btn-default glyphicon glyphicon-plus"
+    <button *ngIf="_as.isAllowed('Create_User')&&createButton" type="button" class="btn btn-default glyphicon glyphicon-plus"
      (click)="createUser=true"></button>
    </div>
    <div class="btn-group btn-group-xs" role="group" aria-label="...">

@@ -1,28 +1,28 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 
-import { AuthService } from '../auth/auth.service';
-import { PagedListDirective } from '../pagedlist/pagedlist.directive';
+import {AuthService} from '../auth/auth.service';
+import {PagedListDirective} from '../pagedlist/pagedlist.directive';
 
-import { User } from './user';
-import { Error } from '../services/error';
+import {User} from './user';
+import {Error} from '../services/error';
 
-import { UserService } from './user.service';
+import {UserService} from './user.service';
 
 @Component({
-    selector: 'kwp-users-list',
-    styles: [`
+  selector: 'kwp-users-list',
+  styles: [`
 `],
-    template: `<div class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'" [pageSize]="_n" #paged="kwpPagedList">
+  template: `<div class="panel panel-default" [kwp-paged-list]="'Users'" [listId]="'users'" [pageSize]="_n" #paged="kwpPagedList">
  <div class="panel-heading clearfix">
   <span>{{_l==='fr' ? 'Utilisateurs' : 'Users'}}</span> &nbsp;<span class="badge">{{paged.fullSize ? paged.fullSize : 0}}</span>
   <div class="btn-toolbar pull-right" role="toolbar" aria-label="...">
    <div class="btn-group btn-group-xs" role="group" aria-label="...">
     <button type="button" class="btn btn-default glyphicon glyphicon-search"
      (click)="displayAction = displayAction==='search' ? '' : 'search'"></button>
-    <button *ngIf="_as.isAllowed('Create_User')" type="button" class="btn btn-default glyphicon glyphicon-plus"
+    <button *ngIf="_as.isAllowed('Create_User')&&createButton" type="button" class="btn btn-default glyphicon glyphicon-plus"
      (click)="createUser=true"></button>
    </div>
    <div class="btn-group btn-group-xs" role="group" aria-label="...">
@@ -112,102 +112,108 @@ import { UserService } from './user.service';
 
 export class UsersListComponent {
 
-    _l: string = 'en';
-    @Input() set LANG(l: string) {
-        this._l = l;
+  _l: string = 'en';
+  @Input() set LANG(l: string) {
+    this._l = l;
+  }
+  
+  @Input() createButton = true;
+
+  _n: number = 16;
+  @Input() set n(n: number) {
+    this._n = n;
+  }
+
+  @Output() onSelected = new EventEmitter<User>();
+
+  user: User = null;
+  e_user: User = null;
+
+  createUser: boolean = false;
+
+  usernameReverse: boolean = false;
+  displayAction: string = '';
+
+  delInPrgrs: boolean = false;
+  error: Error = null;
+
+  @ViewChild(PagedListDirective)
+  pagedList: PagedListDirective;
+
+  constructor(
+    private userService: UserService,
+    public _as: AuthService) {
+  }
+
+  public refreshList() {
+    this.pagedList.refreshList();
+  }
+
+  doSelectUser(user: any) {
+    this.onSelected.emit(User.build(user));
+  }
+
+  doEditUser(user: any) {
+    this.e_user = User.build(user);
+  }
+
+  closeEdit() {
+    this.e_user = null;
+    this.pagedList.refreshList();
+  }
+
+  cancelEdit() {
+    this.e_user = null;
+  }
+
+  modalSelectUser(user: any) {
+    this.user = User.build(user);
+  }
+
+  doDelete() {
+    if (this.user === null) {
+      console.error("Users::doDelete(null)");
+      return;
     }
 
-    _n: number = 16;
-    @Input() set n(n: number) {
-        this._n = n;
-    }
-
-    @Output() onSelected = new EventEmitter<User>();
-
-    user: User = null;
-    e_user: User = null;
-
-    createUser: boolean = false;
-
-    usernameReverse: boolean = false;
-    displayAction: string = '';
-
-    delInPrgrs: boolean = false;
-    error: Error = null;
-
-    @ViewChild(PagedListDirective)
-    pagedList: PagedListDirective;
-
-    constructor(
-        private userService: UserService,
-        public _as: AuthService) {
-    }
-
-    doSelectUser(user: any) {
-        this.onSelected.emit(User.build(user));
-    }
-
-    doEditUser(user: any) {
-        this.e_user = User.build(user);
-    }
-
-    closeEdit() {
-        this.e_user = null;
+    //console.debug("Users::doDelete(" + JSON.stringify(this.user) + ")");
+    this.delInPrgrs = true;
+    this.userService.del(this.user.id)
+      .subscribe(() => {
+        this.delInPrgrs = false;
         this.pagedList.refreshList();
-    }
-
-    cancelEdit() {
-        this.e_user = null;
-    }
-
-    modalSelectUser(user: any) {
-        this.user = User.build(user);
-    }
-
-    doDelete() {
-        if (this.user === null) {
-            console.error("Users::doDelete(null)");
-            return;
-        }
-
-        //console.debug("Users::doDelete(" + JSON.stringify(this.user) + ")");
-        this.delInPrgrs = true;
-        this.userService.del(this.user.id)
-            .subscribe(() => {
-                this.delInPrgrs = false;
-                this.pagedList.refreshList();
-            },
-            error => {
-                this.delInPrgrs = false;
-                if (error instanceof Error) {
-                    this.error = error;
-                    setTimeout(() => {
-                        this.error = null;
-                    }, 3000);
-                }
-                else {
-                    console.error("Users::doDelete|" + error);
-                }
-            });
-    }
-
-    searchUsername(buffer: string) {
-        //console.debug("Users::searchUsername(" + username + ")");
-        if (buffer === '') {
-            this.pagedList.search(null);
+      },
+      error => {
+        this.delInPrgrs = false;
+        if (error instanceof Error) {
+          this.error = error;
+          setTimeout(() => {
+            this.error = null;
+          }, 3000);
         }
         else {
-            this.pagedList.search({ 'username': buffer });
+          console.error("Users::doDelete|" + error);
         }
-    }
+      });
+  }
 
-    searchLastname(buffer: string) {
-        if (buffer === '') {
-            this.pagedList.search(null);
-        }
-        else {
-            this.pagedList.search({ 'lastName': buffer });
-        }
+  searchUsername(buffer: string) {
+    //console.debug("Users::searchUsername(" + username + ")");
+    if (buffer === '') {
+      this.pagedList.search(null);
     }
+    else {
+      this.pagedList.search({'username': buffer});
+    }
+  }
+
+  searchLastname(buffer: string) {
+    if (buffer === '') {
+      this.pagedList.search(null);
+    }
+    else {
+      this.pagedList.search({'lastName': buffer});
+    }
+  }
 
 }
