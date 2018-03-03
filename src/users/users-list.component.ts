@@ -70,11 +70,11 @@ import {UserService} from './user.service';
      <td>{{user.lastName}}</td>
      <td>{{user.roles}}</td>
      <td>
-      <button class="btn btn-warning btn-xs" (click)="doEditUser(user)">
+      <button *ngIf="_as.isAllowed('Edit_User')" class="btn btn-warning btn-xs" (click)="doEditUser(user)">
        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
       </button>
-      <button id="del" class="btn btn-warning btn-xs" [disabled]="delInPrgrs" data-toggle="modal" data-target="#myModal"
-       (click)="modalSelectUser(user)">
+      <button *ngIf="_as.isAllowed('Delete_User')" id="del" class="btn btn-warning btn-xs" [disabled]="delInPrgrs"
+       data-toggle="modal" data-target="#myModal" (click)="modalSelectUser(user)">
        <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
       </button>
      </td>

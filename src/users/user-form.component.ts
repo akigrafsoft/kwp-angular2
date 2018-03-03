@@ -44,7 +44,8 @@ import {Error} from '../services/error';
  <div class="form-group">
   <label for="phone" class="col-sm-2 control-label">{{_l==='fr' ? 'Téléphone' : 'Phone'}}</label>
   <div class="col-lg-4 col-md-6 col-sm-10">
-   <input name="phone" [(ngModel)]="_user.phone" type="tel" class="form-control" placeholder="{{_l==='fr' ? 'numéro' : 'number'}}" id="phone" [required]="newUser">
+   <input name="phone" [(ngModel)]="_user.phone" type="tel" class="form-control"
+    placeholder="{{_l==='fr' ? 'numéro' : 'number'}}" id="phone" [required]="newUser">
   </div>
  </div>
  <div class="form-group">
@@ -92,8 +93,8 @@ import {Error} from '../services/error';
   <label for="roles" class="col-sm-2 control-label">Roles</label>
   <div class="col-lg-4 col-md-6 col-sm-10" id="roles">
    <ul class="list-group">
-    <li class="list-group-item" *ngFor="let role of _user.roles">{{role}}<span class="glyphicon glyphicon-remove"
-     aria-hidden="true" (click)="_user.roles.splice(_user.roles.indexOf(role),1)"></span></li>
+    <li class="list-group-item" *ngFor="let role of _user.roles">{{role}}<span *ngIf="role!=='ROOT'&&role!=='USER'"
+     class="glyphicon glyphicon-remove pull-right" aria-hidden="true" (click)="_user.roles.splice(_user.roles.indexOf(role),1)"></span></li>
     <li class="list-group-item"><select name="role" [ngModel]="roleName"
      (ngModelChange)="addRolebyName($event);rolename='';">
       <option *ngFor="let name of roles">{{name}}</option>
