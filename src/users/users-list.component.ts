@@ -70,7 +70,7 @@ import {UserService} from './user.service';
      <td>{{user.lastName}}</td>
      <td>{{user.roles}}</td>
      <td>
-      <button *ngIf="_as.isAllowed('Edit_User')" class="btn btn-warning btn-xs" (click)="doEditUser(user)">
+      <button *ngIf="_as.isAllowed('Edit_User')" class="btn btn-warning btn-xs" (click)="doEdit(user)">
        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
       </button>
       <button *ngIf="_as.isAllowed('Delete_User')" id="del" class="btn btn-warning btn-xs" [disabled]="delInPrgrs"
@@ -80,9 +80,6 @@ import {UserService} from './user.service';
      </td>
     </tr>
    </table>
-  </div>
-  <div *ngIf="e_user" class="well">
-   <kwp-user-form [LANG]="_l" [user]="e_user" (onUpdated)="closeEdit();paged.refreshList()" (onCancelled)="cancelEdit()"></kwp-user-form>
   </div>
   <div *ngIf="error" class="alert alert-danger" title="{{error.code}}">{{error.reason}}</div>
  </div>
@@ -116,7 +113,7 @@ export class UsersListComponent {
   @Input() set LANG(l: string) {
     this._l = l;
   }
-  
+
   @Input() createButton = true;
 
   _n: number = 16;
@@ -126,8 +123,10 @@ export class UsersListComponent {
 
   @Output() onSelected = new EventEmitter<User>();
 
+  @Output() onEdit = new EventEmitter<User>();
+
   user: User = null;
-  e_user: User = null;
+  //  e_user: User = null;
 
   createUser: boolean = false;
 
@@ -150,21 +149,23 @@ export class UsersListComponent {
   }
 
   doSelectUser(user: any) {
-    this.onSelected.emit(User.build(user));
+    //this.onSelected.emit(User.build(user));
+    this.onSelected.emit(user);
   }
 
-  doEditUser(user: any) {
-    this.e_user = User.build(user);
+  doEdit(user: any) {
+    //this.e_user = User.build(user);
+    this.onEdit.emit(user);
   }
 
-  closeEdit() {
-    this.e_user = null;
-    this.pagedList.refreshList();
-  }
+  //  closeEdit() {
+  //    this.e_user = null;
+  //    this.pagedList.refreshList();
+  //  }
 
-  cancelEdit() {
-    this.e_user = null;
-  }
+  //  cancelEdit() {
+  //    this.e_user = null;
+  //  }
 
   modalSelectUser(user: any) {
     this.user = User.build(user);

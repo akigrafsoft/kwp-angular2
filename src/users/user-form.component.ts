@@ -144,15 +144,20 @@ export class UserFormComponent implements OnInit {
   password2: string;
 
   _user: User;
-  @Input() set user(user: User) {
-    if (user === null) {
+  @Input() set user(i_user: any) {
+    if (i_user === null) {
       this.newUser = true;
       this._user = new User();
       console.log("UserForm::user() new");
     }
     else {
       this.newUser = false;
-      this._user = user;
+      if (i_user instanceof User) {
+        this._user = i_user;
+      }
+      else {
+        this._user = User.build(i_user);
+      }
       console.log("UserForm::user() update");
     }
 
