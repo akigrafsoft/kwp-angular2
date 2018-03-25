@@ -116,7 +116,7 @@ import {Error} from '../services/error';
     <input name="pw1" [(ngModel)]="_user.password" type="password" autocomplete="new-password" class="form-control"
      placeholder="{{_l==='fr' ? 'mot de passe' : 'password'}}" [required]="newUser"> <input name="pw2"
      [(ngModel)]="password2" type="password" autocomplete="new-password" pattern="{{_user.password}}" class="form-control"
-     placeholder="{{_l==='fr' ? 'retapez le mot de passe' : 'password afain'}}" [required]="newUser">
+     placeholder="{{_l==='fr' ? 'retapez le mot de passe' : 'password again'}}" [required]="newUser">
    </div>
   </div>
  </div>
