@@ -1,6 +1,6 @@
 {
   "name": "kwp-angular",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "license": "MIT",
   "scripts": {
     "start": "ng serve",
@@ -44,26 +44,27 @@
     "users.d.ts"
   ],
   "dependencies": {
-    "@angular/animations": "^4.4.0",
-    "@angular/common": "^4.4.0",
-    "@angular/core": "^4.4.0",
-    "@angular/forms": "^4.4.0",
-    "@angular/platform-browser": "^4.4.0",
-    "@angular/platform-browser-dynamic": "^4.4.0",
-    "@angular/router": "^4.4.0",
+    "@angular/animations": "^5.2.9",
+    "@angular/common": "^5.2.9",
+    "@angular/core": "^5.2.9",
+    "@angular/forms": "^5.2.9",
+    "@angular/http": "^5.2.9",
+    "@angular/platform-browser": "^5.2.9",
+    "@angular/platform-browser-dynamic": "^5.2.9",
+    "@angular/router": "^5.2.9",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
-    "rxjs": "^5.1.0",
+    "rxjs": "^5.5.8",
     "systemjs": "0.19.40",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
-    "@angular/compiler": "^4.4.0",
-    "@angular/compiler-cli": "^4.4.0",
-    "@angular/platform-server": "^4.4.0",
+    "@angular/compiler": "^5.2.9",
+    "@angular/compiler-cli": "^5.2.9",
+    "@angular/platform-server": "^5.2.9",
     "@types/core-js": "^0.9.35",
     "concurrently": "^3.1.0",
     "lite-server": "^2.2.2",
-    "typescript": "~2.3.0"
+    "typescript": "^2.4.2"
   }
 }
