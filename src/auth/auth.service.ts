@@ -45,6 +45,9 @@ export class AuthService {
   private userAuthenticationSubject = new Subject<User>();
   private userAuthentication$ = this.userAuthenticationSubject.asObservable();
 
+  private sessionTimedOutSubject = new Subject<User>();
+  private sessionTimedOut$ = this.sessionTimedOutSubject.asObservable();
+
   constructor(private http: HttpClient, @Inject("baseUrl") private baseUrl: string) {}
 
   public getAuthenticatedUser(): User {
@@ -69,6 +72,10 @@ export class AuthService {
 
   public observeUserAuthentication(): Observable<User> {
     return this.userAuthentication$;
+  }
+
+  public observeSessionTimedOut(): Observable<User> {
+    return this.sessionTimedOut$;
   }
 
   public login(credentials: any): Observable<any> {
@@ -224,10 +231,11 @@ export class AuthService {
       //console.log("AuthService::handleError(status:" + status + ") error:" + JSON.stringify(error));
     } else if (status == 419) {
       // Authentication Timeout
+      const user: User = this.authenticatedUser;
       this.cleanUp();
-      location.reload();
-    } else
-    {console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status);}
+      this.sessionTimedOutSubject.next(user);
+      //location.reload();
+    } else {console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status);}
   }
 
 }
