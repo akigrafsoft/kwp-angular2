@@ -4,11 +4,9 @@
 import {Injectable, Inject} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/of';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject, of} from 'rxjs';
+import {tap, map, catchError} from 'rxjs/operators';
+//import 'rxjs/add/observable/of';
 
 import {ServiceUtils} from '../services/service-utils';
 import {User} from '../users/user';
@@ -84,10 +82,17 @@ export class AuthService {
       'SessionId': this.sessionId
     });
     return this.http.post(this.baseUrl, JSON.stringify(credentials), {headers: headers})
-      .catch((response: HttpErrorResponse) => {
-        this.handleErrorResponse(response);
-        return ServiceUtils.handleError(response);
-      });
+      .pipe(catchError(ServiceUtils.handleError6('login', [])));
+    //      .pipe(
+    //      catchError(
+    //        (err: any, caught: Observable<any>) => {
+    //          this.handleErrorResponse(err);
+    //          return Observable.of(ServiceUtils.handleError6('getHeroes', []));
+    //        }));
+    //      .catch((response: HttpErrorResponse) => {
+    //        this.handleErrorResponse(response);
+    //        return ServiceUtils.handleError(response);
+    //      });
   }
 
 
@@ -119,10 +124,7 @@ export class AuthService {
       'SessionId': this.sessionId
     });
     return this.http.delete(encodeURI(this.baseUrl + '/' + sessionId), {headers: headers})
-      .catch((response: HttpErrorResponse) => {
-        this.handleErrorResponse(response);
-        return ServiceUtils.handleError(response);
-      });
+      .pipe(catchError(ServiceUtils.handleError6('logout', [])));
   }
 
   private cleanUp() {
@@ -141,15 +143,20 @@ export class AuthService {
   /**
    * 
    */
-  public check(sessionId: string, redirectUrl: string): Observable<boolean> {
+  public check(sessionId: string, redirectUrl: string): Observable<boolean | any> {
     let headers = new HttpHeaders({
       'SessionId': sessionId
     });
     return this.http.get(encodeURI(this.baseUrl), {headers: headers})
-      .map((data) => {return this.doMapCheck(redirectUrl, data)})
-      .catch((res) => {
-        return Observable.of(false);
-      });
+      .pipe(
+      map((data) => {return this.doMapCheck(redirectUrl, data)}),
+      catchError(ServiceUtils.handleError6('getHeroes', [])));
+    //      
+    //      
+    //      .map((data) => {return this.doMapCheck(redirectUrl, data)})
+    //      .catch((res) => {
+    //        return Observable.of(false);
+    //      });
   }
 
   private doMapCheck(redirectUrl: string, response: any): boolean {

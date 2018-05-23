@@ -4,8 +4,8 @@
 import {Injectable, Inject} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 import {AuthService} from './auth.service';
 import {ServiceUtils} from '../services/service-utils';
@@ -30,10 +30,11 @@ export class SessionObjectsService {
         ]
       }),
       {headers: headers})
-      .catch((response: HttpErrorResponse) => {
-        this.authService.handleErrorResponse(response);
-        return ServiceUtils.handleError(response);
-      });
+      .pipe(catchError(ServiceUtils.handleError6('setSessionObject', [])));
+    //      .catch((response: HttpErrorResponse) => {
+    //        this.authService.handleErrorResponse(response);
+    //        return ServiceUtils.handleError(response);
+    //      });
   }
 
   public getSessionObject(key: string): Observable<any> {
@@ -47,10 +48,7 @@ export class SessionObjectsService {
         'keys': [key]
       }),
       {headers: headers})
-      .catch((response: HttpErrorResponse) => {
-        this.authService.handleErrorResponse(response);
-        return ServiceUtils.handleError(response);
-      });
+      .pipe(catchError(ServiceUtils.handleError6('getSessionObject', [])));
   }
 
   public getSessionObjects(keys: Array<string>): Observable<any> {
@@ -63,9 +61,6 @@ export class SessionObjectsService {
         'keys': keys
       }),
       {headers: headers})
-      .catch((response: HttpErrorResponse) => {
-        this.authService.handleErrorResponse(response);
-        return ServiceUtils.handleError(response);
-      });
+      .pipe(catchError(ServiceUtils.handleError6('getSessionObjects', [])));
   }
 }
