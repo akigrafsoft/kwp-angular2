@@ -20,17 +20,17 @@ import {UserService} from './user.service';
   <span>{{_l==='fr' ? 'Utilisateurs' : 'Users'}}</span> &nbsp;<span class="badge">{{paged.fullSize ? paged.fullSize : 0}}</span>
   <div class="btn-toolbar pull-right" role="toolbar" aria-label="...">
    <div class="btn-group btn-group-xs" role="group" aria-label="...">
-    <button type="button" class="btn btn-default glyphicon glyphicon-search"
-     (click)="displayAction = displayAction==='search' ? '' : 'search'"></button>
-    <button *ngIf="_as.isAllowed('Create_User')&&createButton" type="button" class="btn btn-default glyphicon glyphicon-plus"
-     (click)="createUser=true"></button>
-   </div>
-   <div class="btn-group btn-group-xs" role="group" aria-label="...">
+    <button type="button" class="btn btn-default" (click)="displayAction = displayAction==='search' ? '' : 'search'">
+     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    </button>
+    <button *ngIf="_as.isAllowed('Create_User')&&createButton" type="button" class="btn btn-default" (click)="createUser=true">
+     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    </button>
     <button class="btn btn-default" (click)="paged.refreshList()">
      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
     </button>
    </div>
-   <div class="btn-group btn-group-xs" role="group" aria-label="..." *ngIf="paged.filteredSize>paged.pageSize">
+   <div class="btn-group btn-group-xs" role="group" aria-label="...">
     <button type="button" class="btn btn-default" [class.disabled]="paged.currentPage == 0" (click)="paged.prevPage()">&laquo;</button>
     <button type="button" class="btn btn-default" [class.disabled]="paged.currentPage >= (paged.nbPages-1)"
      (click)="paged.nextPage()">&raquo;</button>
