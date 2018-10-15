@@ -1,11 +1,11 @@
 //
 // Author: Kevin Moyse
 //
-//import { Response } from '@angular/http';
 import {HttpErrorResponse} from '@angular/common/http';
 
-import {Observable, of} from 'rxjs';
-import 'rxjs/add/observable/throw';
+import {Observable} from 'rxjs';
+import {of} from 'rxjs';
+import {throwError} from 'rxjs';
 
 import {Error} from './error';
 
@@ -42,7 +42,6 @@ export class ServiceUtils {
     };
   }
 
-  //| Response 
   public static handleError(response: HttpErrorResponse | any): Observable<Error> | Observable<any> {
     // In a real world app, we might use a remote logging infrastructure
     let errMsg: string;
@@ -69,26 +68,25 @@ export class ServiceUtils {
       try {
         const err = response.error instanceof Object ? response.error : JSON.parse(response.error);
         const error: Error = Error.build(err.errorCode || -1, err.errorReason);
-        var data = new Object();
-        for (var k in err) {
-          if ((k !== 'errorCode') && (k !== 'errorReason'))
+        let data = new Object();
+        for (let k in err) {
+          if ((k !== 'errorCode') && (k !== 'errorReason')) {
             data[k] = err[k];
+          }
         }
         error.setData(data);
-        return Observable.throw(error);
-      }
-      catch (e) {
-        console.error("ServiceUtils::handleError|" + e);
+        return throwError(error);
+      } catch (e) {
+        console.error('ServiceUtils::handleError|' + e);
       }
       //            response.message ||
       const err = JSON.stringify(response);
       errMsg = `${response.status} - ${response.statusText || ''} ${err}`;
-    }
-    else {
+    } else {
       errMsg = response.message ? response.message : response.toString();
     }
-    console.error("ServiceUtils::handleError|" + errMsg);
-    return Observable.throw(errMsg);
+    console.error('ServiceUtils::handleError|' + errMsg);
+    return throwError(errMsg);
   }
 
 }

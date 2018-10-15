@@ -2,7 +2,6 @@
 // Author: Kevin Moyse
 //
 import {Directive, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges} from '@angular/core';
-import {AuthService} from '../auth/auth.service';
 import {PagedListService} from './pagedlist.service';
 import {Error} from '../services/error';
 
@@ -29,7 +28,7 @@ export class PagedListDirective implements OnInit, OnChanges {
   }
 
   @Input('pageSize')
-  public pageSize: number = 25;
+  public pageSize = 25;
 
   @Input('searchCriteriasBase')
   searchCriteriasBase: any = null;
@@ -45,7 +44,7 @@ export class PagedListDirective implements OnInit, OnChanges {
   }
 
   @Input() sortCriteria: string = null;
-  @Input() reverse: boolean = false;
+  @Input() reverse: false;
 
   @Output() onItemsSet = new EventEmitter<any[]>();
 
@@ -54,24 +53,24 @@ export class PagedListDirective implements OnInit, OnChanges {
   public fullSize: number;
   public filteredSize: number;
 
-  fromIndex: number = 0;
+  fromIndex = 0;
 
-  public currentPage: number = 0;
+  public currentPage = 0;
   // This is important to set default to 0 so that pagination buttons are disabled if the createList returned error
-  public nbPages: number = 0;
+  public nbPages = 0;
 
-  private initDone: boolean = false;
+  private initDone = false;
 
   public error: Error = null;
 
-  constructor(private auth: AuthService,
+  constructor(
     private pagedListService: PagedListService
   ) {
-    //console.debug("PagedList::constructor");
+    // console.debug("PagedList::constructor");
   }
 
   ngOnInit() {
-    //console.debug("PagedList::ngOnInit()");
+    // console.debug("PagedList::ngOnInit()");
     this.doCreateList();
     this.initDone = true;
   }
@@ -81,8 +80,7 @@ export class PagedListDirective implements OnInit, OnChanges {
     //    console.debug("PagedList::ngOnChanges():" + JSON.stringify(changes));
     if (changes.listId) {
       this.doCreateList();
-    }
-    else if (changes.searchCriterias) {
+    } else if (changes.searchCriterias) {
       this.search(this._searchCriterias);
     }
   }
@@ -98,18 +96,17 @@ export class PagedListDirective implements OnInit, OnChanges {
       error => {
         if (error instanceof Error) {
           this.error = error;
-        }
-        else {
-          console.error("PagedList::ngOnInit|" + error);
+        } else {
+          console.error('PagedList::ngOnInit|' + error);
           this.error = Error.build(-1, error);
         }
       });
   }
 
   public refreshList() {
-    //console.debug("PagedList::refreshList()");
+    // console.debug("PagedList::refreshList()");
     if (!this.initDone) {
-      console.error("PagedList::refreshList()|init not done");
+      console.error('PagedList::refreshList()|init not done');
       return;
     }
 
@@ -120,9 +117,8 @@ export class PagedListDirective implements OnInit, OnChanges {
       error => {
         if (error instanceof Error) {
           this.error = error;
-        }
-        else {
-          console.error("PagedList::refreshList|" + error);
+        } else {
+          console.error('PagedList::refreshList|' + error);
           this.error = Error.build(-1, error);
         }
       });
@@ -136,9 +132,8 @@ export class PagedListDirective implements OnInit, OnChanges {
       error => {
         if (error instanceof Error) {
           this.error = error;
-        }
-        else {
-          console.error("PagedList::getItems|" + error);
+        } else {
+          console.error('PagedList::getItems|' + error);
           this.error = Error.build(-1, error);
         }
       });
@@ -155,14 +150,15 @@ export class PagedListDirective implements OnInit, OnChanges {
     this.pagedListService.searchList(this._listId, searchCriterias, this.sortCriteria, this.reverse, this.fromIndex, this.pageSize)
       .subscribe(data => {
         this.handleSuccessResponse(data);
-        if (typeof callback !== 'undefined') {callback();};
+        if (typeof callback !== 'undefined') {
+          callback();
+        }
       },
       error => {
         if (error instanceof Error) {
           this.error = error;
-        }
-        else {
-          console.error("PagedList::refreshList|" + error);
+        } else {
+          console.error('PagedList::refreshList|' + error);
           this.error = Error.build(-1, error);
         }
       });
@@ -176,29 +172,28 @@ export class PagedListDirective implements OnInit, OnChanges {
       error => {
         if (error instanceof Error) {
           this.error = error;
-        }
-        else {
-          console.error("PagedList::refreshList|" + error);
+        } else {
+          console.error('PagedList::refreshList|' + error);
           this.error = Error.build(-1, error);
         }
       });
   }
 
   public prevPage() {
-    //console.debug("PagedList::prevPage:" + (this.currentPage - 1));
+    // console.debug("PagedList::prevPage:" + (this.currentPage - 1));
     if (this.currentPage > 0) {
       this.getItems((this.currentPage - 1) * this.pageSize, this.pageSize);
     }
   };
   public nextPage() {
-    //console.debug("PagedList::nextPage:" + (this.currentPage + 1));
+    // console.debug("PagedList::nextPage:" + (this.currentPage + 1));
     if (this.currentPage < (this.nbPages - 1)) {
       this.getItems((this.currentPage + 1) * this.pageSize, this.pageSize);
     }
   };
 
   private handleSuccessResponse(data: any) {
-    //console.debug("PagedList::handleSuccessResponse(" + JSON.stringify(response) + ")");
+    // console.debug("PagedList::handleSuccessResponse(" + JSON.stringify(response) + ")");
     this.items = data.items;
 
     this.onItemsSet.emit(this.items);

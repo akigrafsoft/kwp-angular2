@@ -63,7 +63,8 @@ export class PagedListService {
       'Content-Type': 'application/json;charset=UTF-8',
       'SessionId': this.authService.sessionId
     });
-    return this.http.put(encodeURI(this.baseUrl + '/' + listId), JSON.stringify(request), {headers: headers})
+    return this.http.put(encodeURI(this.baseUrl + '/' + listId),
+      JSON.stringify(request), {headers: headers})
       .pipe(catchError(ServiceUtils.handleError6('searchList', [])));
   }
 
@@ -79,7 +80,9 @@ export class PagedListService {
       'Content-Type': 'application/json;charset=UTF-8',
       'SessionId': this.authService.sessionId
     });
-    return this.http.put(encodeURI(this.baseUrl + '/' + listId), JSON.stringify(request), {headers: headers})
+    return this.http.put(encodeURI(this.baseUrl + '/' + listId),
+      JSON.stringify(request),
+      {headers: headers})
       .pipe(catchError(ServiceUtils.handleError6('sortList', [])));
   }
 
