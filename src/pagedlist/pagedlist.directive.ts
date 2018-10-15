@@ -1,7 +1,7 @@
 //
 // Author: Kevin Moyse
 //
-import {Directive, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Directive, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {PagedListService} from './pagedlist.service';
 import {Error} from '../services/error';
@@ -10,7 +10,7 @@ import {Error} from '../services/error';
   selector: '[kwp-paged-list]',
   exportAs: 'kwpPagedList'
 })
-export class PagedListDirective implements OnInit {
+export class PagedListDirective implements OnInit, OnChanges {
 
   @Input('kwp-paged-list')
   factory: string;
@@ -21,11 +21,11 @@ export class PagedListDirective implements OnInit {
   private _listId: string = null;
   @Input('listId')
   set listId(id: string) {
-    //console.debug("PagedList::listId(" + id + ")");
+    //    console.debug("PagedList::listId(" + id + ")");
     this._listId = id;
-    if (this.initDone) {
-      this.doCreateList();
-    }
+    //    if (this.initDone) {
+    //      this.doCreateList();
+    //    }
   }
 
   @Input('pageSize')
@@ -37,10 +37,11 @@ export class PagedListDirective implements OnInit {
   private _searchCriterias: any = null;
   @Input('searchCriterias')
   set searchCriterias(searchCriterias: any) {
+    //    console.debug("PagedList::searchCriterias(" + JSON.stringify(searchCriterias) + ")");
     this._searchCriterias = searchCriterias;
-    if (this.initDone) {
-      this.search(searchCriterias);
-    }
+    //    if (this.initDone) {
+    //      this.search(searchCriterias);
+    //    }
   }
 
   @Input() sortCriteria: string = null;
@@ -75,8 +76,19 @@ export class PagedListDirective implements OnInit {
     this.initDone = true;
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // throw new Error("Method not implemented.");
+    //    console.debug("PagedList::ngOnChanges():" + JSON.stringify(changes));
+    if (changes.listId) {
+      this.doCreateList();
+    }
+    else if (changes.searchCriterias) {
+      this.search(this._searchCriterias);
+    }
+  }
+
   private doCreateList() {
-    //console.debug("PagedList::doCreateList(" + this._listId + ")");
+    //    console.debug("PagedList::doCreateList(" + this._listId + ")");
     this.pagedListService.createList(this.factory, this.factoryParams,
       this._listId, this.searchCriteriasBase, this._searchCriterias,
       this.sortCriteria, this.reverse, this.fromIndex, this.pageSize)
