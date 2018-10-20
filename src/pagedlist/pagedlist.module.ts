@@ -9,8 +9,8 @@ import {PagedListDirective} from './pagedlist.directive';
   ],
   declarations: [PagedListDirective],
   exports: [PagedListDirective],
-})
-export class PagedListModule {}
   // Do not specify app-wide singleton providers in a shared module.
   // A lazy-loaded module that imports that shared module makes its own copy of the service.
-
+  // providers: [PagedListService]
+})
+export class PagedListModule {}
