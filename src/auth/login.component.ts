@@ -34,12 +34,12 @@ import {Error} from '../services/error';
 })
 export class AuthLoginComponent {
 
-  _l: string = 'en';
+  _l = 'en';
   @Input() set LANG(lang: string) {
     this._l = lang;
   }
   @Input() username: string = null;
-  @Input() inline: boolean = false;
+  @Input() inline = false;
   @Output() onLogin = new EventEmitter<boolean>();
   @Output() onError = new EventEmitter<boolean>();
 
@@ -56,7 +56,7 @@ export class AuthLoginComponent {
   }
 
   login() {
-    //console.debug('AuthLogin');
+    // console.debug('AuthLogin');
     this.authService.login({username: this.username, password: this.password})
       .subscribe(
       json => {
@@ -72,9 +72,8 @@ export class AuthLoginComponent {
           setTimeout(() => {
             this.error = null;
           }, 3000);
-        }
-        else {
-          console.error("AuthLogin::login|" + error);
+        } else {
+          console.error('AuthLogin::login|' + error);
           this.error = Error.build(-1, error);
         }
         this.onError.emit(true);

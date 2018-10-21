@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import {Injectable, Inject} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -12,7 +12,7 @@ import {ServiceUtils} from '../services/service-utils';
 @Injectable()
 export class ConfigurationService {
 
-  constructor(private http: HttpClient, @Inject("baseUrl") private baseUrl: string) {}
+  constructor(private http: HttpClient, @Inject('baseUrl') private baseUrl: string) {}
 
   getConfiguration(sessionId: string): Observable<any> {
     if (sessionId !== null) {
@@ -21,9 +21,6 @@ export class ConfigurationService {
       });
       return this.http.get(this.baseUrl, {headers: headers})
         .pipe(catchError(ServiceUtils.handleError6('getHeroes', [])));
-      //                .catch((response: HttpErrorResponse) => {
-      //                    return ServiceUtils.handleError(response);
-      //                });
     }
     return this.http.get(this.baseUrl)
       .pipe(catchError(ServiceUtils.handleError6('getConfiguration', [])));

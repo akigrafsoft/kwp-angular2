@@ -127,7 +127,7 @@ import {Error} from '../services/error';
 })
 export class UserFormComponent implements OnInit {
 
-  _l: string = 'en';
+  _l = 'en';
   @Input() set LANG(l: string) {
     this._l = l;
   }
@@ -148,17 +148,15 @@ export class UserFormComponent implements OnInit {
     if (i_user === null) {
       this.newUser = true;
       this._user = new User();
-      console.log("UserForm::user() new");
-    }
-    else {
+      console.log('UserForm::user() new');
+    } else {
       this.newUser = false;
       if (i_user instanceof User) {
         this._user = i_user;
-      }
-      else {
+      } else {
         this._user = User.build(i_user);
       }
-      console.log("UserForm::user() update");
+      console.log('UserForm::user() update');
     }
 
     if (this._user.address === null) {
@@ -175,7 +173,7 @@ export class UserFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("UserForm::ngOnInit()");
+    console.log('UserForm::ngOnInit()');
   }
 
   addRolebyName(roleName: string) {
@@ -183,7 +181,7 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit() {
-    //console.debug("UserForm::onSubmit(" + JSON.stringify(this._user) + ")");
+    // console.debug("UserForm::onSubmit(" + JSON.stringify(this._user) + ")");
     if (!this.newUser) {
       this.userService.update(this._user)
         .subscribe(json => {
@@ -194,8 +192,7 @@ export class UserFormComponent implements OnInit {
             this.error = error;
           }
         });
-    }
-    else {
+    } else {
       this.userService.create(this._user)
         .subscribe(json => {
           this.onCreated.emit(User.build(json.user));

@@ -4,9 +4,8 @@
 import {Injectable, Inject} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
 
-import {Observable, Subject, of} from 'rxjs';
-import {tap, map, catchError} from 'rxjs/operators';
-//import 'rxjs/add/observable/of';
+import {Observable, Subject} from 'rxjs';
+import {map, catchError} from 'rxjs/operators';
 
 import {ServiceUtils} from '../services/service-utils';
 import {User} from '../users/user';
@@ -15,9 +14,9 @@ import {Role} from './role';
 @Injectable()
 export class AuthService {
 
-  public static KEY_SESSION_ID: string = 'kwp-sessionId';
+  public static KEY_SESSION_ID = 'kwp-sessionId';
 
-  public isLoggedIn: boolean = false;
+  public isLoggedIn = false;
 
   private _sessionId: string;
 
@@ -29,7 +28,7 @@ export class AuthService {
     if (this._sessionId !== null) {
       return this._sessionId;
     }
-    return "";
+    return '';
   }
   public authenticatedUser: User = null;
   public authenticatedRoles: Array<Role>;
@@ -46,7 +45,7 @@ export class AuthService {
   private sessionTimedOutSubject = new Subject<User>();
   private sessionTimedOut$ = this.sessionTimedOutSubject.asObservable();
 
-  constructor(private http: HttpClient, @Inject("baseUrl") private baseUrl: string) {}
+  constructor(private http: HttpClient, @Inject('baseUrl') private baseUrl: string) {}
 
   public getAuthenticatedUser(): User {
     return this.authenticatedUser;
@@ -83,16 +82,6 @@ export class AuthService {
     });
     return this.http.post(this.baseUrl, JSON.stringify(credentials), {headers: headers})
       .pipe(catchError(ServiceUtils.handleError6('login', [])));
-    //      .pipe(
-    //      catchError(
-    //        (err: any, caught: Observable<any>) => {
-    //          this.handleErrorResponse(err);
-    //          return Observable.of(ServiceUtils.handleError6('getHeroes', []));
-    //        }));
-    //      .catch((response: HttpErrorResponse) => {
-    //        this.handleErrorResponse(response);
-    //        return ServiceUtils.handleError(response);
-    //      });
   }
 
 
@@ -102,7 +91,6 @@ export class AuthService {
       .setItem(
       AuthService.KEY_SESSION_ID,
       sessionId);
-    //console.debug("AuthService::setSessionId(" + sessionId + ")");
   }
 
   // public acceptAuthenticatedUser(sessionId: string, user: User): void;
@@ -128,7 +116,6 @@ export class AuthService {
   }
 
   private cleanUp() {
-    //alert("AuthService::cleanUp()!");
     window.localStorage.removeItem(AuthService.KEY_SESSION_ID);
     this.isLoggedIn = false;
     this._sessionId = null;
@@ -140,9 +127,6 @@ export class AuthService {
     this.cleanUp();
   }
 
-  /**
-   * 
-   */
   public check(sessionId: string, redirectUrl: string): Observable<boolean | any> {
     let headers = new HttpHeaders({
       'SessionId': sessionId
@@ -151,21 +135,14 @@ export class AuthService {
       .pipe(
       map((data) => {return this.doMapCheck(redirectUrl, data)}),
       catchError(ServiceUtils.handleError6('getHeroes', [])));
-    //      
-    //      
-    //      .map((data) => {return this.doMapCheck(redirectUrl, data)})
-    //      .catch((res) => {
-    //        return Observable.of(false);
-    //      });
   }
 
   private doMapCheck(redirectUrl: string, response: any): boolean {
-    //let data = ServiceUtils.extractData(response);
     if (response.user) {
       if (!this.isLoggedIn) {
-        var userRoles = new Array<Role>();
+        let userRoles = new Array<Role>();
         if (typeof response.userRoles !== 'undefined') {
-          for (var role of response.userRoles) {
+          for (let role of response.userRoles) {
             userRoles.push(Role.build(role));
           }
         }
@@ -177,7 +154,7 @@ export class AuthService {
     // Store the attempted URL for redirecting
     this.redirectUrl = redirectUrl;
 
-    console.warn("AuthService::doMapCheck(" + JSON.stringify(response) + ")|false");
+    console.warn('AuthService::doMapCheck(' + JSON.stringify(response) + ')|false');
     return false;
   }
 
@@ -197,8 +174,8 @@ export class AuthService {
       return true;
     }
 
-    for (var role of this.authenticatedRoles) {
-      for (var right of role.frontendRights) {
+    for (const role of this.authenticatedRoles) {
+      for (const right of role.frontendRights) {
         if (i_right === right) {
           return true;
         }
@@ -215,7 +192,7 @@ export class AuthService {
       return false;
     }
 
-    for (var role of this.authenticatedRoles) {
+    for (const role of this.authenticatedRoles) {
       if (i_role === role.name) {
         return true;
       }
@@ -228,21 +205,19 @@ export class AuthService {
    * Takes the promise response Object (do not provide it as json !)
    */
   public handleErrorResponse(response: HttpErrorResponse) {
-    //console.debug("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")");
     let status = +response.status;
-    if (status == 403) {
+    if (status === 403) {
       // Forbidden
       // TODO : does not work well when the request was getting a ResponseType blob
-      // maybe we should check for the type ? 
-      //let error = response.json();
-      //console.log("AuthService::handleError(status:" + status + ") error:" + JSON.stringify(error));
-    } else if (status == 419) {
+      // maybe we should check for the type ?
+    } else if (status === 419) {
       // Authentication Timeout
       const user: User = this.authenticatedUser;
       this.cleanUp();
       this.sessionTimedOutSubject.next(user);
-      //location.reload();
-    } else {console.warn("AuthService::handleErrorResponse(" + JSON.stringify(response) + ")|unknown status:" + status);}
+    } else {
+      console.warn('AuthService::handleErrorResponse(' + JSON.stringify(response) + ')|unknown status:' + status);
+    }
   }
 
 }

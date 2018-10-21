@@ -1,16 +1,16 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
-import { PasswordService } from './password.service';
-import { User } from './user';
-import { Error } from '../services/error';
+import {PasswordService} from './password.service';
+import {User} from './user';
+import {Error} from '../services/error';
 
 @Component({
-    selector: 'kwp-change-pwd',
-    //templateUrl: './change-password-form.component.html',
-    template: `<form name="changePasswordForm" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()" #f="ngForm">
+  selector: 'kwp-change-pwd',
+  // templateUrl: './change-password-form.component.html',
+  template: `<form name="changePasswordForm" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()" #f="ngForm">
  <div class="form-group">
   <label for="cpwd">{{ _l==='fr' ? 'Mot de passe actuel' : 'Current Password'}}</label> <input name="cpwd" [(ngModel)]="_cpwd"
    type="password" pattern=".{6,}" class="form-control" placeholder="{{ _l==='fr' ? 'mot de passe' : 'password'}}" id="cpwd"
@@ -35,53 +35,52 @@ import { Error } from '../services/error';
  <button id="chgpwd-btn" type="submit" class="btn btn-primary pull-right" [disabled]="!f.form.valid||inPrgs">{{ _l==='fr'
   ? 'Valider' : 'Ok'}}</button>
 </form>`,
-    styles: [
-        `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
-        `.ng-invalid:not(form)  {border-left: 5px solid #a94442;`
-    ]
+  styles: [
+    `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
+    `.ng-invalid:not(form)  {border-left: 5px solid #a94442;`
+  ]
 })
 export class ChangePasswordFormComponent implements OnInit {
 
-    _l: string = 'en';
-    @Input() set LANG(lang: string) {
-        this._l = lang;
-    }
-    @Input() user: User = null;
-    @Output() onSuccess = new EventEmitter<boolean>();
+  _l = 'en';
+  @Input() set LANG(lang: string) {
+    this._l = lang;
+  }
+  @Input() user: User = null;
+  @Output() onSuccess = new EventEmitter<boolean>();
 
-    _cpwd: string;
-    _pw1: string;
-    _pw2: string;
+  _cpwd: string;
+  _pw1: string;
+  _pw2: string;
 
-    inPrgs: boolean = false;
-    error: Error = null;
+  inPrgs = false;
+  error: Error = null;
 
-    constructor(
-        private passwordService: PasswordService) {
-    }
+  constructor(
+    private passwordService: PasswordService) {
+  }
 
-    ngOnInit() {
-    }
+  ngOnInit() {
+  }
 
-    onSubmit() {
-        //console.debug("Registration::onSubmit()");
-        this.inPrgs = true;
-        this.passwordService.changePassword(this.user, this._cpwd, this._pw1)
-            .subscribe(() => {
-                this.inPrgs = false;
-                this.onSuccess.emit(true);
-            },
-            error => {
-                this.inPrgs = false;
-                if (error instanceof Error) {
-                    this.error = error;
-                    setTimeout(() => {
-                        this.error = null;
-                    }, 3000);
-                }
-                else {
-                    console.error("ChangePassword::onSubmit()|" + error);
-                }
-            });
-    }
+  onSubmit() {
+    // console.debug("Registration::onSubmit()");
+    this.inPrgs = true;
+    this.passwordService.changePassword(this.user, this._cpwd, this._pw1)
+      .subscribe(() => {
+        this.inPrgs = false;
+        this.onSuccess.emit(true);
+      },
+      error => {
+        this.inPrgs = false;
+        if (error instanceof Error) {
+          this.error = error;
+          setTimeout(() => {
+            this.error = null;
+          }, 3000);
+        } else {
+          console.error('ChangePassword::onSubmit()|' + error);
+        }
+      });
+  }
 }

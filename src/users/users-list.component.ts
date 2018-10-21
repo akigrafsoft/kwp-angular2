@@ -109,14 +109,14 @@ import {UserService} from './user.service';
 
 export class UsersListComponent {
 
-  _l: string = 'en';
+  _l = 'en';
   @Input() set LANG(l: string) {
     this._l = l;
   }
 
   @Input() createButton = true;
 
-  _n: number = 16;
+  _n = 16;
   @Input() set n(n: number) {
     this._n = n;
   }
@@ -128,12 +128,12 @@ export class UsersListComponent {
   user: User = null;
   //  e_user: User = null;
 
-  createUser: boolean = false;
+  createUser = false;
 
-  usernameReverse: boolean = false;
-  displayAction: string = '';
+  usernameReverse = false;
+  displayAction = '';
 
-  delInPrgrs: boolean = false;
+  delInPrgrs = false;
   error: Error = null;
 
   @ViewChild(PagedListDirective)
@@ -149,23 +149,12 @@ export class UsersListComponent {
   }
 
   doSelectUser(user: any) {
-    //this.onSelected.emit(User.build(user));
     this.onSelected.emit(user);
   }
 
   doEdit(user: any) {
-    //this.e_user = User.build(user);
     this.onEdit.emit(user);
   }
-
-  //  closeEdit() {
-  //    this.e_user = null;
-  //    this.pagedList.refreshList();
-  //  }
-
-  //  cancelEdit() {
-  //    this.e_user = null;
-  //  }
 
   modalSelectUser(user: any) {
     this.user = User.build(user);
@@ -173,11 +162,11 @@ export class UsersListComponent {
 
   doDelete() {
     if (this.user === null) {
-      console.error("Users::doDelete(null)");
+      console.error('Users::doDelete(null)');
       return;
     }
 
-    //console.debug("Users::doDelete(" + JSON.stringify(this.user) + ")");
+    // console.debug("Users::doDelete(" + JSON.stringify(this.user) + ")");
     this.delInPrgrs = true;
     this.userService.del(this.user.id)
       .subscribe(() => {
@@ -191,19 +180,17 @@ export class UsersListComponent {
           setTimeout(() => {
             this.error = null;
           }, 3000);
-        }
-        else {
-          console.error("Users::doDelete|" + error);
+        } else {
+          console.error('Users::doDelete|' + error);
         }
       });
   }
 
   searchUsername(buffer: string) {
-    //console.debug("Users::searchUsername(" + username + ")");
+    // console.debug("Users::searchUsername(" + username + ")");
     if (buffer === '') {
       this.pagedList.search(null);
-    }
-    else {
+    } else {
       this.pagedList.search({'username': buffer});
     }
   }
@@ -211,8 +198,7 @@ export class UsersListComponent {
   searchLastname(buffer: string) {
     if (buffer === '') {
       this.pagedList.search(null);
-    }
-    else {
+    } else {
       this.pagedList.search({'lastName': buffer});
     }
   }

@@ -20,12 +20,7 @@ export class User {
   password: string;
   password2: string;
 
-  //lastSuccessfulLoginTime
   public lSLTMs: string;
-
-  constructor() {
-    this.roles = new Array<string>();
-  }
 
   public static build(document: any): User {
     let o_object = new User();
@@ -44,8 +39,7 @@ export class User {
           case 'address':
             if (document.address !== null) {
               o_object.address = Address.build(document.address);
-            }
-            else {
+            } else {
               o_object.address = null;
             }
             break;
@@ -65,10 +59,15 @@ export class User {
     return o_object;
   }
 
+  constructor() {
+    this.roles = new Array<string>();
+  }
+
   public hasRole(role: string): boolean {
-    for (var name of this.roles) {
-      if (role === name)
+    for (const name of this.roles) {
+      if (role === name) {
         return true;
+      }
     }
     return false;
   }

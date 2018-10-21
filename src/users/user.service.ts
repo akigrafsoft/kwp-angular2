@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import {Injectable, Inject} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -17,7 +17,7 @@ export class UserService {
 
   constructor(private http: HttpClient,
     private authService: AuthService,
-    @Inject("baseUrl") private baseUrl: string) {}
+    @Inject('baseUrl') private baseUrl: string) {}
 
   create(user: User): Observable<any | Error> {
     let headers = new HttpHeaders({
@@ -26,10 +26,6 @@ export class UserService {
     });
     return this.http.post(encodeURI(this.baseUrl), JSON.stringify(user), {headers: headers})
       .pipe(catchError(ServiceUtils.handleError6('tmpPassword', [])));
-    //            .catch((response: HttpErrorResponse) => {
-    //                this.authService.handleErrorResponse(response);
-    //                return ServiceUtils.handleError(response);
-    //            });
   }
 
   getUser(userIdOrName: string): Observable<any | Error> {
@@ -38,10 +34,6 @@ export class UserService {
     });
     return this.http.get(encodeURI(this.baseUrl + '/' + userIdOrName), {headers: headers})
       .pipe(catchError(ServiceUtils.handleError6('tmpPassword', [])));
-    //            .catch((response: HttpErrorResponse) => {
-    //                this.authService.handleErrorResponse(response);
-    //                return ServiceUtils.handleError(response);
-    //            });
   }
 
   update(user: User): Observable<any | Error> {
@@ -51,10 +43,6 @@ export class UserService {
     });
     return this.http.put(encodeURI(this.baseUrl + '/' + user.id), JSON.stringify(user), {headers: headers})
       .pipe(catchError(ServiceUtils.handleError6('tmpPassword', [])));
-    //            .catch((response: HttpErrorResponse) => {
-    //                this.authService.handleErrorResponse(response);
-    //                return ServiceUtils.handleError(response);
-    //            });
   }
 
   del(id: string): Observable<any | Error> {
@@ -63,9 +51,5 @@ export class UserService {
     });
     return this.http.delete(encodeURI(this.baseUrl + '/' + id), {headers: headers})
       .pipe(catchError(ServiceUtils.handleError6('tmpPassword', [])));
-    //            .catch((response: HttpErrorResponse) => {
-    //                this.authService.handleErrorResponse(response);
-    //                return ServiceUtils.handleError(response);
-    //            });
   }
 }

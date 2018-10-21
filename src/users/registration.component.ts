@@ -1,16 +1,16 @@
 //
 // Author: Kevin Moyse
 //
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
-import { UserService } from './user.service';
-import { User } from './user';
-import { Error } from '../services/error';
+import {UserService} from './user.service';
+import {User} from './user';
+import {Error} from '../services/error';
 
 @Component({
-    selector: 'kwp-registration',
-    //    templateUrl: 'registration.component.html',
-    template: `<form name="userRegistrationForm" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()" #f="ngForm">
+  selector: 'kwp-registration',
+  //    templateUrl: 'registration.component.html',
+  template: `<form name="userRegistrationForm" class="form-horizontal" accept-charset="UTF-8" (ngSubmit)="onSubmit()" #f="ngForm">
  <div class="form-group">
   <label for="username">{{_l==='fr' ? 'Nom utilisateur' : 'username'}}</label> <input name="username"
    [(ngModel)]="user.username" type="text" pattern="[a-zA-Z0-9.-_]+" class="form-control"
@@ -57,60 +57,59 @@ import { Error } from '../services/error';
  <button type="submit" class="btn btn-primary" [disabled]="!f.form.valid||inPrgs">{{_l==='fr' ? 'Valider' :
   'Register'}}</button>
 </form>`,
-    styles: [
-        `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
-        `.ng-invalid:not(form)  {border-left: 5px solid #a94442;}`
-    ]
+  styles: [
+    `.ng-valid[required], .ng-valid.required  {border-left: 5px solid #42A948;}`,
+    `.ng-invalid:not(form)  {border-left: 5px solid #a94442;}`
+  ]
 })
 export class RegistrationComponent implements OnInit {
 
-    _l: string = 'en';
-    @Input() set LANG(lang: string) {
-        this._l = lang;
+  _l = 'en';
+  @Input() set LANG(lang: string) {
+    this._l = lang;
+  }
+
+  @Input() withPhone = false;
+  @Input() emailHelp: string = null;
+  @Input() phoneHelp: string = null;
+  @Input() roles: string[] = null;
+  @Output() onSuccess = new EventEmitter<boolean>();
+
+  user: User = new User();
+  inPrgs = false;
+  error: Error = null;
+
+  password2: string;
+
+  constructor(
+    private userService: UserService) {
+  }
+
+  ngOnInit() {
+    if (this.roles !== null) {
+      // console.debug("Registration::constructor|User with roles" + JSON.stringify(this.roles));
+      this.user.roles = this.roles;
     }
+  }
 
-    @Input() withPhone: boolean = false;
-    @Input() emailHelp: string = null;
-    @Input() phoneHelp: string = null;
-    @Input() roles: string[] = null;
-    @Output() onSuccess = new EventEmitter<boolean>();
-
-    user: User = new User();
-    inPrgs: boolean = false;
-    error: Error = null;
-
-    password2: string;
-
-    constructor(
-        private userService: UserService) {
-    }
-
-    ngOnInit() {
-        if (this.roles !== null) {
-            //console.debug("Registration::constructor|User with roles" + JSON.stringify(this.roles));
-            this.user.roles = this.roles;
+  onSubmit() {
+    // console.debug("Registration::onSubmit()");
+    this.inPrgs = true;
+    this.userService.create(this.user)
+      .subscribe(() => {
+        this.inPrgs = false;
+        this.onSuccess.emit(true);
+      },
+      error => {
+        this.inPrgs = false;
+        if (error instanceof Error) {
+          this.error = error;
+          setTimeout(() => {
+            this.error = null;
+          }, 3000);
+        } else {
+          console.error('Registration::onSubmit()|' + error);
         }
-    }
-
-    onSubmit() {
-        //console.debug("Registration::onSubmit()");
-        this.inPrgs = true;
-        this.userService.create(this.user)
-            .subscribe(() => {
-                this.inPrgs = false;
-                this.onSuccess.emit(true);
-            },
-            error => {
-                this.inPrgs = false;
-                if (error instanceof Error) {
-                    this.error = error;
-                    setTimeout(() => {
-                        this.error = null;
-                    }, 3000);
-                }
-                else {
-                    console.error("Registration::onSubmit()|" + error);
-                }
-            });
-    }
+      });
+  }
 }

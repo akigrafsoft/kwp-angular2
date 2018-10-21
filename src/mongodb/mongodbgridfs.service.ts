@@ -2,8 +2,7 @@
 // Author: Kevin Moyse
 //
 import {Injectable, Inject} from '@angular/core';
-//import { Headers, Http, ResponseContentType } from '@angular/http';
-import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -17,7 +16,7 @@ export class MongoDBGridFSService {
 
   constructor(private http: HttpClient,
     private authService: AuthService,
-    @Inject("baseUrl") private baseUrl: string) {}
+    @Inject('baseUrl') private baseUrl: string) {}
 
   getTextFile(bucket: string, id: string): Observable<any> {
     let headers = new HttpHeaders({
@@ -31,7 +30,8 @@ export class MongoDBGridFSService {
     let headers = new HttpHeaders({
       'SessionId': this.authService.sessionId
     });
-    return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id), {headers: headers, observe: observe, responseType: responseType})
+    return this.http.get(encodeURI(this.baseUrl + '/' + bucket + '/' + id),
+      {headers: headers, observe: observe, responseType: responseType})
       .pipe(catchError(ServiceUtils.handleError6('getFile', [])));
   }
 
@@ -50,36 +50,28 @@ export class MongoDBGridFSService {
       let formData: FormData = new FormData(),
         xhr: XMLHttpRequest = new XMLHttpRequest();
 
-      // for (let i = 0; i < files.length; i++) {
-      //https://developer.mozilla.org/en-US/docs/Web/API/FormData/append
-      //formData.append("metadata[]", JSON.stringify(metadatas[i]));
-      //formData.append("files[]", files[i], files[i].name);
-      //}
-
-      formData.append("metadata", JSON.stringify(metadata));
-      formData.append("file", file, file.name);
+      formData.append('metadata', JSON.stringify(metadata));
+      formData.append('file', file, file.name);
 
       xhr.onreadystatechange = () => {
-        console.debug('MongoDBGridFSService::uploadFile onreadystatechange=' + xhr.readyState);
+        // console.debug('MongoDBGridFSService::uploadFile onreadystatechange=' + xhr.readyState);
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
             observer.next(JSON.parse(xhr.responseText));
             observer.complete();
-          }
-          else if (xhr.status == 403) {
-            var body = JSON.parse(xhr.responseText);
+          } else if (xhr.status === 403) {
+            const body = JSON.parse(xhr.responseText);
             observer.error(Error.build(body.errorCode || -1, body.errorReason));
-          }
-          else {
-            observer.error(Error.build(xhr.status, "HTTP error"));
+          } else {
+            observer.error(Error.build(xhr.status, 'HTTP error'));
           }
         }
       };
 
       xhr.upload.onprogress = (event) => {
-        var progress = Math.round(event.loaded / event.total * 100);
-        console.debug('MongoDBGridFSService::uploadFile progress=' + progress);
-        //this.progressObserver.next(this.progress);
+        const progress = Math.round(event.loaded / event.total * 100);
+        console.log('MongoDBGridFSService::uploadFile progress=' + progress);
+        // this.progressObserver.next(this.progress);
       };
 
       xhr.open('POST', encodeURI(this.baseUrl + '/' + bucket), true);

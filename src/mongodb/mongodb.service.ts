@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import {Injectable, Inject} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -15,7 +15,7 @@ import {Error} from '../services/error';
 export class MongoDBService {
 
   constructor(private http: HttpClient, private auth: AuthService,
-    @Inject("baseUrl") private baseUrl: string) {}
+    @Inject('baseUrl') private baseUrl: string) {}
 
   // if id is provided null, then mongodb will create its own
   addDocument(collection: string, id: string, document: any): Observable<any | Error> {
@@ -77,8 +77,9 @@ export class MongoDBService {
 
     let uri: string = this.baseUrl + '/' + collection + '/' + id;
 
-    if (excludeFields)
-      uri += "?exclude=" + excludeFields;
+    if (excludeFields) {
+      uri += '?exclude=' + excludeFields;
+    }
 
     return this.http.get(encodeURI(uri), {headers: headers, responseType: 'json'})
       .pipe(catchError(ServiceUtils.handleError6('getDocument', [])));

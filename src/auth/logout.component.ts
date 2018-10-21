@@ -9,7 +9,8 @@ import {Error} from '../services/error';
 @Component({
   selector: 'auth-logout',
   template: `<form name="logoutForm" class="form-inline enabled" accept-charset="UTF-8" (ngSubmit)="logout()" #logoutForm="ngForm">
-<button id='logout-btn' type="submit" class="btn btn-success" [disabled]="!logoutForm.form.valid"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;{{LANG=='fr' ? 'Déconnexion' : 'Logout'}}</button></form>`
+<button id='logout-btn' type="submit" class="btn btn-success" [disabled]="!logoutForm.form.valid">
+<span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;{{LANG=='fr' ? 'Déconnexion' : 'Logout'}}</button></form>`
 })
 export class AuthLogoutComponent {
 
@@ -23,20 +24,19 @@ export class AuthLogoutComponent {
   }
 
   logout() {
-    //console.log("AuthLogout::logout()");
+    // console.log("AuthLogout::logout()");
     this.authService.logout(this.authService.sessionId)
       .subscribe(
       resp => {
-        //console.log("AuthLogout::logout resp received");
+        // console.log("AuthLogout::logout resp received");
         this.authService.successLogout();
         this.onLogout.emit(true);
       },
       error => {
         if (error instanceof Error) {
           this.error = error;
-        }
-        else {
-          console.error("AuthLogout::logout|" + error);
+        } else {
+          console.error('AuthLogout::logout|' + error);
           this.error = Error.build(-1, error);
         }
         // whatever the result, consider logout

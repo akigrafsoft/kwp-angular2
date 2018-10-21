@@ -66,12 +66,12 @@ export class ServiceUtils {
     //        }
     if (response instanceof HttpErrorResponse) {
       try {
-        const err = response.error instanceof Object ? response.error : JSON.parse(response.error);
-        const error: Error = Error.build(err.errorCode || -1, err.errorReason);
+        const errObj = response.error instanceof Object ? response.error : JSON.parse(response.error);
+        const error: Error = Error.build(errObj.errorCode || -1, errObj.errorReason);
         let data = new Object();
-        for (let k in err) {
+        for (let k in errObj) {
           if ((k !== 'errorCode') && (k !== 'errorReason')) {
-            data[k] = err[k];
+            data[k] = errObj[k];
           }
         }
         error.setData(data);

@@ -2,7 +2,7 @@
 // Author: Kevin Moyse
 //
 import {Injectable, Inject} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -15,7 +15,7 @@ export class SessionsService {
 
   constructor(private http: HttpClient,
     private authService: AuthService,
-    @Inject("baseUrl") private baseUrl: string) {}
+    @Inject('baseUrl') private baseUrl: string) {}
 
   public getSessions(): Observable<any> {
     let headers = new HttpHeaders({
@@ -23,7 +23,6 @@ export class SessionsService {
       'SessionId': this.authService.sessionId
     });
     return this.http.get(this.baseUrl, {headers: headers}).pipe(catchError(ServiceUtils.handleError6('getHeroes', [])));
-    //.catch(this.handleError);
   }
 
   public getSession(sessionId: string): Observable<any> {
