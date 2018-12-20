@@ -22,7 +22,7 @@ export class SessionsService {
       'Content-Type': 'application/json;charset=UTF-8',
       'SessionId': this.authService.sessionId
     });
-    return this.http.get(this.baseUrl, {headers: headers}).pipe(catchError(ServiceUtils.handleError6('getHeroes', [])));
+    return this.http.get(this.baseUrl, {headers: headers}).pipe(catchError(ServiceUtils.handleError6('getSessions', [])));
   }
 
   public getSession(sessionId: string): Observable<any> {

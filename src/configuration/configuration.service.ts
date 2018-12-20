@@ -20,7 +20,7 @@ export class ConfigurationService {
         'SessionId': sessionId
       });
       return this.http.get(this.baseUrl, {headers: headers})
-        .pipe(catchError(ServiceUtils.handleError6('getHeroes', [])));
+        .pipe(catchError(ServiceUtils.handleError6('getConfiguration', [])));
     }
     return this.http.get(this.baseUrl)
       .pipe(catchError(ServiceUtils.handleError6('getConfiguration', [])));
