@@ -1,13 +1,13 @@
 //
 // Author: Kevin Moyse
 //
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 
-import {Observable} from 'rxjs';
-import {of} from 'rxjs';
-import {throwError} from 'rxjs';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { throwError } from 'rxjs';
 
-import {Error} from './error';
+import { Error } from './error';
 
 export class ServiceUtils {
 
@@ -28,33 +28,33 @@ export class ServiceUtils {
    * @param operation - name of the operation that failed
    * @param result - optional value to return as the observable result
    */
-    public static handleError6<T>(operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
+    public static handleError6<T>( operation = 'operation', result?: T ) {
+        return ( error: any ): Observable<T> => {
 
             // TODO: send the error to remote logging infrastructure
-            console.error(error); // log to console instead
+            console.error( JSON.stringify( error ) ); // log to console instead
 
             // TODO: better job of transforming error for user consumption
-            console.log(`${operation} failed: ${error.message}`);
+            console.log( `${operation} failed: ${error.message}` );
 
-            if (error instanceof HttpErrorResponse) {
-                const errObj = error.error instanceof Object ? error.error : JSON.parse(error.error);
-                const err: Error = Error.build(errObj.errorCode || -1, errObj.errorReason || null);
+            if ( error instanceof HttpErrorResponse ) {
+                const errObj = error.error instanceof Object ? error.error : JSON.parse( error.error );
+                const err: Error = Error.build( errObj.errorCode || error.status, errObj.errorReason || error.statusText );
                 var data = new Object();
-                for (var k in errObj) {
-                    if ((k !== 'errorCode') && (k !== 'errorReason'))
+                for ( var k in errObj ) {
+                    if ( ( k !== 'errorCode' ) && ( k !== 'errorReason' ) )
                         data[k] = errObj[k];
                 }
-                err.setData(data);
-                return throwError(err);
+                err.setData( data );
+                return throwError( err );
             }
 
             // Let the app keep running by returning an empty result.
-            return of(result as T);
+            return of( result as T );
         };
     }
 
-    public static handleError(response: HttpErrorResponse | any): Observable<Error> | Observable<any> {
+    public static handleError( response: HttpErrorResponse | any ): Observable<Error> | Observable<any> {
         // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;
         //        if (response instanceof Response) {
@@ -76,29 +76,29 @@ export class ServiceUtils {
         //            const err = JSON.stringify(response);
         //            errMsg = `${response.status} - ${response.statusText || ''} ${err}`;
         //        }
-        if (response instanceof HttpErrorResponse) {
+        if ( response instanceof HttpErrorResponse ) {
             try {
-                const errObj = response.error instanceof Object ? response.error : JSON.parse(response.error);
-                const error: Error = Error.build(errObj.errorCode || -1, errObj.errorReason);
+                const errObj = response.error instanceof Object ? response.error : JSON.parse( response.error );
+                const error: Error = Error.build( errObj.errorCode || -1, errObj.errorReason );
                 let data = new Object();
-                for (let k in errObj) {
-                    if ((k !== 'errorCode') && (k !== 'errorReason')) {
+                for ( let k in errObj ) {
+                    if ( ( k !== 'errorCode' ) && ( k !== 'errorReason' ) ) {
                         data[k] = errObj[k];
                     }
                 }
-                error.setData(data);
-                return throwError(error);
-            } catch (e) {
-                console.error('ServiceUtils::handleError|' + e);
+                error.setData( data );
+                return throwError( error );
+            } catch ( e ) {
+                console.error( 'ServiceUtils::handleError|' + e );
             }
             //            response.message ||
-            const err = JSON.stringify(response);
+            const err = JSON.stringify( response );
             errMsg = `${response.status} - ${response.statusText || ''} ${err}`;
         } else {
             errMsg = response.message ? response.message : response.toString();
         }
-        console.error('ServiceUtils::handleError|' + errMsg);
-        return throwError(errMsg);
+        console.error( 'ServiceUtils::handleError|' + errMsg );
+        return throwError( errMsg );
     }
 
 }
