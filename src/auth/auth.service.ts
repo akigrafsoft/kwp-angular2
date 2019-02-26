@@ -5,6 +5,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, Subject } from 'rxjs';
+import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { ServiceUtils } from '../services/service-utils';
@@ -134,6 +135,7 @@ export class AuthService {
         return this.http.get( encodeURI( this.baseUrl + '/' + sessionId ), { headers: headers } )
             .pipe(
             map(( data ) => { return this.doMapCheck( redirectUrl, data ) } ),
+            catchError( err => { this.handleErrorResponse( err ); return throwError( err ); } ),
             catchError( ServiceUtils.handleError6( 'check', [] ) ) );
     }
 
