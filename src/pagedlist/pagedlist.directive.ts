@@ -44,15 +44,18 @@ export class PagedListDirective implements OnInit, OnChanges {
     set searchCriterias( searchCriterias: any ) {
         //    console.debug("PagedList::searchCriterias(" + JSON.stringify(searchCriterias) + ")");
         this._searchCriterias = searchCriterias;
-        //    if (this.initDone) {
-        //      this.search(searchCriterias);
-        //    }
     }
 
-    @Input() sortCriteria: string = null;
-    @Input() reverse: false;
+    private _sortCriterias: any = null;
+    @Input( 'sortCriterias' )
+    set sortCriterias( sortCriterias: any ) {
+        //      console.debug("PagedList::sortCriterias(" + JSON.stringify(sortCriterias) + ")");
+        this._sortCriterias = sortCriterias;
+    }
 
     @Output() onItemsSet = new EventEmitter<any[]>();
+
+    @Output() onSortCriteriasUpdate = new EventEmitter<any>();
 
     items: any[];
 
@@ -95,7 +98,7 @@ export class PagedListDirective implements OnInit, OnChanges {
         //    console.debug("PagedList::doCreateList(" + this._listId + ")");
         this.pagedListService.createList( this.factory, this.factoryParams,
             this._listId, this.searchCriteriasBase, this._searchCriterias,
-            this.sortCriteria, this.reverse, this.fromIndex, this._pageSize )
+            this._sortCriterias, this.fromIndex, this._pageSize )
             .subscribe( data => {
                 this.handleSuccessResponse( data );
             },
@@ -153,7 +156,7 @@ export class PagedListDirective implements OnInit, OnChanges {
     public search( searchCriterias: any, callback?: Function ): void;
 
     public search( searchCriterias: any, callback?: Function ): void {
-        this.pagedListService.searchList( this._listId, searchCriterias, this.sortCriteria, this.reverse, this.fromIndex, this._pageSize )
+        this.pagedListService.searchList( this._listId, searchCriterias, this._sortCriterias, this.fromIndex, this._pageSize )
             .subscribe( data => {
                 this.handleSuccessResponse( data );
                 if ( typeof callback !== 'undefined' ) {
@@ -170,8 +173,8 @@ export class PagedListDirective implements OnInit, OnChanges {
             } );
     }
 
-    public sort( sortCriteria: string, reverse: boolean ) {
-        this.pagedListService.sortList( this._listId, sortCriteria, reverse, this.fromIndex, this._pageSize )
+    public sort( sortCriterias: any ) {
+        this.pagedListService.sortList( this._listId, sortCriterias, this.fromIndex, this._pageSize )
             .subscribe( data => {
                 this.handleSuccessResponse( data );
             },
@@ -207,8 +210,10 @@ export class PagedListDirective implements OnInit, OnChanges {
         this.fullSize = data.itemsFullSize;
         this.filteredSize = data.itemsFilteredSize;
         this.fromIndex = data.fromIndex;
-        this.sortCriteria = data.sortCriteria;
-        this.reverse = data.reverse;
+        this._sortCriterias = data.sortCriterias;
+
+        this.onSortCriteriasUpdate.emit( this._sortCriterias );
+
         this.currentPage = Math
             .ceil( data.fromIndex
             / this._pageSize );

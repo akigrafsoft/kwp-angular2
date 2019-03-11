@@ -20,15 +20,14 @@ export class PagedListService {
 
     createList( factory: string, factoryParams: Object,
         listId: string, searchCriteriasBase: Object, searchCriterias: Object,
-        sortCriteria: string, reverse: boolean, fromIndex: number, pageSize: number ): Observable<any | Error> {
+        sortCriterias: any, fromIndex: number, pageSize: number ): Observable<any | Error> {
 
         let request = {
             'factory': factory,
             'factoryParams': factoryParams,
             'searchCriteriasBase': searchCriteriasBase,
             'searchCriterias': searchCriterias,
-            'sortCriteria': sortCriteria,
-            'reverse': reverse,
+            'sortCriterias': sortCriterias,
             'fromIndex': fromIndex,
             'pageSize': pageSize
         };
@@ -54,11 +53,10 @@ export class PagedListService {
     }
 
     searchList( listId, searchCriterias,
-        sortCriteria, reverse, fromIndex, pageSize ) {
+        sortCriterias, fromIndex, pageSize ) {
         let request = {
             'searchCriterias': searchCriterias,
-            'sortCriteria': sortCriteria,
-            'reverse': reverse,
+            'sortCriterias': sortCriterias,
             'fromIndex': fromIndex,
             'pageSize': pageSize
         };
@@ -72,11 +70,10 @@ export class PagedListService {
             .pipe( catchError( ServiceUtils.handleError6( 'searchList', [] ) ) );
     }
 
-    sortList( listId, sortCriteria, reverse, fromIndex,
+    sortList( listId, sortCriterias, fromIndex,
         pageSize ) {
         let request = {
-            'sortCriteria': sortCriteria,
-            'reverse': reverse,
+            'sortCriterias': sortCriterias,
             'fromIndex': fromIndex,
             'pageSize': pageSize
         };
