@@ -6,10 +6,10 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Observable, Subject } from 'rxjs';
 import { throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 
 import { ServiceUtils } from '../services/service-utils';
-import { User } from '../users/user';
+import { User } from '../users/users.module';
 import { Role } from './role';
 
 @Injectable()
@@ -82,9 +82,15 @@ export class AuthService {
             'SessionId': this.sessionId
         } );
         return this.http.post( this.baseUrl, JSON.stringify( credentials ), { headers: headers } )
-            .pipe( catchError( ServiceUtils.handleError6( 'login', [] ) ) );
+            .pipe(
+            tap( data => this.doTapLogin( data ) ),
+            catchError( ServiceUtils.handleError6( 'login', [] ) ) );
     }
 
+    private doTapLogin( data: any ) {
+        //console.log( 'doTapLogin(' + JSON.stringify( data ) + ')' );
+        this.setSessionId( data.sessionId );
+    }
 
     public setSessionId( sessionId: string ) {
         this._sessionId = sessionId;
@@ -141,15 +147,6 @@ export class AuthService {
 
     private doMapCheck( redirectUrl: string, response: any ): boolean {
         if ( response.user ) {
-            //            if ( !this.isLoggedIn ) {
-            //                let userRoles = new Array<Role>();
-            //                if ( typeof response.userRoles !== 'undefined' ) {
-            //                    for ( let role of response.userRoles ) {
-            //                        userRoles.push( Role.build( role ) );
-            //                    }
-            //                }
-            //                this.setAuthenticatedUser( User.build( response.user ), userRoles );
-            //            }
             return true;
         }
 
