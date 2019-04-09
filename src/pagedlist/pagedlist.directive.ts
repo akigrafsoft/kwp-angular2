@@ -28,7 +28,7 @@ export class PagedListDirective implements OnInit, OnChanges {
     @Input( 'pageSize' )
     set pageSize( ps: number ) {
         this._pageSize = ps;
-        if ( this.initDone ) {
+        if ( this.initialized ) {
             this.getItems( 0, this._pageSize );
         }
     }
@@ -68,7 +68,7 @@ export class PagedListDirective implements OnInit, OnChanges {
     // This is important to set default to 0 so that pagination buttons are disabled if the createList returned error
     public nbPages = 0;
 
-    private initDone = false;
+    private initialized = false;
 
     public error: Error = null;
 
@@ -79,18 +79,20 @@ export class PagedListDirective implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        // console.debug("PagedList::ngOnInit()");
+        //console.debug( "PagedList::ngOnInit()" );
         this.doCreateList();
-        this.initDone = true;
+        this.initialized = true;
     }
 
     ngOnChanges( changes: SimpleChanges ): void {
-        // throw new Error("Method not implemented.");
-        //    console.debug("PagedList::ngOnChanges():" + JSON.stringify(changes));
-        if ( changes.listId ) {
-            this.doCreateList();
-        } else if ( changes.searchCriterias ) {
-            this.search( this._searchCriterias );
+        // do stuff only when ngOnInit has been called
+        if ( this.initialized ) {
+            //console.debug( "PagedList::ngOnChanges():" + JSON.stringify( changes ) );
+            if ( changes.listId ) {
+                this.doCreateList();
+            } else if ( changes.searchCriterias ) {
+                this.search( this._searchCriterias );
+            }
         }
     }
 
@@ -114,7 +116,7 @@ export class PagedListDirective implements OnInit, OnChanges {
 
     public refreshList() {
         // console.debug("PagedList::refreshList()");
-        if ( !this.initDone ) {
+        if ( !this.initialized ) {
             console.error( 'PagedList::refreshList()|init not done' );
             return;
         }
