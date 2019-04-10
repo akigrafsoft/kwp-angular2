@@ -19,15 +19,15 @@ export class PagedListService {
         @Inject( 'baseUrl' ) private baseUrl: string ) { }
 
     createList( factory: string, factoryParams: Object,
-        listId: string, searchCriteriasBase: Object, searchCriterias: Object,
-        sortCriterias: any, fromIndex: number, pageSize: number ): Observable<any | Error> {
+        listId: string, searchCriteriaBase: Object, searchCriteria: Object,
+        sortCriteria: any, fromIndex: number, pageSize: number ): Observable<any | Error> {
 
         let request = {
             'factory': factory,
             'factoryParams': factoryParams,
-            'searchCriteriasBase': searchCriteriasBase,
-            'searchCriterias': searchCriterias,
-            'sortCriterias': sortCriterias,
+            'searchCriteriaBase': searchCriteriaBase,
+            'searchCriteria': searchCriteria,
+            'sortCriteria': sortCriteria,
             'fromIndex': fromIndex,
             'pageSize': pageSize
         };
@@ -52,11 +52,11 @@ export class PagedListService {
             .pipe( catchError( ServiceUtils.handleError6( 'refreshList', [] ) ) );
     }
 
-    searchList( listId, searchCriterias,
-        sortCriterias, fromIndex, pageSize ) {
+    searchList( listId, searchCriteria,
+        sortCriteria, fromIndex, pageSize ) {
         let request = {
-            'searchCriterias': searchCriterias,
-            'sortCriterias': sortCriterias,
+            'searchCriteria': searchCriteria,
+            'sortCriteria': sortCriteria,
             'fromIndex': fromIndex,
             'pageSize': pageSize
         };
@@ -70,10 +70,10 @@ export class PagedListService {
             .pipe( catchError( ServiceUtils.handleError6( 'searchList', [] ) ) );
     }
 
-    sortList( listId, sortCriterias, fromIndex,
+    sortList( listId, sortCriteria, fromIndex,
         pageSize ) {
         let request = {
-            'sortCriterias': sortCriterias,
+            'sortCriteria': sortCriteria,
             'fromIndex': fromIndex,
             'pageSize': pageSize
         };
