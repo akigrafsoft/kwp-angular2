@@ -22,7 +22,7 @@ Run `npm pack`
 
 npm run build;npm pack
 
-It will create a tgz file like kwp-angular2-1.0.0.tgz
+It will create a tgz file like kwp-angular-x.y.z.tgz
 
 ## Install it locally
 
